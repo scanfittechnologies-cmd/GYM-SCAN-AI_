@@ -1,0 +1,56 @@
+{
+  "totalClasses": 8,
+  "source": "prototype_8_class",
+  "indexToClass": {
+    "0": {
+      "machineId": "assisted-pull-up-machine",
+      "machineName": "Assisted Pull Up Machine",
+      "category": "Gym Equipment"
+    },
+    "1": {
+      "machineId": "hack-squat-machine",
+      "machineName": "Hack Squat Machine",
+      "category": "Gym Equipment"
+    },
+    "2": {
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "category": "Gym Equipment"
+    },
+    "3": {
+      "machineId": "lat-pulldown",
+      "machineName": "Lat Pulldown",
+      "category": "Gym Equipment"
+    },
+    "4": {
+      "machineId": "leg-extension",
+      "machineName": "Leg Extension",
+      "category": "Gym Equipment"
+    },
+    "5": {
+      "machineId": "leg-press-45",
+      "machineName": "Leg Press 45",
+      "category": "Gym Equipment"
+    },
+    "6": {
+      "machineId": "pec-deck-machine",
+      "machineName": "Pec Deck Machine",
+      "category": "Gym Equipment"
+    },
+    "7": {
+      "machineId": "seated-cable-row",
+      "machineName": "Seated Cable Row",
+      "category": "Gym Equipment"
+    }
+  },
+  "classToIndex": {
+    "assisted-pull-up-machine": 0,
+    "hack-squat-machine": 1,
+    "incline-chest-press": 2,
+    "lat-pulldown": 3,
+    "leg-extension": 4,
+    "leg-press-45": 5,
+    "pec-deck-machine": 6,
+    "seated-cable-row": 7
+  }
+}
