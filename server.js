@@ -2,7 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
-import { recognizeMachine, initializeLocalModel } from './src/services/backend/machineRecognitionService.js';
+import { recognizeMachine, initializeLocalModel } from './services/backend/machineRecognitionService.js';
 import { analyzeGymMachine } from './services/backend/geminiVisionService.js';
 
 const upload = multer({
