@@ -2,15 +2,15 @@
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
-import { recognizeMachine, initializeLocalModel } from './services/backend/machineRecognitionService.js';
-import { analyzeGymMachine } from './services/backend/geminiVisionService.js';
+import { recognizeMachine, initializeLocalModel } from './machineRecognitionService.js';
+import { analyzeGymMachine } from './geminiVisionService.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 25 * 1024 * 1024 } // 25MB limit
 });
 
-import { RECOGNITION_CONFIG } from './services/backend/recognitionConfig.js';
+import { RECOGNITION_CONFIG } from './recognitionConfig.js';
 
 // dotenv.config() is called in env-preload.js (first import above)
 
