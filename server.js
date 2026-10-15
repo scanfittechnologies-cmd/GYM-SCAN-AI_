@@ -1,16 +1,16 @@
-//import './env-preload.js';   //MUST be first: loads .env before any other module reads process.env
+import './env-preload.js';   // MUST be first: loads .env before any other module reads process.env
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
-import { recognizeMachine, initializeLocalModel } from './machineRecognitionService.js';
-import { analyzeGymMachine } from './geminiVisionService.js';
+import { recognizeMachine, initializeLocalModel } from './src/services/backend/machineRecognitionService.js';
+import { analyzeGymMachine } from './src/services/backend/geminiVisionService.js';
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 25 * 1024 * 1024 } // 25MB limit
 });
 
-import { RECOGNITION_CONFIG } from './recognitionConfig.js';
+import { RECOGNITION_CONFIG } from './src/services/backend/recognitionConfig.js';
 
 // dotenv.config() is called in env-preload.js (first import above)
 
@@ -180,4 +180,5 @@ app.listen(PORT, () => {
   console.log(`[GymScan AI Backend] POST /api/scan-machine ready`);
   console.log(`[GymScan AI Backend] Engine: Local ONNX Inference Engine (50 Mapped Classes)`);
 });
+
 

@@ -1,0 +1,555 @@
+{
+  "version": "1.0",
+  "updatedAt": "2026-09-29T13:47:11Z",
+  "totalImages": 78,
+  "images": [
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-01.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-01.jpg",
+      "file_hash": "74721dd67b2429ea6cab9e2e770c570b"
+    },
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-02.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-02.jpg",
+      "file_hash": "9d2dbd3ae0e20c483bb2a61395f75323"
+    },
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-03.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-03.jpg",
+      "file_hash": "47b14fec56593c8f4376e4edaf5d80e2"
+    },
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-04.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-04.jpg",
+      "file_hash": "c8c09782540dba42246143b1e7d983b9"
+    },
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-05.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-05.jpg",
+      "file_hash": "9aba1d859d3b3f600bbcb8a4b7c535aa"
+    },
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-06.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-06.jpg",
+      "file_hash": "13131614c5e362537ca7affa87097e8a"
+    },
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-07.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-07.jpg",
+      "file_hash": "004bfe14389b64ece10d3c624d141434"
+    },
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-08.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-08.jpg",
+      "file_hash": "25b75ad17729251aab45c621178377f7"
+    },
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-09.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-09.jpg",
+      "file_hash": "19ae267edee2d633c6661c1df298e1ac"
+    },
+    {
+      "class_id": "lat-pulldown",
+      "filename": "lat-pulldown-10.jpg",
+      "relative_path": "reference_images/lat-pulldown/lat-pulldown-10.jpg",
+      "file_hash": "4364924de878b7b7f10e91352b8fd70b"
+    },
+    {
+      "class_id": "pec-deck-fly",
+      "filename": "pec-deck-fly-01.jpg",
+      "relative_path": "reference_images/pec-deck-fly/pec-deck-fly-01.jpg",
+      "file_hash": "428e8c02d1c60dea23d1d774a0e4a41b"
+    },
+    {
+      "class_id": "pec-deck-fly",
+      "filename": "pec-deck-fly-02.jpg",
+      "relative_path": "reference_images/pec-deck-fly/pec-deck-fly-02.jpg",
+      "file_hash": "8cf3083021186dc80920ded40e03c457"
+    },
+    {
+      "class_id": "pec-deck-fly",
+      "filename": "pec-deck-fly-03.jpg",
+      "relative_path": "reference_images/pec-deck-fly/pec-deck-fly-03.jpg",
+      "file_hash": "f1ffe6001335f88a9f5c4613513fbc1a"
+    },
+    {
+      "class_id": "pec-deck-fly",
+      "filename": "pec-deck-fly-04.jpg",
+      "relative_path": "reference_images/pec-deck-fly/pec-deck-fly-04.jpg",
+      "file_hash": "b01d8143cc07533ebad8ed519b014954"
+    },
+    {
+      "class_id": "pec-deck-fly",
+      "filename": "pec-deck-fly-05.jpg",
+      "relative_path": "reference_images/pec-deck-fly/pec-deck-fly-05.jpg",
+      "file_hash": "41fca362954e6d47642214a6b81ddf03"
+    },
+    {
+      "class_id": "pec-deck-fly",
+      "filename": "pec-deck-fly-06.jpg",
+      "relative_path": "reference_images/pec-deck-fly/pec-deck-fly-06.jpg",
+      "file_hash": "d2e375890de42ab0d1d582ca2191287d"
+    },
+    {
+      "class_id": "pec-deck-fly",
+      "filename": "pec-deck-fly-07.jpg",
+      "relative_path": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg",
+      "file_hash": "2270b95c51b9b3c73b00a7fdda306f29"
+    },
+    {
+      "class_id": "pec-deck-fly",
+      "filename": "pec-deck-fly-08.jpg",
+      "relative_path": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg",
+      "file_hash": "dc2520096027f8b16bd313c63bba6cf7"
+    },
+    {
+      "class_id": "pec-deck-fly",
+      "filename": "pec-deck-fly-09.jpg",
+      "relative_path": "reference_images/pec-deck-fly/pec-deck-fly-09.jpg",
+      "file_hash": "34cbc7c90e145b196feaf9afa7acc581"
+    },
+    {
+      "class_id": "leg-press-45",
+      "filename": "leg-press-45-01.jpg",
+      "relative_path": "reference_images/leg-press-45/leg-press-45-01.jpg",
+      "file_hash": "8bf961234599d1c143b1b9105f445fad"
+    },
+    {
+      "class_id": "leg-press-45",
+      "filename": "leg-press-45-02.jpg",
+      "relative_path": "reference_images/leg-press-45/leg-press-45-02.jpg",
+      "file_hash": "7aa1b1902571e30d277ab13e1beb1885"
+    },
+    {
+      "class_id": "leg-press-45",
+      "filename": "leg-press-45-03.jpg",
+      "relative_path": "reference_images/leg-press-45/leg-press-45-03.jpg",
+      "file_hash": "281f53a6fc92c516abf556802b1831b9"
+    },
+    {
+      "class_id": "leg-press-45",
+      "filename": "leg-press-45-04.jpg",
+      "relative_path": "reference_images/leg-press-45/leg-press-45-04.jpg",
+      "file_hash": "8299c15c3951e4e5325e94fe39a3f78a"
+    },
+    {
+      "class_id": "leg-press-45",
+      "filename": "leg-press-45-05.jpg",
+      "relative_path": "reference_images/leg-press-45/leg-press-45-05.jpg",
+      "file_hash": "ea011d5e16f57f4dcb6b7b8548feae94"
+    },
+    {
+      "class_id": "leg-press-45",
+      "filename": "leg-press-45-06.jpg",
+      "relative_path": "reference_images/leg-press-45/leg-press-45-06.jpg",
+      "file_hash": "c6bb7100d15941aa9c5a93c9d15a2f4d"
+    },
+    {
+      "class_id": "leg-press-45",
+      "filename": "leg-press-45-07.jpg",
+      "relative_path": "reference_images/leg-press-45/leg-press-45-07.jpg",
+      "file_hash": "543ef1dc86a4d7075561e8e19a1479bb"
+    },
+    {
+      "class_id": "leg-press-45",
+      "filename": "leg-press-45-08.jpg",
+      "relative_path": "reference_images/leg-press-45/leg-press-45-08.jpg",
+      "file_hash": "854e9982406df9bf884b3f054054ca9c"
+    },
+    {
+      "class_id": "leg-press-45",
+      "filename": "leg-press-45-09.jpg",
+      "relative_path": "reference_images/leg-press-45/leg-press-45-09.jpg",
+      "file_hash": "631b2def2efda58d20d573a9331c139b"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-01.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-01.jpg",
+      "file_hash": "f4ff2f425e6bfeb903d7dc90cbe3114a"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-02.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-02.jpg",
+      "file_hash": "c567ee64a58d76b0ed4a8de0f843f63e"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-03.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-03.jpg",
+      "file_hash": "682f4a69aaf58e67d8fd3c17a740d262"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-04.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-04.jpg",
+      "file_hash": "518c89d8eb5e4727fde6a8638bfcdca0"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-05.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-05.jpg",
+      "file_hash": "e4b8be557173bbd26d29c5189a25fa80"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-06.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-06.jpg",
+      "file_hash": "42280628120043c4f1c394103f848323"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-07.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-07.jpg",
+      "file_hash": "d65b59af497a2438ff7a91146fb5b366"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-08.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-08.jpg",
+      "file_hash": "9a29c9781c0b4264a74ecc9058b4f957"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-09.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-09.jpg",
+      "file_hash": "2f3afbd23bb636c6e2fabe674d55c189"
+    },
+    {
+      "class_id": "leg-extension",
+      "filename": "leg-extension-10.jpg",
+      "relative_path": "reference_images/leg-extension/leg-extension-10.jpg",
+      "file_hash": "5f6f498e35cae79c6097a01406a7fc6c"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-01.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-01.jpg",
+      "file_hash": "c515cd644ad1a777b1311d9c015f6a0e"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-02.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-02.jpg",
+      "file_hash": "b8465398c48728a860d7431b23f7e283"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-03.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-03.jpg",
+      "file_hash": "ce051390c635c1bdf5520efb47935052"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-04.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-04.jpg",
+      "file_hash": "eca8e2044d21e0df64265db0cc013613"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-05.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-05.jpg",
+      "file_hash": "26a10a51ef69de386d9eff01faab31c7"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-06.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-06.jpg",
+      "file_hash": "a9a32c6594ceab9621593b5ccb45456f"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-07.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-07.jpg",
+      "file_hash": "3fdd5c160ad94707fa43b87705c922cf"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-08.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-08.jpg",
+      "file_hash": "815a4ff7a85457b2abc4c12c32ba29e2"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-09.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-09.jpg",
+      "file_hash": "22a6c489fc6ff67d9f3bef712d5bc48b"
+    },
+    {
+      "class_id": "seated-cable-row",
+      "filename": "seated-cable-row-10.jpg",
+      "relative_path": "reference_images/seated-cable-row/seated-cable-row-10.jpg",
+      "file_hash": "60a89cfe6597f9b0cb23611bed75e969"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-01.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg",
+      "file_hash": "d35303e00825fd4eb944a6a23aa767c5"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-02.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-02.jpg",
+      "file_hash": "30c27d5b44dabd1dcf89aaefde226551"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-03.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-03.jpg",
+      "file_hash": "224830c90304aa08264e6b811b54a6e1"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-04.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-04.jpg",
+      "file_hash": "cf2f5d95ceea129d2dafcf2029b16e3e"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-05.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-05.jpg",
+      "file_hash": "71aad05753904863ff54c65a4567ff8b"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-06.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-06.jpg",
+      "file_hash": "eccc4d4e74832a3ded8f2ebf5c6a7bb3"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-07.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-07.jpg",
+      "file_hash": "59c17d2cdd46b18f75fa79d3d8d3dbfc"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-08.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-08.jpg",
+      "file_hash": "53bdbaa2159dadeaab55f1c6b05bbda6"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-09.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-09.jpg",
+      "file_hash": "cdbdc5a4d09b0aa69b0532d6b8eafbe1"
+    },
+    {
+      "class_id": "assisted-pull-up-machine",
+      "filename": "assisted-pull-up-machine-10.jpg",
+      "relative_path": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-10.jpg",
+      "file_hash": "2ddf8f6e32588fcd2b048bd79af7e65a"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-01.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-01.jpg",
+      "file_hash": "25d8452ba2e96e5db3ca5fe9dabcb198"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-02.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-02.jpg",
+      "file_hash": "b94fc983250a879add6ee43e9d0c812f"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-03.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-03.jpg",
+      "file_hash": "eb95cb9686857483e248fd9cf3a7aa4c"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-04.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-04.jpg",
+      "file_hash": "d1324e9c8ca7f2cd75683428e12ae2e8"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-05.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-05.jpg",
+      "file_hash": "d3feafdf12a1ec3cf4779526449f426a"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-06.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-06.jpg",
+      "file_hash": "1c7062de3b037fc9fe388f24b4d53da3"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-07.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-07.jpg",
+      "file_hash": "d9b3a12bda1bdb1c9bed4f2afbb59fc0"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-08.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-08.jpg",
+      "file_hash": "b0d9903a40cfd9bdf57e2ec387ef3cae"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-09.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg",
+      "file_hash": "1484b00a63a0a4d3c5ef9f5e4b9d0be5"
+    },
+    {
+      "class_id": "hack-squat-machine",
+      "filename": "hack-squat-machine-10.jpg",
+      "relative_path": "reference_images/hack-squat-machine/hack-squat-machine-10.jpg",
+      "file_hash": "65644a663bd705f18df4a957de7bf474"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-01.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-01.jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 960
+      },
+      "file_size": 523734,
+      "file_hash": "2e0b7d39aefb23064eb86abf3e2118eb",
+      "md5": "2e0b7d39aefb23064eb86abf3e2118eb"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-02.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-02.jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 960
+      },
+      "file_size": 520489,
+      "file_hash": "bb377db3b77952ab0f0b2418885d7222",
+      "md5": "bb377db3b77952ab0f0b2418885d7222"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-03.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-03.jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 960
+      },
+      "file_size": 505240,
+      "file_hash": "639e5b65c62946bd1553cb2a3dcdb661",
+      "md5": "639e5b65c62946bd1553cb2a3dcdb661"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-04.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-04.jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 960
+      },
+      "file_size": 537077,
+      "file_hash": "40bb088156a97a50d2b4ad019d60c68e",
+      "md5": "40bb088156a97a50d2b4ad019d60c68e"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-05.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-05.jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 960
+      },
+      "file_size": 480621,
+      "file_hash": "f3a82f047f06f8adac533f900f9377cf",
+      "md5": "f3a82f047f06f8adac533f900f9377cf"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-06.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-06.jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 960
+      },
+      "file_size": 531240,
+      "file_hash": "878c5f1fa454cf5e3344487bc8ed311f",
+      "md5": "878c5f1fa454cf5e3344487bc8ed311f"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-07.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-07.jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 960
+      },
+      "file_size": 506397,
+      "file_hash": "57de43a9c6792079aa69ef471f1d13f0",
+      "md5": "57de43a9c6792079aa69ef471f1d13f0"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-08.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-08.jpg",
+      "dimensions": {
+        "width": 1024,
+        "height": 960
+      },
+      "file_size": 478183,
+      "file_hash": "6d074bc5ec49c0e4cfce4c57ca2e8f55",
+      "md5": "6d074bc5ec49c0e4cfce4c57ca2e8f55"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-09.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-09.jpg",
+      "dimensions": {
+        "width": 960,
+        "height": 1024
+      },
+      "file_size": 543195,
+      "file_hash": "f9f8cbaa737274709c5cb46e45b3ec8a",
+      "md5": "f9f8cbaa737274709c5cb46e45b3ec8a"
+    },
+    {
+      "class_id": "incline-chest-press",
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press",
+      "filename": "incline-chest-press-10.jpg",
+      "relative_path": "reference_images/incline-chest-press/incline-chest-press-10.jpg",
+      "dimensions": {
+        "width": 959,
+        "height": 1024
+      },
+      "file_size": 504860,
+      "file_hash": "013b5f65d3f246b1ad36f58943f9f497",
+      "md5": "013b5f65d3f246b1ad36f58943f9f497"
+    }
+  ]
+}

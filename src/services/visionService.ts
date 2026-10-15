@@ -116,6 +116,16 @@ function parseImageMeta(base64DataUrl: string): { format: string; sizeKb: number
 }
 
 /**
+ * Live Backend API Base URL
+ * Defaults to live Render backend: https://gymscan-server-2026.onrender.com
+ * Can be overridden via VITE_BACKEND_URL in environment files.
+ */
+export const BACKEND_BASE_URL = (
+  (import.meta.env?.VITE_BACKEND_URL as string | undefined) ||
+  'https://gymscan-server-2026.onrender.com'
+).replace(/\/+$/, '');
+
+/**
  * Main entry point: Analyze uploaded gym machine image against backend /api/scan-machine API.
  */
 export async function analyzeGymMachineImage(
@@ -181,10 +191,11 @@ export async function analyzeGymMachineImage(
   }
 
   const imageMeta = parseImageMeta(base64DataUrl);
-  console.log(`[GymScan Vision] Querying POST /api/scan-machine with ${imageMeta.format} (${imageMeta.sizeKb} KB)...`);
+  const scanEndpoint = `${BACKEND_BASE_URL}/api/scan-machine`;
+  console.log(`[GymScan Vision] Querying POST ${scanEndpoint} with ${imageMeta.format} (${imageMeta.sizeKb} KB)...`);
 
   try {
-    const apiResponse = await fetch('/api/scan-machine', {
+    const apiResponse = await fetch(scanEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: base64DataUrl })
@@ -399,7 +410,7 @@ export async function analyzeGymMachineImage(
 
   } catch (err: any) {
     console.error('[GymScan Vision] Network fetch error:', err);
-    const errorMsg = err?.message || 'Could not connect to backend /api/scan-machine endpoint.';
+    const errorMsg = err?.message || `Could not connect to backend ${scanEndpoint} endpoint.`;
 
     const record: AnalysisDebugRecord = {
       analysisId,
@@ -468,7 +479,7 @@ export async function uploadAndScanMachine(imageFile: File | Blob): Promise<Scan
   const formData = new FormData();
   formData.append('image', imageFile);
 
-  const response = await fetch('/api/scan', {
+  const response = await fetch(`${BACKEND_BASE_URL}/api/scan`, {
     method: 'POST',
     body: formData,
   });
