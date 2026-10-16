@@ -117,12 +117,12 @@ function parseImageMeta(base64DataUrl: string): { format: string; sizeKb: number
 
 /**
  * Live Backend API Base URL
- * Defaults to live Render backend: https://gymscan-server-2026.onrender.com
- * Can be overridden via VITE_BACKEND_URL in environment files.
+ * Official production backend: https://scanner-app-fydt.onrender.com
+ * Can be overridden via VITE_BACKEND_URL environment variable.
  */
 export const BACKEND_BASE_URL = (
   (import.meta.env?.VITE_BACKEND_URL as string | undefined) ||
-  'https://gymscan-server-2026.onrender.com'
+  'https://scanner-app-fydt.onrender.com'
 ).replace(/\/+$/, '');
 
 /**

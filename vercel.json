@@ -3,6 +3,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",
+  "env": {
+    "VITE_BACKEND_URL": "https://scanner-app-fydt.onrender.com"
+  },
   "rewrites": [
     {
       "source": "/(.*)",
