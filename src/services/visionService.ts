@@ -32,6 +32,8 @@ export interface StructuredVisionOutput {
   alternative_matches: string[];
   visualFeatures: string[];
   visible_features: string[];
+  primaryMuscles?: string[];
+  setupSteps?: string[];
   exercise?: string;
   uncertainty_reason?: string;
   needs_more_photos: boolean;
@@ -373,6 +375,8 @@ export async function analyzeGymMachineImage(
       alternative_matches: isUnrecognized ? [] : formattedMatches.map(m => m.name),
       visualFeatures: backendData.visualFeatures || [],
       visible_features: backendData.visualFeatures || [],
+      primaryMuscles: (backendData as any).primaryMuscles || resJson.primaryMuscles || [],
+      setupSteps: (backendData as any).setupSteps || resJson.setupSteps || [],
       exercise: isUnrecognized ? undefined : (backendData.exercise || primaryName || undefined),
       uncertainty_reason: isUnrecognized ? fallbackMessage : undefined,
       needs_more_photos: isUnrecognized,

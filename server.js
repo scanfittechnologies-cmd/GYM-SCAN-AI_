@@ -109,6 +109,8 @@ app.post('/api/scan-machine', async (req, res, next) => {
       confidenceLevel: recognitionResult.status === 'identified' ? 'high' : recognitionResult.status === 'uncertain' ? 'medium' : 'low',
       exactModelIdentified: recognitionResult.status === 'identified',
       exercise: recognitionResult.machineName || 'None',
+      primaryMuscles: recognitionResult.primaryMuscles || [],
+      setupSteps: recognitionResult.setupSteps || [],
       visualFeatures: recognitionResult.visualFeatures || [],
       possibleMatches: (recognitionResult.candidates || []).map(c => ({
         machineName: c.machineName,
@@ -124,6 +126,8 @@ app.post('/api/scan-machine', async (req, res, next) => {
       modelUsed: recognitionResult.model,
       processingTimeMs: recognitionResult.processingTimeMs,
       candidates: recognitionResult.candidates || [],
+      primaryMuscles: recognitionResult.primaryMuscles || formattedData.primaryMuscles || [],
+      setupSteps: recognitionResult.setupSteps || formattedData.setupSteps || [],
       data: formattedData
     });
   } catch (err) {
@@ -150,10 +154,14 @@ app.post('/api/scan', upload.single('image'), async (req, res) => {
     // Format the payload returned to the frontend
     return res.json({
       source: 'Google Gemini Vision',
-      match: geminiResult.match,
+      match: geminiResult.machineName || geminiResult.match,
+      machineName: geminiResult.machineName || geminiResult.match,
       status: geminiResult.status,
       confidence: geminiResult.confidence,
-      reasoning: geminiResult.reasoning
+      primaryMuscles: geminiResult.primaryMuscles || [],
+      setupSteps: geminiResult.setupSteps || [],
+      reasoning: geminiResult.reasoning,
+      modelUsed: geminiResult.modelUsed
     });
 
   } catch (err) {

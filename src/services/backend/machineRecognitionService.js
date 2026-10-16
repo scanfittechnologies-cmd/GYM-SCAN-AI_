@@ -116,44 +116,56 @@ export async function recognizeMachine(imageBase64DataUrl) {
       const geminiResult = await analyzeGymMachine(imageBase64DataUrl);
       const processingTimeMs = Date.now() - startTime;
 
-      if (geminiResult && geminiResult.status === 'identified' && geminiResult.match) {
-        const machineSlug = geminiResult.match.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      if (geminiResult && geminiResult.status === 'identified' && (geminiResult.match || geminiResult.machineName)) {
+        const recognizedName = geminiResult.machineName || geminiResult.match;
+        const machineSlug = recognizedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        const modelName = geminiResult.modelUsed || 'gemini-3.5-flash-lite';
+        const primaryMuscles = geminiResult.primaryMuscles || [];
+        const setupSteps = geminiResult.setupSteps || [];
+
         return {
           status: 'identified',
           machineId: machineSlug,
-          machineName: geminiResult.match,
+          machineName: recognizedName,
           category: 'Strength Equipment',
-          confidence: geminiResult.confidence || 90,
+          confidence: geminiResult.confidence || 92,
           reason: geminiResult.reasoning || '',
+          primaryMuscles,
+          setupSteps,
           visualFeatures: [
-            'Gemini Vision AI (gemini-3.8-flash)',
-            geminiResult.reasoning || `Detected: ${geminiResult.match}`
+            `Gemini Vision AI (${modelName})`,
+            ...(primaryMuscles.length > 0 ? [`Muscles: ${primaryMuscles.join(', ')}`] : []),
+            geminiResult.reasoning || `Detected: ${recognizedName}`
           ],
           candidates: [
             {
               machineId: machineSlug,
-              machineName: geminiResult.match,
+              machineName: recognizedName,
               category: 'Strength Equipment',
-              confidence: geminiResult.confidence || 90
+              confidence: geminiResult.confidence || 92
             }
           ],
           rawOutput: {
-            machineName: geminiResult.match,
+            machineName: recognizedName,
             category: 'Strength Equipment',
-            confidence: geminiResult.confidence || 90,
+            confidence: geminiResult.confidence || 92,
             confidenceLevel: 'high',
             exactModelIdentified: true,
-            exercise: geminiResult.match,
+            exercise: recognizedName,
+            primaryMuscles,
+            setupSteps,
             visualFeatures: [
-              'Gemini Vision AI (gemini-3.8-flash)',
-              geminiResult.reasoning || `Detected: ${geminiResult.match}`
+              `Gemini Vision AI (${modelName})`,
+              ...(primaryMuscles.length > 0 ? [`Muscles: ${primaryMuscles.join(', ')}`] : []),
+              geminiResult.reasoning || `Detected: ${recognizedName}`
             ],
             possibleMatches: []
           },
-          model: 'gemini-3.8-flash',
+          model: modelName,
           processingTimeMs
         };
       } else if (geminiResult && geminiResult.status === 'not_identified') {
+        const modelName = geminiResult.modelUsed || 'gemini-3.5-flash-lite';
         return {
           status: 'not_identified',
           machineId: null,
@@ -161,6 +173,8 @@ export async function recognizeMachine(imageBase64DataUrl) {
           category: 'Unknown',
           confidence: geminiResult.confidence || 0,
           reason: geminiResult.reasoning || 'Gemini Vision could not determine or match this equipment.',
+          primaryMuscles: [],
+          setupSteps: [],
           visualFeatures: [geminiResult.reasoning || 'No matches found'],
           candidates: [],
           rawOutput: {
@@ -170,10 +184,12 @@ export async function recognizeMachine(imageBase64DataUrl) {
             confidenceLevel: 'low',
             exactModelIdentified: false,
             exercise: 'None',
+            primaryMuscles: [],
+            setupSteps: [],
             visualFeatures: [geminiResult.reasoning || 'No matches found'],
             possibleMatches: []
           },
-          model: 'gemini-3.8-flash',
+          model: modelName,
           processingTimeMs
         };
       }

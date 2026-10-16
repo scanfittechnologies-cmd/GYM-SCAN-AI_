@@ -918,6 +918,25 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                 Target Muscles: <span style={{ color: '#CBD5E1' }}>{selectedMatch.primaryMuscles.join(', ')}</span>
               </p>
             )}
+
+            {visionOutput.setupSteps && visionOutput.setupSteps.length > 0 && (
+              <div style={{
+                marginTop: '0.75rem',
+                padding: '0.75rem 0.9rem',
+                background: 'rgba(0, 210, 255, 0.05)',
+                border: '1px solid rgba(0, 210, 255, 0.2)',
+                borderRadius: '10px'
+              }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#00D2FF', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '4px' }}>
+                  ⚡ Quick Setup:
+                </span>
+                <ol style={{ margin: 0, paddingLeft: '1.1rem', fontSize: '0.75rem', color: '#CBD5E1', lineHeight: 1.45 }}>
+                  {visionOutput.setupSteps.map((step, sIdx) => (
+                    <li key={sIdx}>{step}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
