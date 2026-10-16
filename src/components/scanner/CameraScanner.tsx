@@ -152,7 +152,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     setScanError(null);
     setDetectedMachine(null);
 
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
       setCameraState('unavailable');
       return;
     }
@@ -160,11 +160,12 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     try {
       if (activeStreamRef.current) {
         activeStreamRef.current.getTracks().forEach(track => track.stop());
+        activeStreamRef.current = null;
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          facingMode: cameraFacing,
+          facingMode: { ideal: cameraFacing || "environment" },
           width: { ideal: 1280 },
           height: { ideal: 720 }
         },
@@ -172,12 +173,15 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       });
 
       activeStreamRef.current = stream;
+      setCameraState('active');
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        videoRef.current.setAttribute('playsinline', 'true');
-        await videoRef.current.play().catch(e => console.warn('Video play error:', e));
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current?.play().catch(console.error);
+        };
+        videoRef.current.play().catch(console.error);
       }
-      setCameraState('active');
       isScanningRef.current = true;
       animationFrameRef.current = requestAnimationFrame(scanFrame);
     } catch (err: any) {
@@ -193,15 +197,31 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     }
   };
 
+  // Sync video stream when camera state becomes active
+  useEffect(() => {
+    if (cameraState === 'active' && videoRef.current && activeStreamRef.current) {
+      const video = videoRef.current;
+      if (video.srcObject !== activeStreamRef.current) {
+        video.srcObject = activeStreamRef.current;
+      }
+      video.onloadedmetadata = () => {
+        video.play().catch(console.error);
+      };
+      video.play().catch(console.error);
+    }
+  }, [cameraState]);
+
   // Stop camera when unmounting or switching views
   useEffect(() => {
     return () => {
       isScanningRef.current = false;
       if (activeStreamRef.current) {
         activeStreamRef.current.getTracks().forEach(track => track.stop());
+        activeStreamRef.current = null;
       }
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
       }
     };
   }, []);
@@ -349,11 +369,12 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
           <>
             <video
               ref={videoRef}
+              autoPlay
               playsInline
               muted
               style={{
                 width: '100%',
-                height: '340px',
+                height: '100%',
                 objectFit: 'cover'
               }}
             />

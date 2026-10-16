@@ -41,12 +41,17 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   const { machines, userProfile } = useGym();
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const activeStreamRef = useRef<MediaStream | null>(null);
   const cancelTokenRef = useRef<boolean>(false);
   const cooldownIntervalRef = useRef<any>(null);
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [selectedFileMeta, setSelectedFileMeta] = useState<{ name: string; size: string } | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [isLiveCameraOpen, setIsLiveCameraOpen] = useState(false);
+  const [cameraFacing, setCameraFacing] = useState<'environment' | 'user'>('environment');
 
   // Analysis State
   const [analyzing, setAnalyzing] = useState(false);
@@ -71,10 +76,105 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     '4. Processing structured machine identification response...'
   ];
 
-  // Clean up cooldown timer on unmount
+  // Start live WebRTC camera stream
+  const startLiveCamera = async (facing: 'environment' | 'user' = cameraFacing) => {
+    setCameraError(null);
+    setIsLiveCameraOpen(true);
+
+    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+      setCameraError('Camera access is not supported by your browser.');
+      return;
+    }
+
+    try {
+      if (activeStreamRef.current) {
+        activeStreamRef.current.getTracks().forEach(track => track.stop());
+        activeStreamRef.current = null;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: facing || "environment" },
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        },
+        audio: false
+      });
+
+      activeStreamRef.current = stream;
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current?.play().catch(console.error);
+        };
+        videoRef.current.play().catch(console.error);
+      }
+    } catch (err: any) {
+      console.warn('Live camera access error:', err);
+      setCameraError(err?.message || 'Could not access camera. Please check camera permissions.');
+    }
+  };
+
+  // Stop live WebRTC camera stream
+  const stopLiveCamera = () => {
+    if (activeStreamRef.current) {
+      activeStreamRef.current.getTracks().forEach(track => track.stop());
+      activeStreamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    setIsLiveCameraOpen(false);
+    setCameraError(null);
+  };
+
+  // Capture photo from live video feed
+  const captureLivePhoto = async () => {
+    if (!videoRef.current) return;
+    const video = videoRef.current;
+    if (video.videoWidth === 0 || video.videoHeight === 0) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const rawDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+
+    stopLiveCamera();
+
+    setUploadedImage(rawDataUrl);
+    setSelectedFileMeta({ name: `live-scan-${Date.now()}.jpg`, size: `${Math.round((rawDataUrl.length * 0.75) / 1024)} KB` });
+
+    const compressed = await compressImageIfNeeded(rawDataUrl);
+    triggerRealVisionAnalysis(compressed);
+  };
+
+  // Sync video stream when live camera state opens
+  useEffect(() => {
+    if (isLiveCameraOpen && videoRef.current && activeStreamRef.current) {
+      const video = videoRef.current;
+      if (video.srcObject !== activeStreamRef.current) {
+        video.srcObject = activeStreamRef.current;
+      }
+      video.onloadedmetadata = () => {
+        video.play().catch(console.error);
+      };
+      video.play().catch(console.error);
+    }
+  }, [isLiveCameraOpen]);
+
+  // Clean up timers & camera stream on unmount
   useEffect(() => {
     return () => {
       if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
+      if (activeStreamRef.current) {
+        activeStreamRef.current.getTracks().forEach(track => track.stop());
+        activeStreamRef.current = null;
+      }
     };
   }, []);
 
@@ -387,12 +487,204 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
         </span>
       </div>
 
-      {/* 2. Upload Box / Image Preview Card with Enhanced Drag-and-Drop Dropzone */}
-      <PhotoUploadTab
-        onImageSelected={validateAndProcessFile}
-        isScanning={analyzing}
-        previewUrl={uploadedImage}
-      />
+      {/* 2. Live WebRTC Camera Stream Viewport OR Upload Dropzone */}
+      {isLiveCameraOpen ? (
+        <div style={{
+          position: 'relative',
+          height: '340px',
+          backgroundColor: '#07090E',
+          borderRadius: '24px',
+          overflow: 'hidden',
+          border: '1.5px solid #00D2FF',
+          boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '1rem'
+        }}>
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+
+          {/* Viewfinder Overlay with Laser & Target Frame */}
+          <div style={{
+            position: 'absolute',
+            width: '210px',
+            height: '210px',
+            border: '2px dashed rgba(0, 210, 255, 0.6)',
+            borderRadius: '16px',
+            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.45)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            pointerEvents: 'none'
+          }}>
+            <div className="viewfinder-corner corner-tl" />
+            <div className="viewfinder-corner corner-tr" />
+            <div className="viewfinder-corner corner-bl" />
+            <div className="viewfinder-corner corner-br" />
+          </div>
+
+          {/* Top Bar Controls */}
+          <div style={{
+            position: 'absolute',
+            top: '12px',
+            left: '12px',
+            right: '12px',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            zIndex: 20
+          }}>
+            <div style={{
+              background: 'rgba(10, 14, 22, 0.85)',
+              backdropFilter: 'blur(8px)',
+              padding: '4px 10px',
+              borderRadius: '999px',
+              border: '1px solid rgba(0, 210, 255, 0.3)',
+              fontSize: '0.72rem',
+              color: '#00D2FF',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00D2FF', animation: 'pulse 1.5s infinite' }} />
+              Live Camera Feed
+            </div>
+
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <button
+                type="button"
+                onClick={() => {
+                  const next = cameraFacing === 'environment' ? 'user' : 'environment';
+                  setCameraFacing(next);
+                  startLiveCamera(next);
+                }}
+                className="btn-ghost"
+                style={{
+                  background: 'rgba(10, 14, 22, 0.85)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: 0
+                }}
+                title="Switch Camera"
+              >
+                <RotateCcw size={14} color="#F1F5F9" />
+              </button>
+              <button
+                type="button"
+                onClick={stopLiveCamera}
+                className="btn-ghost"
+                style={{
+                  background: 'rgba(10, 14, 22, 0.85)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: 0
+                }}
+                title="Close Camera"
+              >
+                <XCircle size={16} color="#FF6B81" />
+              </button>
+            </div>
+          </div>
+
+          {/* Bottom Snap Button */}
+          <div style={{
+            position: 'absolute',
+            bottom: '16px',
+            left: 0,
+            right: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 20
+          }}>
+            <button
+              type="button"
+              onClick={captureLivePhoto}
+              className="btn-primary"
+              style={{
+                borderRadius: '999px',
+                padding: '0.65rem 1.4rem',
+                fontSize: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                boxShadow: '0 4px 20px rgba(0, 210, 255, 0.4)'
+              }}
+            >
+              <Camera size={16} /> Snap Photo & Analyze
+            </button>
+          </div>
+        </div>
+      ) : (
+        <PhotoUploadTab
+          onImageSelected={validateAndProcessFile}
+          isScanning={analyzing}
+          previewUrl={uploadedImage}
+        />
+      )}
+
+      {/* Button to toggle live camera when closed and no image uploaded */}
+      {!isLiveCameraOpen && !uploadedImage && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '-0.5rem', marginBottom: '0.75rem' }}>
+          <button
+            type="button"
+            onClick={() => startLiveCamera()}
+            disabled={analyzing}
+            className="btn-secondary"
+            style={{
+              fontSize: '0.82rem',
+              padding: '0.55rem 1.1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              border: '1px solid rgba(0, 210, 255, 0.3)',
+              color: '#00D2FF'
+            }}
+          >
+            <Camera size={15} /> Open Live Camera Scanner
+          </button>
+        </div>
+      )}
+
+      {cameraError && (
+        <div style={{
+          background: 'rgba(255, 71, 87, 0.1)',
+          border: '1px solid rgba(255, 71, 87, 0.3)',
+          borderRadius: '12px',
+          padding: '0.85rem 1rem',
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '0.65rem',
+          color: '#FF6B81',
+          fontSize: '0.82rem',
+          textAlign: 'left',
+          marginBottom: '1rem'
+        }}>
+          <AlertCircle size={18} color="#FF4757" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <div>
+            <strong style={{ color: '#FF4757', display: 'block', marginBottom: '2px' }}>Camera Notice</strong>
+            {cameraError}
+          </div>
+        </div>
+      )}
 
       <input
         ref={cameraInputRef}
@@ -493,12 +785,19 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             <button
               type="button"
-              onClick={() => cameraInputRef.current?.click()}
+              onClick={() => {
+                if (typeof navigator.mediaDevices?.getUserMedia === 'function') {
+                  setUploadedImage(null);
+                  startLiveCamera();
+                } else {
+                  cameraInputRef.current?.click();
+                }
+              }}
               disabled={analyzing}
               className="btn-secondary"
               style={{ fontSize: '0.82rem', padding: '0.55rem 1rem' }}
             >
-              <Camera size={14} /> Take Photo with Camera
+              <Camera size={14} /> Retake with Live Camera
             </button>
 
             <button
