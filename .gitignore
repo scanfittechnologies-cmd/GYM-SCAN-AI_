@@ -49,3 +49,5 @@ unseen_test_images/
 !src/reference_images/reference_manifest.json
 
 
+
+.vercel

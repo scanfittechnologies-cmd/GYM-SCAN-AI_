@@ -1,4 +1,5 @@
 {
+  "name": "gym-scan-ai",
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite",

@@ -1,0 +1,13 @@
+node_modules
+dataset
+prototype_8class
+prototype_8class_frozen
+BIILS
+test_images
+unseen_test_images
+reference_images
+python_pipeline
+.git
+.github
+*.pth
+scratch
