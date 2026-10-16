@@ -20,7 +20,7 @@ export const RECOGNITION_CONFIG = {
 
   // Local ONNX model path & mapping file path (getters ensure env vars set after import are evaluated)
   get ONNX_MODEL_PATH() {
-    return process.env.ONNX_MODEL_PATH || path.join(process.cwd(), 'models', 'machine_classifier.onnx');
+    return process.env.ONNX_MODEL_PATH || path.join(process.cwd(), 'models', 'ai_model.onnx');
   },
   get CLASS_MAPPING_PATH() {
     return process.env.CLASS_MAPPING_PATH || path.join(process.cwd(), 'models', 'class_mapping.json');

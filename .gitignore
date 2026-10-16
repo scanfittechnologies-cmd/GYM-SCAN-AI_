@@ -7,6 +7,12 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+
 node_modules
 dist
 dist-ssr
@@ -38,6 +44,7 @@ unseen_test_images/
 # Lightweight metadata and manifests needed for Render & app
 !models/
 !models/class_mapping.json
+!models/ai_model.onnx
 !src/reference_images/
 !src/reference_images/reference_manifest.json
 

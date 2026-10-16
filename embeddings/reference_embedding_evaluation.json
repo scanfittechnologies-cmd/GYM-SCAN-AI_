@@ -1,0 +1,4414 @@
+{
+  "model": "Xenova/clip-vit-base-patch32",
+  "evaluationType": "Leave-One-Out Cross Validation",
+  "aggregationMethod": "Max Similarity Per Machine across Reference Candidates",
+  "totalQueries": 78,
+  "accuracy": {
+    "top1Count": 66,
+    "top1Accuracy": 0.8462,
+    "top3Count": 77,
+    "top3Accuracy": 0.9872,
+    "top5Count": 78,
+    "top5Accuracy": 1
+  },
+  "similarityDistributions": {
+    "correctMatches": {
+      "count": 66,
+      "min": 0.9387,
+      "max": 0.9889,
+      "mean": 0.9758,
+      "median": 0.9764,
+      "p25": 0.9724,
+      "p75": 0.981
+    },
+    "incorrectMatches": {
+      "count": 12,
+      "min": 0.9653,
+      "max": 0.9826,
+      "mean": 0.975,
+      "median": 0.976,
+      "p25": 0.9682,
+      "p75": 0.9806
+    },
+    "top1VsTop2Margin": {
+      "count": 78,
+      "min": 0.0002,
+      "max": 0.0323,
+      "mean": 0.0113,
+      "median": 0.0103,
+      "p25": 0.0038,
+      "p75": 0.0165
+    }
+  },
+  "confusionMatrix": {
+    "assisted-pull-up-machine": {
+      "assisted-pull-up-machine": 9,
+      "hack-squat-machine": 0,
+      "incline-chest-press": 0,
+      "lat-pulldown": 0,
+      "leg-extension": 0,
+      "leg-press-45": 0,
+      "pec-deck-machine": 1,
+      "seated-cable-row": 0
+    },
+    "hack-squat-machine": {
+      "assisted-pull-up-machine": 0,
+      "hack-squat-machine": 5,
+      "incline-chest-press": 4,
+      "lat-pulldown": 0,
+      "leg-extension": 0,
+      "leg-press-45": 1,
+      "pec-deck-machine": 0,
+      "seated-cable-row": 0
+    },
+    "incline-chest-press": {
+      "assisted-pull-up-machine": 0,
+      "hack-squat-machine": 2,
+      "incline-chest-press": 8,
+      "lat-pulldown": 0,
+      "leg-extension": 0,
+      "leg-press-45": 0,
+      "pec-deck-machine": 0,
+      "seated-cable-row": 0
+    },
+    "lat-pulldown": {
+      "assisted-pull-up-machine": 0,
+      "hack-squat-machine": 0,
+      "incline-chest-press": 0,
+      "lat-pulldown": 10,
+      "leg-extension": 0,
+      "leg-press-45": 0,
+      "pec-deck-machine": 0,
+      "seated-cable-row": 0
+    },
+    "leg-extension": {
+      "assisted-pull-up-machine": 0,
+      "hack-squat-machine": 0,
+      "incline-chest-press": 0,
+      "lat-pulldown": 0,
+      "leg-extension": 10,
+      "leg-press-45": 0,
+      "pec-deck-machine": 0,
+      "seated-cable-row": 0
+    },
+    "leg-press-45": {
+      "assisted-pull-up-machine": 0,
+      "hack-squat-machine": 0,
+      "incline-chest-press": 2,
+      "lat-pulldown": 0,
+      "leg-extension": 0,
+      "leg-press-45": 7,
+      "pec-deck-machine": 0,
+      "seated-cable-row": 0
+    },
+    "pec-deck-machine": {
+      "assisted-pull-up-machine": 0,
+      "hack-squat-machine": 0,
+      "incline-chest-press": 0,
+      "lat-pulldown": 2,
+      "leg-extension": 0,
+      "leg-press-45": 0,
+      "pec-deck-machine": 7,
+      "seated-cable-row": 0
+    },
+    "seated-cable-row": {
+      "assisted-pull-up-machine": 0,
+      "hack-squat-machine": 0,
+      "incline-chest-press": 0,
+      "lat-pulldown": 0,
+      "leg-extension": 0,
+      "leg-press-45": 0,
+      "pec-deck-machine": 0,
+      "seated-cable-row": 10
+    }
+  },
+  "mostConfusedPairs": [
+    {
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "incline-chest-press",
+      "errorCount": 4
+    },
+    {
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "hack-squat-machine",
+      "errorCount": 2
+    },
+    {
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "incline-chest-press",
+      "errorCount": 2
+    },
+    {
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "lat-pulldown",
+      "errorCount": 2
+    },
+    {
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "pec-deck-machine",
+      "errorCount": 1
+    },
+    {
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "leg-press-45",
+      "errorCount": 1
+    }
+  ],
+  "perMachineBreakdown": {
+    "assisted-pull-up-machine": {
+      "total": 10,
+      "correct": 9,
+      "accuracy": 0.9
+    },
+    "hack-squat-machine": {
+      "total": 10,
+      "correct": 5,
+      "accuracy": 0.5
+    },
+    "incline-chest-press": {
+      "total": 10,
+      "correct": 8,
+      "accuracy": 0.8
+    },
+    "lat-pulldown": {
+      "total": 10,
+      "correct": 10,
+      "accuracy": 1
+    },
+    "leg-extension": {
+      "total": 10,
+      "correct": 10,
+      "accuracy": 1
+    },
+    "leg-press-45": {
+      "total": 9,
+      "correct": 7,
+      "accuracy": 0.7778
+    },
+    "pec-deck-machine": {
+      "total": 9,
+      "correct": 7,
+      "accuracy": 0.7778
+    },
+    "seated-cable-row": {
+      "total": 10,
+      "correct": 10,
+      "accuracy": 1
+    }
+  },
+  "queryDetails": [
+    {
+      "queryIndex": 1,
+      "queryFilename": "lat-pulldown-01.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-01.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9659,
+      "marginToTop2": 0.0107,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9659,
+          "top3AvgSimilarity": 0.9573,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-03.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9552,
+          "top3AvgSimilarity": 0.95,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-06.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9334,
+          "top3AvgSimilarity": 0.9317,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-04.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.932,
+          "top3AvgSimilarity": 0.9287,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-02.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9194,
+          "top3AvgSimilarity": 0.9088,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 2,
+      "queryFilename": "lat-pulldown-02.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-02.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9773,
+      "marginToTop2": 0.0093,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9773,
+          "top3AvgSimilarity": 0.974,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-10.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.968,
+          "top3AvgSimilarity": 0.9523,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-03.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9647,
+          "top3AvgSimilarity": 0.9581,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-02.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9518,
+          "top3AvgSimilarity": 0.9334,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9401,
+          "top3AvgSimilarity": 0.9391,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 3,
+      "queryFilename": "lat-pulldown-03.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-03.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9714,
+      "marginToTop2": 0.0221,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9714,
+          "top3AvgSimilarity": 0.9682,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-08.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9493,
+          "top3AvgSimilarity": 0.9458,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-04.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9449,
+          "top3AvgSimilarity": 0.9351,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9441,
+          "top3AvgSimilarity": 0.9361,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-03.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9284,
+          "top3AvgSimilarity": 0.9211,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 4,
+      "queryFilename": "lat-pulldown-04.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-04.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.973,
+      "marginToTop2": 0.0048,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.973,
+          "top3AvgSimilarity": 0.9691,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-06.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9682,
+          "top3AvgSimilarity": 0.962,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9679,
+          "top3AvgSimilarity": 0.9665,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-05.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9643,
+          "top3AvgSimilarity": 0.961,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-02.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9534,
+          "top3AvgSimilarity": 0.9461,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 5,
+      "queryFilename": "lat-pulldown-05.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-05.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9809,
+      "marginToTop2": 0.0141,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9809,
+          "top3AvgSimilarity": 0.9778,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-10.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9668,
+          "top3AvgSimilarity": 0.9642,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9641,
+          "top3AvgSimilarity": 0.9516,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9565,
+          "top3AvgSimilarity": 0.955,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-02.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9521,
+          "top3AvgSimilarity": 0.9494,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-02.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 6,
+      "queryFilename": "lat-pulldown-06.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-06.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.973,
+      "marginToTop2": 0.0035,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.973,
+          "top3AvgSimilarity": 0.9644,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9695,
+          "top3AvgSimilarity": 0.9646,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-10.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9663,
+          "top3AvgSimilarity": 0.9654,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9653,
+          "top3AvgSimilarity": 0.9568,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9547,
+          "top3AvgSimilarity": 0.9528,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 7,
+      "queryFilename": "lat-pulldown-07.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-07.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.981,
+      "marginToTop2": 0.0192,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.981,
+          "top3AvgSimilarity": 0.9766,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-09.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9618,
+          "top3AvgSimilarity": 0.9568,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9617,
+          "top3AvgSimilarity": 0.958,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.957,
+          "top3AvgSimilarity": 0.9509,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9538,
+          "top3AvgSimilarity": 0.9477,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 8,
+      "queryFilename": "lat-pulldown-08.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-08.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9748,
+      "marginToTop2": 0.0161,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9748,
+          "top3AvgSimilarity": 0.9726,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-02.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9587,
+          "top3AvgSimilarity": 0.9551,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-02.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9549,
+          "top3AvgSimilarity": 0.9431,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9434,
+          "top3AvgSimilarity": 0.9395,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-03.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9332,
+          "top3AvgSimilarity": 0.9262,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 9,
+      "queryFilename": "lat-pulldown-09.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-09.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.981,
+      "marginToTop2": 0.0225,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.981,
+          "top3AvgSimilarity": 0.9732,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-07.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9585,
+          "top3AvgSimilarity": 0.9527,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-02.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9574,
+          "top3AvgSimilarity": 0.9557,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-05.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.953,
+          "top3AvgSimilarity": 0.947,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9507,
+          "top3AvgSimilarity": 0.9437,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 10,
+      "queryFilename": "lat-pulldown-10.jpg",
+      "queryPath": "reference_images/lat-pulldown/lat-pulldown-10.jpg",
+      "actualMachineId": "lat-pulldown",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9809,
+      "marginToTop2": 0.0116,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9809,
+          "top3AvgSimilarity": 0.9766,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-05.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9693,
+          "top3AvgSimilarity": 0.9589,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-02.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9662,
+          "top3AvgSimilarity": 0.964,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-03.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9522,
+          "top3AvgSimilarity": 0.9513,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9522,
+          "top3AvgSimilarity": 0.94,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 11,
+      "queryFilename": "pec-deck-fly-01.jpg",
+      "queryPath": "reference_images/pec-deck-fly/pec-deck-fly-01.jpg",
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "pec-deck-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9703,
+      "marginToTop2": 0.007,
+      "top5Candidates": [
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9703,
+          "top3AvgSimilarity": 0.9677,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-05.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9633,
+          "top3AvgSimilarity": 0.9629,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-10.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9554,
+          "top3AvgSimilarity": 0.9536,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9515,
+          "top3AvgSimilarity": 0.9438,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-02.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9453,
+          "top3AvgSimilarity": 0.934,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 12,
+      "queryFilename": "pec-deck-fly-02.jpg",
+      "queryPath": "reference_images/pec-deck-fly/pec-deck-fly-02.jpg",
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "pec-deck-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9683,
+      "marginToTop2": 0.0054,
+      "top5Candidates": [
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9683,
+          "top3AvgSimilarity": 0.9664,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-01.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9629,
+          "top3AvgSimilarity": 0.9581,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.95,
+          "top3AvgSimilarity": 0.9466,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9444,
+          "top3AvgSimilarity": 0.9407,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9389,
+          "top3AvgSimilarity": 0.9288,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 13,
+      "queryFilename": "pec-deck-fly-03.jpg",
+      "queryPath": "reference_images/pec-deck-fly/pec-deck-fly-03.jpg",
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.968,
+      "marginToTop2": 0.0152,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.968,
+          "top3AvgSimilarity": 0.9619,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-02.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9528,
+          "top3AvgSimilarity": 0.9431,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-02.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.949,
+          "top3AvgSimilarity": 0.9443,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-02.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9377,
+          "top3AvgSimilarity": 0.9332,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9255,
+          "top3AvgSimilarity": 0.8987,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 14,
+      "queryFilename": "pec-deck-fly-04.jpg",
+      "queryPath": "reference_images/pec-deck-fly/pec-deck-fly-04.jpg",
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "pec-deck-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9713,
+      "marginToTop2": 0.0076,
+      "top5Candidates": [
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9713,
+          "top3AvgSimilarity": 0.9665,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-05.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9637,
+          "top3AvgSimilarity": 0.9582,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9603,
+          "top3AvgSimilarity": 0.9557,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-03.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9545,
+          "top3AvgSimilarity": 0.9471,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-08.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9467,
+          "top3AvgSimilarity": 0.9426,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 15,
+      "queryFilename": "pec-deck-fly-05.jpg",
+      "queryPath": "reference_images/pec-deck-fly/pec-deck-fly-05.jpg",
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "pec-deck-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9713,
+      "marginToTop2": 0.0034,
+      "top5Candidates": [
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9713,
+          "top3AvgSimilarity": 0.969,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-04.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9679,
+          "top3AvgSimilarity": 0.9649,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9588,
+          "top3AvgSimilarity": 0.952,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9569,
+          "top3AvgSimilarity": 0.9531,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9523,
+          "top3AvgSimilarity": 0.9498,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 16,
+      "queryFilename": "pec-deck-fly-06.jpg",
+      "queryPath": "reference_images/pec-deck-fly/pec-deck-fly-06.jpg",
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "lat-pulldown",
+      "isCorrect": false,
+      "inTop3": false,
+      "inTop5": true,
+      "top1Similarity": 0.9656,
+      "marginToTop2": 0.0003,
+      "top5Candidates": [
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9656,
+          "top3AvgSimilarity": 0.9567,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-06.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9653,
+          "top3AvgSimilarity": 0.9474,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-08.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9646,
+          "top3AvgSimilarity": 0.9616,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-07.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9625,
+          "top3AvgSimilarity": 0.962,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-05.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9588,
+          "top3AvgSimilarity": 0.9509,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 17,
+      "queryFilename": "pec-deck-fly-07.jpg",
+      "queryPath": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg",
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "pec-deck-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.975,
+      "marginToTop2": 0.0072,
+      "top5Candidates": [
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.975,
+          "top3AvgSimilarity": 0.9691,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9678,
+          "top3AvgSimilarity": 0.9655,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9616,
+          "top3AvgSimilarity": 0.9591,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9579,
+          "top3AvgSimilarity": 0.9562,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.955,
+          "top3AvgSimilarity": 0.9429,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 18,
+      "queryFilename": "pec-deck-fly-08.jpg",
+      "queryPath": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg",
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "pec-deck-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.975,
+      "marginToTop2": 0.0082,
+      "top5Candidates": [
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.975,
+          "top3AvgSimilarity": 0.9666,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9668,
+          "top3AvgSimilarity": 0.9642,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-05.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9572,
+          "top3AvgSimilarity": 0.9552,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9559,
+          "top3AvgSimilarity": 0.9539,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9545,
+          "top3AvgSimilarity": 0.9443,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 19,
+      "queryFilename": "pec-deck-fly-09.jpg",
+      "queryPath": "reference_images/pec-deck-fly/pec-deck-fly-09.jpg",
+      "actualMachineId": "pec-deck-machine",
+      "predictedMachineId": "pec-deck-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.961,
+      "marginToTop2": 0.0034,
+      "top5Candidates": [
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.961,
+          "top3AvgSimilarity": 0.9594,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9576,
+          "top3AvgSimilarity": 0.9529,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-10.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9523,
+          "top3AvgSimilarity": 0.949,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.952,
+          "top3AvgSimilarity": 0.9497,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9517,
+          "top3AvgSimilarity": 0.949,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-02.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 20,
+      "queryFilename": "leg-press-45-01.jpg",
+      "queryPath": "reference_images/leg-press-45/leg-press-45-01.jpg",
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9741,
+      "marginToTop2": 0.0018,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9741,
+          "top3AvgSimilarity": 0.9702,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9723,
+          "top3AvgSimilarity": 0.9689,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-06.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9721,
+          "top3AvgSimilarity": 0.9667,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-09.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9578,
+          "top3AvgSimilarity": 0.9529,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-10.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9549,
+          "top3AvgSimilarity": 0.9495,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 21,
+      "queryFilename": "leg-press-45-02.jpg",
+      "queryPath": "reference_images/leg-press-45/leg-press-45-02.jpg",
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "leg-press-45",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9387,
+      "marginToTop2": 0.0103,
+      "top5Candidates": [
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9387,
+          "top3AvgSimilarity": 0.9355,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-04.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9284,
+          "top3AvgSimilarity": 0.9231,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-04.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9035,
+          "top3AvgSimilarity": 0.8973,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9007,
+          "top3AvgSimilarity": 0.9001,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-02.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.8958,
+          "top3AvgSimilarity": 0.8926,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 22,
+      "queryFilename": "leg-press-45-03.jpg",
+      "queryPath": "reference_images/leg-press-45/leg-press-45-03.jpg",
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "leg-press-45",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9814,
+      "marginToTop2": 0.0155,
+      "top5Candidates": [
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9814,
+          "top3AvgSimilarity": 0.9767,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-09.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9659,
+          "top3AvgSimilarity": 0.9574,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-10.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9528,
+          "top3AvgSimilarity": 0.9517,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9392,
+          "top3AvgSimilarity": 0.9338,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9359,
+          "top3AvgSimilarity": 0.9324,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 23,
+      "queryFilename": "leg-press-45-04.jpg",
+      "queryPath": "reference_images/leg-press-45/leg-press-45-04.jpg",
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "leg-press-45",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9719,
+      "marginToTop2": 0.0212,
+      "top5Candidates": [
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9719,
+          "top3AvgSimilarity": 0.9671,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-03.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9507,
+          "top3AvgSimilarity": 0.9487,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-04.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9442,
+          "top3AvgSimilarity": 0.9268,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9399,
+          "top3AvgSimilarity": 0.9323,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-05.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9392,
+          "top3AvgSimilarity": 0.9345,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 24,
+      "queryFilename": "leg-press-45-05.jpg",
+      "queryPath": "reference_images/leg-press-45/leg-press-45-05.jpg",
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "leg-press-45",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9768,
+      "marginToTop2": 0.009,
+      "top5Candidates": [
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9768,
+          "top3AvgSimilarity": 0.9728,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-03.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9678,
+          "top3AvgSimilarity": 0.9648,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-07.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9598,
+          "top3AvgSimilarity": 0.9586,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9581,
+          "top3AvgSimilarity": 0.9517,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9578,
+          "top3AvgSimilarity": 0.9497,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 25,
+      "queryFilename": "leg-press-45-06.jpg",
+      "queryPath": "reference_images/leg-press-45/leg-press-45-06.jpg",
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9683,
+      "marginToTop2": 0.0011,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9683,
+          "top3AvgSimilarity": 0.9649,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-02.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9672,
+          "top3AvgSimilarity": 0.9617,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-03.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9637,
+          "top3AvgSimilarity": 0.9576,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9451,
+          "top3AvgSimilarity": 0.9398,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-03.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9438,
+          "top3AvgSimilarity": 0.9398,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 26,
+      "queryFilename": "leg-press-45-07.jpg",
+      "queryPath": "reference_images/leg-press-45/leg-press-45-07.jpg",
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "leg-press-45",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9764,
+      "marginToTop2": 0.0202,
+      "top5Candidates": [
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9764,
+          "top3AvgSimilarity": 0.9648,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-08.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9562,
+          "top3AvgSimilarity": 0.9542,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-07.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9509,
+          "top3AvgSimilarity": 0.9393,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-03.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9479,
+          "top3AvgSimilarity": 0.9464,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-05.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9459,
+          "top3AvgSimilarity": 0.943,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 27,
+      "queryFilename": "leg-press-45-08.jpg",
+      "queryPath": "reference_images/leg-press-45/leg-press-45-08.jpg",
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "leg-press-45",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9764,
+      "marginToTop2": 0.01,
+      "top5Candidates": [
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9764,
+          "top3AvgSimilarity": 0.9703,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-07.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9664,
+          "top3AvgSimilarity": 0.9655,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-06.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9621,
+          "top3AvgSimilarity": 0.9611,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9551,
+          "top3AvgSimilarity": 0.9488,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9528,
+          "top3AvgSimilarity": 0.9447,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 28,
+      "queryFilename": "leg-press-45-09.jpg",
+      "queryPath": "reference_images/leg-press-45/leg-press-45-09.jpg",
+      "actualMachineId": "leg-press-45",
+      "predictedMachineId": "leg-press-45",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9814,
+      "marginToTop2": 0.008,
+      "top5Candidates": [
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9814,
+          "top3AvgSimilarity": 0.9749,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-03.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9734,
+          "top3AvgSimilarity": 0.9683,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-10.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9673,
+          "top3AvgSimilarity": 0.9662,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9496,
+          "top3AvgSimilarity": 0.9461,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9469,
+          "top3AvgSimilarity": 0.9426,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 29,
+      "queryFilename": "leg-extension-01.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-01.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9561,
+      "marginToTop2": 0.0032,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9561,
+          "top3AvgSimilarity": 0.9518,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-09.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9529,
+          "top3AvgSimilarity": 0.9511,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-01.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9522,
+          "top3AvgSimilarity": 0.9453,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-10.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9342,
+          "top3AvgSimilarity": 0.9321,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-04.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9282,
+          "top3AvgSimilarity": 0.9205,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 30,
+      "queryFilename": "leg-extension-02.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-02.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9637,
+      "marginToTop2": 0.0072,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9637,
+          "top3AvgSimilarity": 0.9576,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-03.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9565,
+          "top3AvgSimilarity": 0.947,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-05.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9458,
+          "top3AvgSimilarity": 0.9445,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.942,
+          "top3AvgSimilarity": 0.9364,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-05.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9374,
+          "top3AvgSimilarity": 0.9307,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 31,
+      "queryFilename": "leg-extension-03.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-03.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9637,
+      "marginToTop2": 0.0034,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9637,
+          "top3AvgSimilarity": 0.9578,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-02.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9603,
+          "top3AvgSimilarity": 0.9568,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-04.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.957,
+          "top3AvgSimilarity": 0.9497,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9509,
+          "top3AvgSimilarity": 0.9492,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-07.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9489,
+          "top3AvgSimilarity": 0.9454,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 32,
+      "queryFilename": "leg-extension-04.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-04.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9666,
+      "marginToTop2": 0.0089,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9666,
+          "top3AvgSimilarity": 0.9594,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9577,
+          "top3AvgSimilarity": 0.9531,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9552,
+          "top3AvgSimilarity": 0.9543,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9542,
+          "top3AvgSimilarity": 0.9459,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.954,
+          "top3AvgSimilarity": 0.9534,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 33,
+      "queryFilename": "leg-extension-05.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-05.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9752,
+      "marginToTop2": 0.007,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9752,
+          "top3AvgSimilarity": 0.9699,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9682,
+          "top3AvgSimilarity": 0.9635,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9653,
+          "top3AvgSimilarity": 0.9569,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9607,
+          "top3AvgSimilarity": 0.9586,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-06.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9586,
+          "top3AvgSimilarity": 0.9574,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-08.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 34,
+      "queryFilename": "leg-extension-06.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-06.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9631,
+      "marginToTop2": 0.0206,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9631,
+          "top3AvgSimilarity": 0.9582,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-09.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9425,
+          "top3AvgSimilarity": 0.9415,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-04.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9374,
+          "top3AvgSimilarity": 0.9361,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-05.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9327,
+          "top3AvgSimilarity": 0.9314,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-05.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9269,
+          "top3AvgSimilarity": 0.9191,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 35,
+      "queryFilename": "leg-extension-07.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-07.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9782,
+      "marginToTop2": 0.0136,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9782,
+          "top3AvgSimilarity": 0.964,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-09.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9646,
+          "top3AvgSimilarity": 0.9507,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-06.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9447,
+          "top3AvgSimilarity": 0.9372,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9442,
+          "top3AvgSimilarity": 0.9357,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-06.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9418,
+          "top3AvgSimilarity": 0.9346,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 36,
+      "queryFilename": "leg-extension-08.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-08.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.961,
+      "marginToTop2": 0.0098,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.961,
+          "top3AvgSimilarity": 0.9559,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-09.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9512,
+          "top3AvgSimilarity": 0.9438,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-10.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.937,
+          "top3AvgSimilarity": 0.9359,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9334,
+          "top3AvgSimilarity": 0.9202,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-04.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9331,
+          "top3AvgSimilarity": 0.9267,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-02.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 37,
+      "queryFilename": "leg-extension-09.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-09.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9782,
+      "marginToTop2": 0.0187,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9782,
+          "top3AvgSimilarity": 0.9697,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-07.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9595,
+          "top3AvgSimilarity": 0.9562,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-06.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9525,
+          "top3AvgSimilarity": 0.9491,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-06.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9447,
+          "top3AvgSimilarity": 0.9337,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9435,
+          "top3AvgSimilarity": 0.9403,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 38,
+      "queryFilename": "leg-extension-10.jpg",
+      "queryPath": "reference_images/leg-extension/leg-extension-10.jpg",
+      "actualMachineId": "leg-extension",
+      "predictedMachineId": "leg-extension",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9752,
+      "marginToTop2": 0.0102,
+      "top5Candidates": [
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9752,
+          "top3AvgSimilarity": 0.9616,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.965,
+          "top3AvgSimilarity": 0.9637,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-10.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9607,
+          "top3AvgSimilarity": 0.9494,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.96,
+          "top3AvgSimilarity": 0.9569,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-01.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9586,
+          "top3AvgSimilarity": 0.9555,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 39,
+      "queryFilename": "seated-cable-row-01.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-01.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9764,
+      "marginToTop2": 0.0123,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9764,
+          "top3AvgSimilarity": 0.9639,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-02.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9641,
+          "top3AvgSimilarity": 0.9603,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-05.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9585,
+          "top3AvgSimilarity": 0.9573,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9578,
+          "top3AvgSimilarity": 0.9481,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-05.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9577,
+          "top3AvgSimilarity": 0.9515,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 40,
+      "queryFilename": "seated-cable-row-02.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-02.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9764,
+      "marginToTop2": 0.0121,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9764,
+          "top3AvgSimilarity": 0.9751,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9643,
+          "top3AvgSimilarity": 0.9607,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9617,
+          "top3AvgSimilarity": 0.9569,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9563,
+          "top3AvgSimilarity": 0.9516,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9548,
+          "top3AvgSimilarity": 0.9529,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 41,
+      "queryFilename": "seated-cable-row-03.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-03.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9724,
+      "marginToTop2": 0.0103,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9724,
+          "top3AvgSimilarity": 0.9627,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-07.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9621,
+          "top3AvgSimilarity": 0.9577,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-02.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9497,
+          "top3AvgSimilarity": 0.946,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-08.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9491,
+          "top3AvgSimilarity": 0.9472,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-04.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9457,
+          "top3AvgSimilarity": 0.944,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-09.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 42,
+      "queryFilename": "seated-cable-row-04.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-04.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9764,
+      "marginToTop2": 0.024,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9764,
+          "top3AvgSimilarity": 0.9612,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-05.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9524,
+          "top3AvgSimilarity": 0.9358,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-04.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9407,
+          "top3AvgSimilarity": 0.9391,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-07.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9378,
+          "top3AvgSimilarity": 0.9217,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-04.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9226,
+          "top3AvgSimilarity": 0.9193,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 43,
+      "queryFilename": "seated-cable-row-05.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-05.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9764,
+      "marginToTop2": 0.025,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9764,
+          "top3AvgSimilarity": 0.9676,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-04.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9514,
+          "top3AvgSimilarity": 0.9444,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-04.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9455,
+          "top3AvgSimilarity": 0.9367,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-04.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9419,
+          "top3AvgSimilarity": 0.939,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-02.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9412,
+          "top3AvgSimilarity": 0.9349,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-08.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 44,
+      "queryFilename": "seated-cable-row-06.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-06.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9889,
+      "marginToTop2": 0.0229,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9889,
+          "top3AvgSimilarity": 0.9771,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.966,
+          "top3AvgSimilarity": 0.9615,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-02.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9609,
+          "top3AvgSimilarity": 0.9549,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9579,
+          "top3AvgSimilarity": 0.9556,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9524,
+          "top3AvgSimilarity": 0.9506,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 45,
+      "queryFilename": "seated-cable-row-07.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-07.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9724,
+      "marginToTop2": 0.0194,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9724,
+          "top3AvgSimilarity": 0.9557,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-03.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.953,
+          "top3AvgSimilarity": 0.952,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-04.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9506,
+          "top3AvgSimilarity": 0.9429,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-08.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9373,
+          "top3AvgSimilarity": 0.9327,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-08.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9371,
+          "top3AvgSimilarity": 0.9253,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-06.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 46,
+      "queryFilename": "seated-cable-row-08.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-08.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.987,
+      "marginToTop2": 0.0158,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.987,
+          "top3AvgSimilarity": 0.9788,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-10.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9712,
+          "top3AvgSimilarity": 0.9617,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9684,
+          "top3AvgSimilarity": 0.9654,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9661,
+          "top3AvgSimilarity": 0.9555,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-06.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9639,
+          "top3AvgSimilarity": 0.957,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 47,
+      "queryFilename": "seated-cable-row-09.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-09.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9889,
+      "marginToTop2": 0.0196,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9889,
+          "top3AvgSimilarity": 0.98,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-06.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9693,
+          "top3AvgSimilarity": 0.9663,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-02.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9623,
+          "top3AvgSimilarity": 0.9555,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9623,
+          "top3AvgSimilarity": 0.9605,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9551,
+          "top3AvgSimilarity": 0.9506,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-08.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 48,
+      "queryFilename": "seated-cable-row-10.jpg",
+      "queryPath": "reference_images/seated-cable-row/seated-cable-row-10.jpg",
+      "actualMachineId": "seated-cable-row",
+      "predictedMachineId": "seated-cable-row",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.987,
+      "marginToTop2": 0.0175,
+      "top5Candidates": [
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.987,
+          "top3AvgSimilarity": 0.9778,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-08.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9695,
+          "top3AvgSimilarity": 0.9581,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-06.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9674,
+          "top3AvgSimilarity": 0.9608,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9664,
+          "top3AvgSimilarity": 0.9631,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.965,
+          "top3AvgSimilarity": 0.9578,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 49,
+      "queryFilename": "assisted-pull-up-machine-01.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "assisted-pull-up-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9808,
+      "marginToTop2": 0.0191,
+      "top5Candidates": [
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9808,
+          "top3AvgSimilarity": 0.9793,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-06.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9617,
+          "top3AvgSimilarity": 0.9575,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-02.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9616,
+          "top3AvgSimilarity": 0.9588,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9547,
+          "top3AvgSimilarity": 0.954,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-06.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9453,
+          "top3AvgSimilarity": 0.9328,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 50,
+      "queryFilename": "assisted-pull-up-machine-02.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-02.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "assisted-pull-up-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9787,
+      "marginToTop2": 0.0094,
+      "top5Candidates": [
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9787,
+          "top3AvgSimilarity": 0.9741,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9693,
+          "top3AvgSimilarity": 0.9642,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-10.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.957,
+          "top3AvgSimilarity": 0.942,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9552,
+          "top3AvgSimilarity": 0.9532,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9417,
+          "top3AvgSimilarity": 0.9362,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 51,
+      "queryFilename": "assisted-pull-up-machine-03.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-03.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "assisted-pull-up-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9787,
+      "marginToTop2": 0.0244,
+      "top5Candidates": [
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9787,
+          "top3AvgSimilarity": 0.9722,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-07.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9543,
+          "top3AvgSimilarity": 0.9479,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-02.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9458,
+          "top3AvgSimilarity": 0.9333,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9453,
+          "top3AvgSimilarity": 0.9427,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9301,
+          "top3AvgSimilarity": 0.919,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 52,
+      "queryFilename": "assisted-pull-up-machine-04.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-04.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "assisted-pull-up-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9712,
+      "marginToTop2": 0.0148,
+      "top5Candidates": [
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9712,
+          "top3AvgSimilarity": 0.9678,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-07.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9564,
+          "top3AvgSimilarity": 0.9539,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9552,
+          "top3AvgSimilarity": 0.9539,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-02.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9482,
+          "top3AvgSimilarity": 0.9392,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.937,
+          "top3AvgSimilarity": 0.9257,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 53,
+      "queryFilename": "assisted-pull-up-machine-05.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-05.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "assisted-pull-up-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9864,
+      "marginToTop2": 0.0323,
+      "top5Candidates": [
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9864,
+          "top3AvgSimilarity": 0.9797,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-06.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9541,
+          "top3AvgSimilarity": 0.9534,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-08.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9534,
+          "top3AvgSimilarity": 0.9445,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9462,
+          "top3AvgSimilarity": 0.9441,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9327,
+          "top3AvgSimilarity": 0.9253,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 54,
+      "queryFilename": "assisted-pull-up-machine-06.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-06.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "assisted-pull-up-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9864,
+      "marginToTop2": 0.0312,
+      "top5Candidates": [
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9864,
+          "top3AvgSimilarity": 0.9798,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-05.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9552,
+          "top3AvgSimilarity": 0.948,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9516,
+          "top3AvgSimilarity": 0.9466,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-02.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9464,
+          "top3AvgSimilarity": 0.9452,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9329,
+          "top3AvgSimilarity": 0.9262,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 55,
+      "queryFilename": "assisted-pull-up-machine-07.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-07.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "assisted-pull-up-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9787,
+      "marginToTop2": 0.0262,
+      "top5Candidates": [
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9787,
+          "top3AvgSimilarity": 0.9747,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-03.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9525,
+          "top3AvgSimilarity": 0.9458,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-07.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9462,
+          "top3AvgSimilarity": 0.9431,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-02.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9398,
+          "top3AvgSimilarity": 0.9381,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-08.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9326,
+          "top3AvgSimilarity": 0.9313,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-02.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 56,
+      "queryFilename": "assisted-pull-up-machine-08.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-08.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "pec-deck-machine",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9653,
+      "marginToTop2": 0.0002,
+      "top5Candidates": [
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9653,
+          "top3AvgSimilarity": 0.9586,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-06.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9651,
+          "top3AvgSimilarity": 0.9597,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9563,
+          "top3AvgSimilarity": 0.9463,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9531,
+          "top3AvgSimilarity": 0.9467,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9519,
+          "top3AvgSimilarity": 0.9417,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-06.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 57,
+      "queryFilename": "assisted-pull-up-machine-09.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-09.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "assisted-pull-up-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9765,
+      "marginToTop2": 0.0168,
+      "top5Candidates": [
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9765,
+          "top3AvgSimilarity": 0.9742,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-01.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9597,
+          "top3AvgSimilarity": 0.9535,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-07.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9551,
+          "top3AvgSimilarity": 0.9548,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-01.jpg"
+        },
+        {
+          "machineId": "lat-pulldown",
+          "machineName": "Lat Pulldown",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9518,
+          "top3AvgSimilarity": 0.9508,
+          "bestMatchingImage": "reference_images/lat-pulldown/lat-pulldown-06.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9502,
+          "top3AvgSimilarity": 0.9409,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 58,
+      "queryFilename": "assisted-pull-up-machine-10.jpg",
+      "queryPath": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-10.jpg",
+      "actualMachineId": "assisted-pull-up-machine",
+      "predictedMachineId": "assisted-pull-up-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9737,
+      "marginToTop2": 0.0161,
+      "top5Candidates": [
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9737,
+          "top3AvgSimilarity": 0.9696,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-09.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9576,
+          "top3AvgSimilarity": 0.9488,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-09.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9541,
+          "top3AvgSimilarity": 0.951,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-02.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9465,
+          "top3AvgSimilarity": 0.9447,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-02.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9459,
+          "top3AvgSimilarity": 0.9425,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 59,
+      "queryFilename": "hack-squat-machine-01.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-01.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "hack-squat-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9859,
+      "marginToTop2": 0.015,
+      "top5Candidates": [
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9859,
+          "top3AvgSimilarity": 0.9775,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-02.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9709,
+          "top3AvgSimilarity": 0.9687,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-03.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9648,
+          "top3AvgSimilarity": 0.9614,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.96,
+          "top3AvgSimilarity": 0.9495,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9587,
+          "top3AvgSimilarity": 0.9565,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-09.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 60,
+      "queryFilename": "hack-squat-machine-02.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-02.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "hack-squat-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9859,
+      "marginToTop2": 0.0166,
+      "top5Candidates": [
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9859,
+          "top3AvgSimilarity": 0.9767,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9693,
+          "top3AvgSimilarity": 0.9656,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9665,
+          "top3AvgSimilarity": 0.9636,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9606,
+          "top3AvgSimilarity": 0.958,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9587,
+          "top3AvgSimilarity": 0.9493,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 61,
+      "queryFilename": "hack-squat-machine-03.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-03.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "hack-squat-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9796,
+      "marginToTop2": 0.0004,
+      "top5Candidates": [
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9796,
+          "top3AvgSimilarity": 0.9698,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-08.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9792,
+          "top3AvgSimilarity": 0.9736,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-02.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9672,
+          "top3AvgSimilarity": 0.9643,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-06.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9531,
+          "top3AvgSimilarity": 0.9515,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-08.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9423,
+          "top3AvgSimilarity": 0.9351,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 62,
+      "queryFilename": "hack-squat-machine-04.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-04.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "hack-squat-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9726,
+      "marginToTop2": 0.0121,
+      "top5Candidates": [
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9726,
+          "top3AvgSimilarity": 0.9598,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-05.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9605,
+          "top3AvgSimilarity": 0.9544,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-08.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9455,
+          "top3AvgSimilarity": 0.9411,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-05.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9381,
+          "top3AvgSimilarity": 0.9357,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-02.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.937,
+          "top3AvgSimilarity": 0.9248,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-04.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 63,
+      "queryFilename": "hack-squat-machine-05.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-05.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "hack-squat-machine",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9726,
+      "marginToTop2": 0.0104,
+      "top5Candidates": [
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9726,
+          "top3AvgSimilarity": 0.9618,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-04.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9622,
+          "top3AvgSimilarity": 0.9551,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-08.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9429,
+          "top3AvgSimilarity": 0.9371,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-05.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9365,
+          "top3AvgSimilarity": 0.9272,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9261,
+          "top3AvgSimilarity": 0.9208,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-03.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 64,
+      "queryFilename": "hack-squat-machine-06.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-06.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9826,
+      "marginToTop2": 0.0032,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9826,
+          "top3AvgSimilarity": 0.976,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9794,
+          "top3AvgSimilarity": 0.9742,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-07.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9723,
+          "top3AvgSimilarity": 0.9685,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9615,
+          "top3AvgSimilarity": 0.9582,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9521,
+          "top3AvgSimilarity": 0.9445,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 65,
+      "queryFilename": "hack-squat-machine-07.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-07.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9801,
+      "marginToTop2": 0.0007,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9801,
+          "top3AvgSimilarity": 0.9742,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9794,
+          "top3AvgSimilarity": 0.9754,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-06.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9678,
+          "top3AvgSimilarity": 0.9661,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-05.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9665,
+          "top3AvgSimilarity": 0.965,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-08.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9582,
+          "top3AvgSimilarity": 0.9488,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 66,
+      "queryFilename": "hack-squat-machine-08.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-08.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9822,
+      "marginToTop2": 0.0026,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9822,
+          "top3AvgSimilarity": 0.9756,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-08.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9796,
+          "top3AvgSimilarity": 0.9637,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-03.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9671,
+          "top3AvgSimilarity": 0.9597,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-06.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9497,
+          "top3AvgSimilarity": 0.9434,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-03.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9381,
+          "top3AvgSimilarity": 0.9264,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 67,
+      "queryFilename": "hack-squat-machine-09.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9797,
+      "marginToTop2": 0.0028,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9797,
+          "top3AvgSimilarity": 0.9777,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9769,
+          "top3AvgSimilarity": 0.9749,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9684,
+          "top3AvgSimilarity": 0.9644,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-08.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9677,
+          "top3AvgSimilarity": 0.963,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-01.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9588,
+          "top3AvgSimilarity": 0.9519,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-06.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 68,
+      "queryFilename": "hack-squat-machine-10.jpg",
+      "queryPath": "reference_images/hack-squat-machine/hack-squat-machine-10.jpg",
+      "actualMachineId": "hack-squat-machine",
+      "predictedMachineId": "leg-press-45",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9734,
+      "marginToTop2": 0.0013,
+      "top5Candidates": [
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9734,
+          "top3AvgSimilarity": 0.968,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-09.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9721,
+          "top3AvgSimilarity": 0.97,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9657,
+          "top3AvgSimilarity": 0.9636,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-10.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9609,
+          "top3AvgSimilarity": 0.957,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9484,
+          "top3AvgSimilarity": 0.9433,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 69,
+      "queryFilename": "incline-chest-press-01.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-01.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "hack-squat-machine",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9826,
+      "marginToTop2": 0.0002,
+      "top5Candidates": [
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9826,
+          "top3AvgSimilarity": 0.9753,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-06.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9824,
+          "top3AvgSimilarity": 0.9794,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-04.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9741,
+          "top3AvgSimilarity": 0.9678,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9623,
+          "top3AvgSimilarity": 0.9599,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9569,
+          "top3AvgSimilarity": 0.9521,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 70,
+      "queryFilename": "incline-chest-press-02.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-02.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9875,
+      "marginToTop2": 0.0063,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9875,
+          "top3AvgSimilarity": 0.9781,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-08.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9812,
+          "top3AvgSimilarity": 0.9745,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-08.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9683,
+          "top3AvgSimilarity": 0.9624,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-06.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9621,
+          "top3AvgSimilarity": 0.9578,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-03.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9485,
+          "top3AvgSimilarity": 0.9421,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 71,
+      "queryFilename": "incline-chest-press-03.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-03.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9861,
+      "marginToTop2": 0.0129,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9861,
+          "top3AvgSimilarity": 0.9781,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-05.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9732,
+          "top3AvgSimilarity": 0.9716,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9592,
+          "top3AvgSimilarity": 0.9543,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-08.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9515,
+          "top3AvgSimilarity": 0.9479,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9447,
+          "top3AvgSimilarity": 0.9388,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 72,
+      "queryFilename": "incline-chest-press-04.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-04.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9824,
+      "marginToTop2": 0.0023,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9824,
+          "top3AvgSimilarity": 0.9773,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9801,
+          "top3AvgSimilarity": 0.9764,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-07.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9712,
+          "top3AvgSimilarity": 0.9666,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-08.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9687,
+          "top3AvgSimilarity": 0.964,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-01.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9653,
+          "top3AvgSimilarity": 0.9593,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-05.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 73,
+      "queryFilename": "incline-chest-press-05.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-05.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9861,
+      "marginToTop2": 0.0147,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9861,
+          "top3AvgSimilarity": 0.9777,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-03.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9714,
+          "top3AvgSimilarity": 0.9676,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9609,
+          "top3AvgSimilarity": 0.9565,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-08.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.947,
+          "top3AvgSimilarity": 0.9423,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9457,
+          "top3AvgSimilarity": 0.9396,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-06.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 74,
+      "queryFilename": "incline-chest-press-06.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-06.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.977,
+      "marginToTop2": 0.0031,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.977,
+          "top3AvgSimilarity": 0.976,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-07.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9739,
+          "top3AvgSimilarity": 0.9714,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9678,
+          "top3AvgSimilarity": 0.9621,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9515,
+          "top3AvgSimilarity": 0.9498,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-10.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9441,
+          "top3AvgSimilarity": 0.9333,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 75,
+      "queryFilename": "incline-chest-press-07.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-07.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9789,
+      "marginToTop2": 0.0033,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9789,
+          "top3AvgSimilarity": 0.9773,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9756,
+          "top3AvgSimilarity": 0.9726,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9651,
+          "top3AvgSimilarity": 0.9593,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.958,
+          "top3AvgSimilarity": 0.9556,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "leg-extension",
+          "machineName": "Leg Extension",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9509,
+          "top3AvgSimilarity": 0.9485,
+          "bestMatchingImage": "reference_images/leg-extension/leg-extension-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 76,
+      "queryFilename": "incline-chest-press-08.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-08.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9875,
+      "marginToTop2": 0.0053,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9875,
+          "top3AvgSimilarity": 0.9712,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-02.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9822,
+          "top3AvgSimilarity": 0.9713,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-08.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9653,
+          "top3AvgSimilarity": 0.9572,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-06.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9616,
+          "top3AvgSimilarity": 0.9521,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-03.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9402,
+          "top3AvgSimilarity": 0.9341,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-10.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 77,
+      "queryFilename": "incline-chest-press-09.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-09.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "hack-squat-machine",
+      "isCorrect": false,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9779,
+      "marginToTop2": 0.0023,
+      "top5Candidates": [
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9779,
+          "top3AvgSimilarity": 0.9678,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-09.jpg"
+        },
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9756,
+          "top3AvgSimilarity": 0.9745,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-01.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9631,
+          "top3AvgSimilarity": 0.9518,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-01.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9557,
+          "top3AvgSimilarity": 0.9496,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-08.jpg"
+        },
+        {
+          "machineId": "pec-deck-machine",
+          "machineName": "Pec Deck Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9478,
+          "top3AvgSimilarity": 0.9349,
+          "bestMatchingImage": "reference_images/pec-deck-fly/pec-deck-fly-06.jpg"
+        }
+      ]
+    },
+    {
+      "queryIndex": 78,
+      "queryFilename": "incline-chest-press-10.jpg",
+      "queryPath": "reference_images/incline-chest-press/incline-chest-press-10.jpg",
+      "actualMachineId": "incline-chest-press",
+      "predictedMachineId": "incline-chest-press",
+      "isCorrect": true,
+      "inTop3": true,
+      "inTop5": true,
+      "top1Similarity": 0.9726,
+      "marginToTop2": 0.0046,
+      "top5Candidates": [
+        {
+          "machineId": "incline-chest-press",
+          "machineName": "Incline Chest Press",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9726,
+          "top3AvgSimilarity": 0.9703,
+          "bestMatchingImage": "reference_images/incline-chest-press/incline-chest-press-06.jpg"
+        },
+        {
+          "machineId": "hack-squat-machine",
+          "machineName": "Hack Squat Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.968,
+          "top3AvgSimilarity": 0.9667,
+          "bestMatchingImage": "reference_images/hack-squat-machine/hack-squat-machine-06.jpg"
+        },
+        {
+          "machineId": "leg-press-45",
+          "machineName": "Leg Press 45",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9639,
+          "top3AvgSimilarity": 0.9588,
+          "bestMatchingImage": "reference_images/leg-press-45/leg-press-45-09.jpg"
+        },
+        {
+          "machineId": "seated-cable-row",
+          "machineName": "Seated Cable Row",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9471,
+          "top3AvgSimilarity": 0.9438,
+          "bestMatchingImage": "reference_images/seated-cable-row/seated-cable-row-09.jpg"
+        },
+        {
+          "machineId": "assisted-pull-up-machine",
+          "machineName": "Assisted Pull Up Machine",
+          "category": "Gym Equipment",
+          "maxSimilarity": 0.9415,
+          "top3AvgSimilarity": 0.9297,
+          "bestMatchingImage": "reference_images/assisted-pull-up-machine/assisted-pull-up-machine-10.jpg"
+        }
+      ]
+    }
+  ],
+  "evaluatedAt": "2026-10-03T19:51:37.013Z"
+}

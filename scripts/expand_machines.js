@@ -1,0 +1,1936 @@
+import fs from 'fs';
+
+const machines = [
+  // ===================== CHEST MACHINES (7) =====================
+  {
+    id: 'seated-chest-press',
+    name: 'Chest Press Machine',
+    alternativeNames: ['Seated Chest Press', 'Horizontal Machine Press', 'Pin-Loaded Chest Press'],
+    category: 'Chest',
+    tagline: 'Safe, guided horizontal pressing for pectoral development and tricep strength',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Pectoralis Major (Mid & Lower Chest)'],
+    secondaryMuscles: ['Anterior Deltoid (Front Shoulders)', 'Triceps Brachii'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-CHEST-01',
+    matchKeywords: ['chest press', 'seated press', 'chest machine', 'bench machine', 'push handles', 'pecs'],
+    imageSvg: 'chest-press',
+    description: 'The seated chest press provides a stable, fixed range of motion to build upper body pressing strength without requiring a barbell spotter. It is the premier chest building machine for beginners.',
+    brand: 'Life Fitness Signature Series',
+    visualCharacteristics: ['Horizontal padded backrest', 'Dual forward-facing push handles', 'Enclosed vertical weight stack', 'Foot assist pedal'],
+    frontReferenceImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&auto=format&fit=crop&q=60',
+    sideReferenceImage: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?w=800&auto=format&fit=crop&q=60',
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat height so handles align directly with the mid-chest level (nipple line).',
+      'Select a moderate starter weight by inserting the magnetic pin into the weight stack.',
+      'Sit with your lower back pressed firmly into the backrest pad and plant your feet flat on the floor.',
+      'Grasp the horizontal handles with wrists straight and elbows at a 45-60 degree angle from your torso.'
+    ],
+    movementGuidance: [
+      'Exhale and push the handles forward in a controlled arc until arms are extended (do not lock elbows harshly).',
+      'Pause for 1 second at full extension to squeeze the pectoral muscles.',
+      'Inhale and slowly lower the handles back over 3 seconds until you feel a gentle chest stretch.',
+      'Avoid letting the weight stack slam down between repetitions.'
+    ],
+    commonMistakes: [
+      { mistake: 'Flaring elbows outward at 90 degrees', correction: 'Tuck elbows slightly inward at ~45-60 degrees to protect the rotator cuff and shoulder joint.' },
+      { mistake: 'Shrugging shoulders upward during the press', correction: 'Retract and depress shoulder blades down and back against the seat.' },
+      { mistake: 'Arching the lower back off the pad', correction: 'Keep core engaged and maintain neutral spine contact with the backrest.' }
+    ],
+    safetyReminders: [
+      'Ensure the weight stack pin is fully inserted into the selector hole before starting.',
+      'If you feel sharp shoulder pain, immediately release handles and lower weight.',
+      'Always use foot assist pedals if equipped when beginning and ending your set.'
+    ],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Seat Alignment Check', description: 'Verify handles align with the middle of your sternum, not your throat or collarbone.', tip: 'If your shoulders feel crowded at the start, drop the seat one notch lower.' },
+      { stepNumber: 2, title: 'Scapular Retraction', description: 'Pinch shoulder blades together like you are holding a pencil between them.', tip: 'This creates a solid base and isolates chest activation.' },
+      { stepNumber: 3, title: 'Controlled 3-Second Cadence', description: '1 second pushing forward, 1 second pause, 3 seconds lowering back.', tip: 'Time under tension creates the safest muscle stimulation.' }
+    ],
+    videoDurationSec: 45,
+    featured: true
+  },
+  {
+    id: 'incline-chest-press',
+    name: 'Incline Chest Press Machine',
+    alternativeNames: ['Upper Chest Press Machine', 'Incline Hammer Strength Press', 'Converging Incline Press'],
+    category: 'Chest',
+    tagline: 'Target upper clavicular chest fibers and shoulders on an upward converging arc',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Clavicular Head (Upper Chest)'],
+    secondaryMuscles: ['Anterior Deltoid (Front Shoulder)', 'Triceps Brachii'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-CHEST-02',
+    matchKeywords: ['incline press', 'upper chest', 'inclined machine', 'angled press', 'upper pecs'],
+    imageSvg: 'incline-press',
+    description: 'Designed with a 30 to 45-degree upward pressing angle, this machine emphasizes the clavicular head of the pectorals while maintaining shoulder safety.',
+    brand: 'Hammer Strength MTS',
+    visualCharacteristics: ['Angled backrest at 35 degrees', 'Upward converging push levers', 'Overhead pivot arms', 'Dual independent weight horns/stacks'],
+    frontReferenceImage: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800&auto=format&fit=crop&q=60',
+    sideReferenceImage: 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=800&auto=format&fit=crop&q=60',
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat so the handles sit level with your upper chest / collarbone area.',
+      'Choose a manageable load on the weight stack or plate horns.',
+      'Sit tall with your head, upper back, and glutes resting firmly against the back pad.'
+    ],
+    movementGuidance: [
+      'Drive the handles upward and slightly inward along the machine’s natural trajectory.',
+      'Focus on contracting the upper chest fibers at peak contraction.',
+      'Lower under strict control, resisting the weight back to starting position.'
+    ],
+    commonMistakes: [
+      { mistake: 'Pushing from neck level with flared shoulders', correction: 'Keep grip slightly wider than shoulders and maintain elbows angled down.' },
+      { mistake: 'Letting head jut forward during heavy reps', correction: 'Keep neck in neutral alignment resting lightly against head pad.' }
+    ],
+    safetyReminders: [
+      'Do not bounce at the bottom of the movement.',
+      'Keep wrists rigid and aligned over the forearms.'
+    ],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Seat Height for Collarbone Line', description: 'Position seat so handle resting point is right at your collarbone level.' },
+      { stepNumber: 2, title: 'Converging Upward Drive', description: 'Push upward in the natural inward sweeping motion without shrugging traps.' }
+    ],
+    videoDurationSec: 40,
+    featured: true
+  },
+  {
+    id: 'decline-chest-press',
+    name: 'Decline Chest Press Machine',
+    alternativeNames: ['Lower Chest Press Machine', 'Decline Machine Press', 'Seated Decline Press'],
+    category: 'Chest',
+    tagline: 'Isolate lower sternal pectoral head with reduced shoulder joint stress',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Pectoralis Major (Lower Sternal Head)'],
+    secondaryMuscles: ['Triceps Brachii', 'Anterior Deltoid'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-CHEST-03',
+    matchKeywords: ['decline press', 'lower chest', 'downward press', 'lower pecs'],
+    imageSvg: 'chest-press',
+    description: 'A downward-angled pressing station designed to activate lower pectoral muscle fibers while placing minimal shearing force on the anterior shoulder capsule.',
+    brand: 'Matrix Ultra Series',
+    visualCharacteristics: ['Slight downward thrust handle path', 'Upright or slight reclined backrest', 'Low pivot arm axis'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Set the seat height so the handles align across the bottom border of your chest.',
+      'Plant feet securely or tuck legs under thigh rollers if equipped.',
+      'Retract scapulae and stabilize your torso before grasping handles.'
+    ],
+    movementGuidance: [
+      'Press handles downward and forward in a smooth sweeping arc.',
+      'Squeeze the lower chest firmly for 1 count at full arm extension.',
+      'Return weight slowly over 3 seconds to feel a deep stretch in the lower pecs.'
+    ],
+    commonMistakes: [
+      { mistake: 'Rounding shoulders at lockout', correction: 'Maintain pinched shoulder blades against the back pad throughout.' }
+    ],
+    safetyReminders: [
+      'Ensure the weight stack pin is completely locked before pressing.'
+    ],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Lower Sternum Target', description: 'Verify handle trajectory targets the bottom edge of your pectoral muscle.' }
+    ],
+    videoDurationSec: 35
+  },
+  {
+    id: 'pec-deck-machine',
+    name: 'Pec Deck Machine',
+    alternativeNames: ['Butterfly Machine', 'Seated Machine Fly', 'Chest Fly Machine', 'Reverse Fly Station'],
+    category: 'Chest',
+    tagline: 'Pure chest isolation with continuous horizontal adduction resistance',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Pectoralis Major (Sternal & Clavicular)'],
+    secondaryMuscles: ['Anterior Deltoid', 'Serratus Anterior'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-CHEST-04',
+    matchKeywords: ['pec deck', 'butterfly', 'chest fly', 'machine fly', 'fly machine', 'pec fly'],
+    imageSvg: 'pec-deck',
+    description: 'The pec deck guides your arms through pure horizontal chest adduction, isolating the pectorals without taxing tricep pressing strength.',
+    brand: 'Nautilus Inspiration',
+    visualCharacteristics: ['Vertical seat with narrow backrest', 'Dual curved swivel lever arms with elbow/wrist pads', 'Selectorized central tower'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat height so handles/pads rest level with your mid-chest line.',
+      'Select starting arm range (setting 1 or 2 for beginner shoulder mobility).',
+      'Sit flush against the back pad, plant feet wide, and grip vertical handles.'
+    ],
+    movementGuidance: [
+      'Keep a slight, rigid bend in your elbows (10-15 degrees).',
+      'Exhale and bring both handles together in front of your chest in a sweeping hugging arc.',
+      'Squeeze chest muscles together for 1-2 seconds at the peak.',
+      'Inhale and slowly open arms outward until elbows are in line with your torso.'
+    ],
+    commonMistakes: [
+      { mistake: 'Letting elbows hyperextend backwards behind shoulders', correction: 'Set range-of-motion limiter so arms stop slightly ahead of shoulder plane.' },
+      { mistake: 'Bending elbows into a press during fatigue', correction: 'Lock a consistent slight elbow bend throughout the entire fly motion.' }
+    ],
+    safetyReminders: [
+      'Never force extreme horizontal abduction stretch beyond comfortable shoulder joint mobility.'
+    ],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Range Cam Pin Setting', description: 'Select a comfortable starting stretch setting (usually pin 1, 2, or 3).' },
+      { stepNumber: 2, title: 'Hug the Tree Squeeze', description: 'Imagine wrapping your arms around a large tree trunk for peak chest contraction.' }
+    ],
+    videoDurationSec: 40,
+    featured: true
+  },
+  {
+    id: 'cable-crossover',
+    name: 'Cable Crossover',
+    alternativeNames: ['Cable Crossover Station', 'Dual Cable Cross', 'High-to-Low Cable Fly'],
+    category: 'Chest',
+    tagline: 'Versatile multi-angle cable tension for complete upper and lower chest sculpting',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Pectoralis Major (All Angles)'],
+    secondaryMuscles: ['Anterior Deltoids', 'Core Stabilizers', 'Biceps Short Head'],
+    equipmentType: 'Cable Pulley',
+    qrCodeId: 'GYM-CHEST-05',
+    matchKeywords: ['cable crossover', 'cable cross', 'dual pulley fly', 'cable flyes'],
+    imageSvg: 'cable-station',
+    description: 'A wide dual-pulley frame that delivers constant continuous tension throughout chest adduction across high, middle, and low vectors.',
+    brand: 'Cybex Dual Cable Station',
+    visualCharacteristics: ['Wide overhead bridging frame', 'Two opposing height-adjustable pulley columns', 'Single D-handles attached to steel cables'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Set pulleys to the top notch for high-to-low flyes, or chest height for horizontal crossovers.',
+      'Attach standard D-handles to both carabiners and select equal weight on both stacks.',
+      'Step forward into a staggered stance with a slight forward torso lean.'
+    ],
+    movementGuidance: [
+      'Bring handles together in front of your lower chest or waist.',
+      'Cross hands slightly at the bottom for intense pectoral contraction.',
+      'Resist cable tension smoothly on the eccentric return.'
+    ],
+    commonMistakes: [
+      { mistake: 'Swinging torso back and forth to generate momentum', correction: 'Lock core solid and isolate shoulder adduction only.' }
+    ],
+    safetyReminders: ['Maintain equal weight pin settings on both towers.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Staggered Stance Foundation', description: 'Step one foot forward with core braced to prevent cable pull from rocking your posture.' }
+    ],
+    videoDurationSec: 50
+  },
+  {
+    id: 'smith-machine-chest',
+    name: 'Smith Machine',
+    alternativeNames: ['Guided Barbell Rack', 'Smith Press Machine', 'Counterbalanced Smith System'],
+    category: 'Chest',
+    tagline: 'Fixed vertical track barbell system for controlled flat, incline, and decline benching',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Pectoralis Major', 'Anterior Deltoids'],
+    secondaryMuscles: ['Triceps Brachii', 'Core'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-CHEST-06',
+    matchKeywords: ['smith machine', 'guided barbell', 'smith bench', 'smith press', 'guided rack'],
+    imageSvg: 'smith-machine',
+    description: 'A barbell fixed within twin vertical steel guide rails with built-in safety catches and rotating hook locks, allowing solo lifting without spotters.',
+    brand: 'Hammer Strength Smith',
+    visualCharacteristics: ['Two vertical steel guide rails', 'Fixed Olympic barbell on bearings', 'Rotatable bar with lockout hooks', 'Adjustable bottom safety stop pins'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Position an adjustable workout bench centered directly beneath the barbell path.',
+      'Adjust bottom safety stop catches to 2 inches below your lowest comfortable chest press depth.',
+      'Rotate the barbell with your wrists to unhook from safety pegs.'
+    ],
+    movementGuidance: [
+      'Lower bar slowly until it lightly touches your mid-chest.',
+      'Press upward forcefully along the vertical rail guide and rotate wrists to re-rack hooks when finished.'
+    ],
+    commonMistakes: [
+      { mistake: 'Setting safety catches too low', correction: 'Always position safety stop catches high enough to prevent bar from trapping your chest.' }
+    ],
+    safetyReminders: ['Never lift without setting the adjustable bottom safety stops first.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Safety Stop Pin Setup', description: 'Set both left and right safety stops above chest collapse height before adding weight plates.' }
+    ],
+    videoDurationSec: 45,
+    featured: true
+  },
+  {
+    id: 'adjustable-cable-machine',
+    name: 'Adjustable Cable Machine',
+    alternativeNames: ['Single Cable Column', 'Hi-Lo Cable Station', 'Dual Adjustable Pulley (DAP)'],
+    category: 'Chest',
+    tagline: 'Multi-directional single & dual cable column with 360-degree swivel pulleys',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Pectoralis Major', 'Deltoids', 'Triceps'],
+    secondaryMuscles: ['Core', 'Forearms'],
+    equipmentType: 'Cable Pulley',
+    qrCodeId: 'GYM-CHEST-07',
+    matchKeywords: ['adjustable cable', 'cable column', 'pulley column', 'hi-lo pulley'],
+    imageSvg: 'cable-station',
+    description: 'A height-adjustable column with rotating swivel pulley allowing customized angle execution for single-arm chest presses, flyes, and crossovers.',
+    brand: 'Freemotion Cable Tower',
+    visualCharacteristics: ['Single or dual vertical track with spring pin slider', 'Numbered vertical height notches', 'Steel weight stack with 2:1 or 4:1 pulley ratio'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Pull the spring-loaded knob to slide the pulley carriage to your desired height.',
+      'Clip the appropriate attachment (D-handle, rope, straight bar) to the carabiner.'
+    ],
+    movementGuidance: [
+      'Maintain uniform cable travel along the pulley wheel alignment without rubbing edges.'
+    ],
+    commonMistakes: [
+      { mistake: 'Letting cable snap back loosely at the end of set', correction: 'Guide handle back until the weight stack rests silently.' }
+    ],
+    safetyReminders: ['Check that the height pin snaps fully into the track hole.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Height Pin Engagement', description: 'Listen for the metallic click ensuring the pulley carriage is locked before loading weight.' }
+    ],
+    videoDurationSec: 35
+  },
+
+  // ===================== BACK MACHINES (8) =====================
+  {
+    id: 'lat-pulldown',
+    name: 'Lat Pulldown Machine',
+    alternativeNames: ['Cable Lat Pulldown', 'Wide Grip Pulldown', 'Overhead Pulldown Station'],
+    category: 'Back',
+    tagline: 'Premier vertical pulling station for developing back width and upper body posture',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Latissimus Dorsi (Outer Back Wings)'],
+    secondaryMuscles: ['Biceps Brachii', 'Rhomboids', 'Middle & Lower Trapezius', 'Posterior Deltoid'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-BACK-01',
+    matchKeywords: ['lat pulldown', 'pulldown', 'back machine', 'lat bar', 'cable pull down', 'lats'],
+    imageSvg: 'lat-pulldown',
+    description: 'The lat pulldown uses an overhead cable and wide bar to simulate a pull-up under customizable weight resistance, providing direct latissimus dorsi hypertrophy.',
+    brand: 'Life Fitness Pro2 Series',
+    visualCharacteristics: ['High overhead pulley and wide angled bar', 'Adjustable padded thigh hold-down rollers', 'Vertical selectorized weight stack', 'Horizontal bench seat'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Sit on the bench and adjust the thigh roller pad so your legs are snug with feet flat on the floor.',
+      'Stand up, grip the wide angled bar just outside shoulder width with palms facing away (overhand).',
+      'Sit down under the thigh pads while keeping arms fully extended overhead.'
+    ],
+    movementGuidance: [
+      'Lean back slightly (10-15 degrees) and puff your chest toward the ceiling.',
+      'Exhale and pull the bar down toward your upper collarbone by driving elbows downward and back.',
+      'Pause 1 second as the bar approaches upper chest; squeeze shoulder blades together.',
+      'Inhale and slowly resist the bar back upward over 3 seconds until lats feel a complete stretch.'
+    ],
+    commonMistakes: [
+      { mistake: 'Pulling the bar behind the neck', correction: 'Always pull the bar down in front of your face to your upper chest to protect cervical spine.' },
+      { mistake: 'Using heavy torso momentum or swinging backwards', correction: 'Keep torso stationary and isolate lat contraction.' }
+    ],
+    safetyReminders: [
+      'Never release the bar abruptly at the top.',
+      'Ensure thigh lock pin is clicked firmly before loading weight.'
+    ],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Thigh Roller Lockout', description: 'Ensure the thigh pads hold your knees firmly against seat upward recoil.' },
+      { stepNumber: 2, title: 'Elbow-Driven Pull', description: 'Think about driving your elbows into your back pockets rather than pulling with your wrists.' }
+    ],
+    videoDurationSec: 45,
+    featured: true
+  },
+  {
+    id: 'seated-cable-row',
+    name: 'Seated Cable Row',
+    alternativeNames: ['Low Row Cable Station', 'Horizontal Cable Row', 'Seated Pulley Row'],
+    category: 'Back',
+    tagline: 'Horizontal cable pulling for deep mid-back thickness, rhomboids, and rear delts',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Rhomboids', 'Middle & Lower Trapezius', 'Latissimus Dorsi'],
+    secondaryMuscles: ['Biceps Brachii', 'Brachialis', 'Posterior Deltoids', 'Erector Spinae'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-BACK-02',
+    matchKeywords: ['seated row', 'cable row', 'low row', 'v-bar row', 'rowing machine weights', 'rhomboids'],
+    imageSvg: 'seated-row',
+    description: 'Features a low pulley and textured footrests to allow horizontal rowing against stack resistance, building mid-back thickness and upright posture.',
+    brand: 'Technogym Selection',
+    visualCharacteristics: ['Low horizontal cable line with V-grip attachment', 'Dual angled textured foot plates', 'Long flat bench slide/seat', 'Front-facing weight stack'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Sit on the bench, place feet on footrests with knees slightly bent (never locked straight).',
+      'Reach forward with neutral spine and grasp the close-grip V-handle.',
+      'Push back with legs into starting position with torso vertical and chest proud.'
+    ],
+    movementGuidance: [
+      'Exhale and pull the handle smoothly toward your lower abdomen/navel.',
+      'Retract your shoulder blades and drive elbows past your sides.',
+      'Hold peak squeeze for 1 second, then slowly extend arms back over 3 seconds.'
+    ],
+    commonMistakes: [
+      { mistake: 'Rounding lower back when reaching forward', correction: 'Hinge at the hips with a flat neutral back.' },
+      { mistake: 'Locking knees out completely', correction: 'Maintain a 15-20 degree soft knee bend to protect the hamstring tendons.' }
+    ],
+    safetyReminders: ['Never round your lumbar spine while holding loaded cable handles.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Proud Chest Setup', description: 'Lift sternum high and keep core braced before initiating the row.' },
+      { stepNumber: 2, title: 'Scapular Pinch Finish', description: 'Pinch shoulder blades hard together as handle touches abdomen.' }
+    ],
+    videoDurationSec: 40,
+    featured: true
+  },
+  {
+    id: 'chest-supported-row',
+    name: 'Chest-Supported Row Machine',
+    alternativeNames: ['T-Bar Chest Supported Row', 'Seal Row Machine', 'Incline Prone Row'],
+    category: 'Back',
+    tagline: 'Strict upper back rowing without lower back spinal compression',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Rhomboids', 'Mid Trapezius', 'Latissimus Dorsi'],
+    secondaryMuscles: ['Biceps', 'Rear Deltoids'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-BACK-03',
+    matchKeywords: ['chest supported row', 't-bar supported', 'prone row', 'chest pad row'],
+    imageSvg: 'seated-row',
+    description: 'An angled torso support pad eliminates momentum and lumbar fatigue, making it the safest horizontal row for isolating the mid-back and rhomboids.',
+    brand: 'Hammer Strength Plate-Loaded',
+    visualCharacteristics: ['Angled front chest support pad', 'Dual rotating pronated/neutral handles', 'Under-frame weight plate horns'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat height so the top of the chest pad sits just below your collarbones.',
+      'Rest your chest firmly on the pad and grasp the handles with your preferred grip.'
+    ],
+    movementGuidance: [
+      'Pull elbows up and back while keeping your chest glued to the pad.',
+      'Pause at the top for 1 full second and lower smoothly.'
+    ],
+    commonMistakes: [
+      { mistake: 'Lifting chest off pad during heavy reps', correction: 'Keep sternum pinned to the pad to eliminate cheating momentum.' }
+    ],
+    safetyReminders: ['Do not hyperextend neck upward.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Pad Contact Check', description: 'Ensure full sternum contact with the support pad throughout the entire set.' }
+    ],
+    videoDurationSec: 35
+  },
+  {
+    id: 't-bar-row-machine',
+    name: 'T-Bar Row Machine',
+    alternativeNames: ['T-Bar Row Station', 'Leverage T-Bar Row', 'Corner Barbell Row'],
+    category: 'Back',
+    tagline: 'Heavy-duty pivot rowing station for dense back thickness',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Latissimus Dorsi', 'Rhomboids', 'Erector Spinae'],
+    secondaryMuscles: ['Biceps', 'Forearms', 'Glutes'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-BACK-04',
+    matchKeywords: ['t-bar row', 't-bar', 'pivot row', 'corner row'],
+    imageSvg: 'seated-row',
+    description: 'A heavy pivot bar station with dual wide and narrow grip handles for loading Olympic plates to perform heavy compound back rows.',
+    brand: 'Body-Solid Leverage',
+    visualCharacteristics: ['Floor pivot joint with long angled tube', 'Angled diamond-plate foot platform', 'Wide and narrow welded T-handles'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Step onto the foot platforms with knees bent at a 45-degree angle.',
+      'Hinge hips back with a flat spine and grasp handles firmly with both hands.'
+    ],
+    movementGuidance: [
+      'Row the bar up toward your lower ribcage by squeezing back muscles.',
+      'Lower under strict eccentric control without letting the plates crash onto the floor stand.'
+    ],
+    commonMistakes: [
+      { mistake: 'Standing up too high during the pull', correction: 'Maintain a consistent 45-degree forward torso hinge angle.' }
+    ],
+    safetyReminders: ['Wear a weight belt if lifting maximum loads and keep lumbar spine locked flat.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Hip Hinge Alignment', description: 'Hinge hips backwards until your back forms a flat table-top angle.' }
+    ],
+    videoDurationSec: 40
+  },
+  {
+    id: 'assisted-pull-up-machine',
+    name: 'Assisted Pull-Up Machine',
+    alternativeNames: ['Assisted Chin-Up Station', 'Counterbalance Pull-Up & Dip', 'Gravitron'],
+    category: 'Back',
+    tagline: 'Counterbalanced knee pad allows progressive mastery of full bodyweight pull-ups',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Latissimus Dorsi', 'Upper Back'],
+    secondaryMuscles: ['Biceps Brachii', 'Core'],
+    equipmentType: 'Bodyweight Assisted',
+    qrCodeId: 'GYM-BACK-05',
+    matchKeywords: ['assisted pull up', 'gravitron', 'assisted chin up', 'counterbalance pull up'],
+    imageSvg: 'assisted-pullup',
+    description: 'A counterbalance kneeling platform counterweights your body mass, allowing beginner to intermediate athletes to build pull-up strength safely.',
+    brand: 'Life Fitness Signature Assisted Dip/Chin',
+    visualCharacteristics: ['Tall vertical ladder frame with multi-grip overhead handles', 'Padded fold-away kneeling platform', 'Weight stack (MORE weight = EASIER lift)'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Select counterweight pin (REMEMBER: more weight means MORE assistance / easier lift).',
+      'Step onto side foot pegs, grasp overhead handles, and place one knee then the second onto the padded pad.'
+    ],
+    movementGuidance: [
+      'Lower your body into a full arm extension hang.',
+      'Pull yourself upward until your chin clears the bar level.',
+      'Lower smoothly back to the bottom without slamming the weight stack.'
+    ],
+    commonMistakes: [
+      { mistake: 'Stepping off the pad quickly with one foot', correction: 'Carefully step off one foot at a time onto the metal side pegs.' }
+    ],
+    safetyReminders: ['Always hold the upper handles securely before placing your knees on the platform.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Counterbalance Weight Logic', description: 'Choose a weight roughly 15-20kg below your bodyweight to start.' }
+    ],
+    videoDurationSec: 45,
+    featured: true
+  },
+  {
+    id: 'high-row-machine',
+    name: 'High Row Machine',
+    alternativeNames: ['Iso-Lateral High Row', 'Overhead Diagonal Row Machine'],
+    category: 'Back',
+    tagline: 'Diagonal high-to-low pulling trajectory targeting lower lats and teres major',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Latissimus Dorsi (Lower Insertion)', 'Teres Major'],
+    secondaryMuscles: ['Biceps', 'Rhomboids'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-BACK-06',
+    matchKeywords: ['high row', 'iso lateral high row', 'diagonal row', 'lat machine'],
+    imageSvg: 'lat-pulldown',
+    description: 'Combines the benefits of a pulldown and horizontal row along a natural converging diagonal path.',
+    brand: 'Hammer Strength Iso-Lateral',
+    visualCharacteristics: ['High pivot lever arms', 'Chest support pad with angled seat', 'Independent left and right movement arms'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat so your chest rests comfortably against the upper half of the chest pad.',
+      'Reach up and grasp the high handles with an overhand or neutral grip.'
+    ],
+    movementGuidance: [
+      'Pull the handles downward and back into your hips in a diagonal sweep.',
+      'Squeeze lower lats firmly at the bottom of the stroke.'
+    ],
+    commonMistakes: [{ mistake: 'Pulling with biceps only', correction: 'Focus on pulling through your elbows down to your hip crest.' }],
+    safetyReminders: ['Control both arms equally during bilateral or unilateral work.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Diagonal Elbow Path', description: 'Drive elbows back and down toward the rear waistline.' }
+    ],
+    videoDurationSec: 35
+  },
+  {
+    id: 'low-row-machine',
+    name: 'Low Row Machine',
+    alternativeNames: ['Iso-Lateral Low Row', 'Ground-Up Row Machine'],
+    category: 'Back',
+    tagline: 'Low-to-high upward pulling angle targeting upper back and traps',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Upper Trapezius', 'Rhomboids', 'Rear Deltoids'],
+    secondaryMuscles: ['Biceps', 'Lower Back'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-BACK-07',
+    matchKeywords: ['low row', 'iso low row', 'ground row', 'plate loaded row'],
+    imageSvg: 'seated-row',
+    description: 'Pulls from a low pivot point upward toward the chest, developing the dense musculature between the shoulder blades.',
+    brand: 'Hammer Strength Low Row',
+    visualCharacteristics: ['Low forward pivot arms', 'Vertical chest support pad and seat', 'Individual plate horns'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Sit tall with chest resting on pad and grasp low forward handles.',
+      'Plant feet firmly on textured floor plates.'
+    ],
+    movementGuidance: [
+      'Row handles upward and back toward the lower rib cage.',
+      'Squeeze shoulder blades together at the apex.'
+    ],
+    commonMistakes: [{ mistake: 'Leaning backward off pad', correction: 'Keep chest glued to pad to isolate the upper back.' }],
+    safetyReminders: ['Do not let the weight slam against the frame stop.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Upper Back Squeeze', description: 'Pinch scapulae together at full retraction.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'pullover-machine',
+    name: 'Pullover Machine',
+    alternativeNames: ['Nautilus Pullover', 'Rotary Lat Pullover', 'Upper Body Squat Machine'],
+    category: 'Back',
+    tagline: 'Full arc lat isolation without forearm or bicep grip fatigue',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Latissimus Dorsi', 'Teres Major'],
+    secondaryMuscles: ['Serratus Anterior', 'Triceps Long Head', 'Pectoralis Minor'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-BACK-08',
+    matchKeywords: ['pullover machine', 'nautilus pullover', 'rotary pullover', 'lat pullover'],
+    imageSvg: 'lat-pulldown',
+    description: 'The legendary machine that provides 180 degrees of continuous rotary resistance to the lats directly through the elbow pads, bypassing grip fatigue.',
+    brand: 'Nautilus Classic Pullover',
+    visualCharacteristics: ['Overhead padded elbow bar', 'Foot assist pedal to bring bar forward', 'Bucket seat with seatbelt strap'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat so your shoulder joints align precisely with the rotational axis cam.',
+      'Fasten seatbelt strap snugly and press foot pedal to bring elbow pads into reach.',
+      'Place elbows on the pads with hands lightly resting on the overhead guide bar.'
+    ],
+    movementGuidance: [
+      'Drive your elbows in a smooth downward arc until the bar touches your abdomen.',
+      'Pause for 1 second of intense lat contraction.',
+      'Return overhead slowly to feel a complete stretch along the ribcage.'
+    ],
+    commonMistakes: [{ mistake: 'Pushing with hands instead of elbows', correction: 'Drive solely with elbows into the pads to bypass bicep tension.' }],
+    safetyReminders: ['Always use the foot assist pedal to enter and exit safely.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Axis of Rotation Alignment', description: 'Ensure machine pivot cam aligns directly with your shoulder joint.' }
+    ],
+    videoDurationSec: 45
+  },
+
+  // ===================== SHOULDER MACHINES (4) =====================
+  {
+    id: 'seated-shoulder-press',
+    name: 'Shoulder Press Machine',
+    alternativeNames: ['Overhead Machine Press', 'Seated Military Press Machine', 'Deltoid Press'],
+    category: 'Shoulders',
+    tagline: 'Guided overhead pressing for strong, rounded deltoids and tricep extension',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Anterior Deltoid (Front Shoulders)', 'Lateral Deltoid'],
+    secondaryMuscles: ['Triceps Brachii', 'Upper Trapezius', 'Serratus Anterior'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-SHOULDER-01',
+    matchKeywords: ['shoulder press', 'overhead press', 'military press', 'deltoid machine', 'seated overhead', 'delts'],
+    imageSvg: 'shoulder-press',
+    description: 'Guides your arms upward along an ergonomic natural plane of movement, safely training overhead strength without the balance requirements of a standing barbell.',
+    brand: 'Matrix Versa Series',
+    visualCharacteristics: ['Upright 85-degree backrest', 'Dual overhead push handles (pronated & neutral options)', 'Vertical side weight stack', 'Foot pedal starter'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat height so the handles sit level with your earlobes / top of shoulders.',
+      'Select a moderate starting weight with the selector pin.',
+      'Sit upright with lower back flat against pad and feet planted shoulder-width.'
+    ],
+    movementGuidance: [
+      'Exhale and press handles smoothly overhead until arms are nearly straight (do not lock elbows harshly).',
+      'Pause 1 second at the top feeling the shoulder contraction.',
+      'Inhale and lower handles slowly over 3 seconds back to ear level.'
+    ],
+    commonMistakes: [
+      { mistake: 'Lowering handles too deep below collarbones', correction: 'Stop at earlobe level to prevent excessive rotator cuff impingement.' },
+      { mistake: 'Arching lower back and sliding hips forward', correction: 'Keep glutes firmly against the corner of the seat and engage core.' }
+    ],
+    safetyReminders: [
+      'If you have prior rotator cuff injuries, use neutral (palms-facing) grip handles if available.'
+    ],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Ear-Level Handle Alignment', description: 'Position seat so handles start right beside your ears, preventing shoulder over-stretching.' },
+      { stepNumber: 2, title: 'Neutral Grip Option', description: 'Use parallel handles for a shoulder-friendly pressing angle.' }
+    ],
+    videoDurationSec: 40,
+    featured: true
+  },
+  {
+    id: 'lateral-raise-machine',
+    name: 'Lateral Raise Machine',
+    alternativeNames: ['Seated Side Delt Machine', 'Deltoid Lateral Raise', 'Side Lateral Machine'],
+    category: 'Shoulders',
+    tagline: 'Direct side deltoid isolation for broader shoulders and V-taper aesthetics',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Lateral Deltoid (Side Shoulder Cap)'],
+    secondaryMuscles: ['Anterior Deltoid', 'Supraspinatus', 'Upper Trapezius'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-SHOULDER-02',
+    matchKeywords: ['lateral raise', 'side delts', 'shoulder fly', 'deltoid raise', 'side raises', 'boulder shoulders'],
+    imageSvg: 'lateral-raise',
+    description: 'Isolates the middle deltoid cap through guided arm abduction without forearm strain or dumbbell swinging momentum.',
+    brand: 'Technogym Element+',
+    visualCharacteristics: ['Upright seat with chest/back pad', 'Dual side lever arms with padded elbow cushions', 'Selectorized weight stack', 'Dual pivot cams'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat height so your shoulder joints align directly with the rotating machine pivot cams.',
+      'Sit tall with chest upright and place your outer arms/elbows against the padded cushions.',
+      'Grasp the lower stabilizing hand grips lightly with relaxed wrists.'
+    ],
+    movementGuidance: [
+      'Exhale and elevate your elbows outward and upward until arms are parallel with the floor.',
+      'Pause for 1 second at shoulder height to maximize lateral deltoid tension.',
+      'Inhale and lower smoothly over 3 seconds back to starting position without weights touching.'
+    ],
+    commonMistakes: [
+      { mistake: 'Shrugging shoulders into the ears', correction: 'Keep traps depressed and think about pushing elbows outward toward the walls.' },
+      { mistake: 'Gripping handles too tight and flexing forearms', correction: 'Initiate movement purely from the elbows pressing into pads.' }
+    ],
+    safetyReminders: ['Never jerk or throw the weight upward.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Pivot Cam Alignment', description: 'Check that the round red pivot axis matches your shoulder joint height.' }
+    ],
+    videoDurationSec: 35
+  },
+  {
+    id: 'rear-delt-machine',
+    name: 'Rear Delt Machine',
+    alternativeNames: ['Reverse Pec Deck', 'Reverse Fly Machine', 'Posterior Deltoid Machine'],
+    category: 'Shoulders',
+    tagline: 'Target posterior deltoids and rhomboids for complete shoulder balance',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Posterior Deltoid (Rear Shoulders)'],
+    secondaryMuscles: ['Rhomboids', 'Middle Trapezius', 'Infraspinatus'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-SHOULDER-03',
+    matchKeywords: ['rear delt', 'reverse pec deck', 'reverse fly', 'posterior deltoid'],
+    imageSvg: 'pec-deck',
+    description: 'Facing the pec deck backrest allows reverse horizontal abduction, building strong rear deltoids essential for postural alignment.',
+    brand: 'Life Fitness Signature Reverse Fly',
+    visualCharacteristics: ['Forward-facing chest pad on vertical seat', 'Horizontal dual swivel handles set to back position', 'Pin-loaded central tower'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Set the overhead range pins to the rear-most slots.',
+      'Sit facing the pad with chest resting flat against it and feet planted.',
+      'Adjust seat height so handles are level with your shoulders.'
+    ],
+    movementGuidance: [
+      'With a slight bend in your elbows, pull handles backward in a horizontal arc.',
+      'Squeeze the back of your shoulders at full extension for 1 count.',
+      'Slowly resist forward until handles are in front of chest.'
+    ],
+    commonMistakes: [{ mistake: 'Bending elbows into a row', correction: 'Keep elbow angle fixed throughout the entire arc.' }],
+    safetyReminders: ['Do not shrug your neck during the reverse fly.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Chest-to-Pad Contact', description: 'Keep sternum against the pad to prevent swinging back.' }
+    ],
+    videoDurationSec: 35
+  },
+  {
+    id: 'cable-shoulder-machine',
+    name: 'Cable Shoulder Machine',
+    alternativeNames: ['Cable Lateral Station', 'Dual Cable Shoulder Complex', 'Cable Face Pull Station'],
+    category: 'Shoulders',
+    tagline: 'Constant tension cable resistance for lateral raises, face pulls, and front raises',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Lateral Deltoids', 'Posterior Deltoids', 'Rotator Cuff'],
+    secondaryMuscles: ['Trapezius', 'Forearms'],
+    equipmentType: 'Cable Pulley',
+    qrCodeId: 'GYM-SHOULDER-04',
+    matchKeywords: ['cable shoulder', 'cable face pull', 'cable side raise', 'shoulder pulley'],
+    imageSvg: 'cable-station',
+    description: 'A dedicated low/mid cable station providing constant tension at the bottom of the movement where dumbbells provide zero resistance.',
+    brand: 'Freemotion Shoulder Tower',
+    visualCharacteristics: ['Low dual pulley swivel arms', 'Rope and single handle attachments', 'Smooth 2:1 cable weight reduction'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Set pulley to lowest setting for side raises, or eye-level for face pulls.',
+      'Attach nylon single grip or tricep rope.'
+    ],
+    movementGuidance: [
+      'Lead with the elbow on lateral raises, maintaining a steady 2-second lift and 3-second descent.'
+    ],
+    commonMistakes: [{ mistake: 'Using heavy weight and twisting spine', correction: 'Use lightweight pin and strict unilateral isolation.' }],
+    safetyReminders: ['Never let cable slacken at the bottom of a repetition.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Continuous Tension Check', description: 'Start rep with cable already taut.' }],
+    videoDurationSec: 40
+  },
+
+  // ===================== LEG MACHINES (11) =====================
+  {
+    id: 'leg-press-45',
+    name: 'Leg Press Machine',
+    alternativeNames: ['45-Degree Leg Press', 'Incline Sled Leg Press', 'Linear Leg Press'],
+    category: 'Legs',
+    tagline: 'Heavy compound lower body pressing without spinal axial loading',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Quadriceps (Vastus Lateralis, Medialis, Rectus Femoris)', 'Gluteus Maximus'],
+    secondaryMuscles: ['Hamstrings', 'Adductors', 'Calves'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-LEG-01',
+    matchKeywords: ['leg press', '45 leg press', 'incline press', 'sled press', 'foot plate', 'quads', 'glutes'],
+    imageSvg: 'leg-press',
+    description: 'A 45-degree angled sled with a large footplate that allows heavy lower body development while keeping the lumbar spine supported against a backrest.',
+    brand: 'Hammer Strength Plate-Loaded Linear Leg Press',
+    visualCharacteristics: ['45-degree angled track with roller bearings', 'Large textured steel footplate', 'Reclined seat with side safety lockout handles', 'Side Olympic plate storage horns'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Sit firmly with your lower back and glutes pressed tight into the seat corner.',
+      'Place feet shoulder-width apart in the center of the platform (toes pointing slightly out 10-15 degrees).',
+      'Push the platform up to release the side safety lockout levers.'
+    ],
+    movementGuidance: [
+      'Inhale and slowly lower the heavy sled over 3-4 seconds until knees are bent to approximately 90 degrees.',
+      'Do not allow lower back or hips to curl up off the seat pad at the bottom.',
+      'Exhale and drive through the heels and midfoot back to starting position (STOP just short of full knee lockout).'
+    ],
+    commonMistakes: [
+      { mistake: 'Locking knees out aggressively at the top', correction: 'Always keep a soft 5-degree bend in knees at the top to protect joints.' },
+      { mistake: 'Lowering too deep causing butt to curl (butt wink)', correction: 'Stop the descent when knees reach 90 degrees before hips lift off the pad.' },
+      { mistake: 'Knees caving inward (valgus collapse)', correction: 'Push knees outward in line with your middle toes throughout.' }
+    ],
+    safetyReminders: [
+      'NEVER lock knees straight with heavy weight on the sled.',
+      'Always re-engage the side safety lockout catches before releasing foot contact.'
+    ],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Foot Placement on Platform', description: 'Center feet shoulder-width for balanced quad and glute recruitment.' },
+      { stepNumber: 2, title: 'Safety Handle Release', description: 'Press weight up slightly, rotate safety handles out, and maintain light grip.' }
+    ],
+    videoDurationSec: 50,
+    featured: true
+  },
+  {
+    id: 'hack-squat-machine',
+    name: 'Hack Squat Machine',
+    alternativeNames: ['Linear Hack Squat', '45-Degree Hack Squat Sled', 'Plate-Loaded Hack Squat'],
+    category: 'Legs',
+    tagline: 'Deep quad development with solid back and shoulder support sled',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Quadriceps (Vastus Medialis & Lateralis)'],
+    secondaryMuscles: ['Gluteus Maximus', 'Calves', 'Hamstrings'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-LEG-02',
+    matchKeywords: ['hack squat', 'hack machine', 'quad squat', 'hack sled'],
+    imageSvg: 'leg-press',
+    description: 'An inverted sled machine with padded shoulder yokes and an angled footplate that isolates the quadriceps with deep knee flexion.',
+    brand: 'Cybex Plate-Loaded Hack Squat',
+    visualCharacteristics: ['Angled rails with padded shoulder pads and backrest', 'Large low textured foot platform', 'Rotating side safety handles'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Step onto the platform and rest back against pad with shoulder pads resting over traps.',
+      'Disengage safety locks and maintain core tightness.'
+    ],
+    movementGuidance: [
+      'Squat down until thighs are parallel to the footplate.',
+      'Drive forcefully through midfoot to return to top position.'
+    ],
+    commonMistakes: [{ mistake: 'Heels lifting off footplate', correction: 'Place feet slightly higher on platform to keep full heel contact.' }],
+    safetyReminders: ['Set the mechanical bottom safety catch before loading heavy plates.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Shoulder Pad Placement', description: 'Fit shoulders snugly under pads before releasing lockout handle.' }],
+    videoDurationSec: 45
+  },
+  {
+    id: 'leg-extension',
+    name: 'Leg Extension Machine',
+    alternativeNames: ['Seated Quad Extension', 'Knee Extension Machine', 'Pin-Loaded Leg Extension'],
+    category: 'Legs',
+    tagline: 'Direct open-chain isolation for complete quadriceps development and knee tracking',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Quadriceps (Rectus Femoris, Vastus Medialis/Lateralis/Intermedius)'],
+    secondaryMuscles: ['Tibialis Anterior'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-LEG-03',
+    matchKeywords: ['leg extension', 'quad extension', 'knee extension', 'quad machine', 'leg kick', 'quads'],
+    imageSvg: 'leg-extension',
+    description: 'Isolates the four quadriceps muscles through seated knee extension against a rotating padded lever arm.',
+    brand: 'Precor Resolute Strength',
+    visualCharacteristics: ['Upright seat with horizontal backrest slider', 'Lower cylindrical padded roller bar against shins', 'Side hand hold bars with yellow adjustment pins', 'Selectorized weight stack'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust backrest so the back of your knees rest comfortably against the front edge of the seat cushion.',
+      'Position the lower shin pad so it rests snugly across the lower third of your shins (just above the ankles).',
+      'Select starting weight and grip the side handles firmly to lock your pelvis down.'
+    ],
+    movementGuidance: [
+      'Exhale and extend your legs upward in a smooth arc until knees are straight.',
+      'Hold peak quadriceps contraction for 1 full second at the top.',
+      'Inhale and slowly lower the shin pad back down over 3 seconds without letting weights slam.'
+    ],
+    commonMistakes: [
+      { mistake: 'Kicking the weight up with violent explosive jerking', correction: 'Use a slow controlled 2-second lift to protect the patellar tendon.' },
+      { mistake: 'Hips lifting off the seat during extension', correction: 'Grip side handles and pull your hips down firmly into the pad.' }
+    ],
+    safetyReminders: ['If experiencing sharp patellar knee discomfort, lighten weight or limit extension range.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Rotational Pivot Alignment', description: 'Align your knee joint center directly with the machine pivot axis.' },
+      { stepNumber: 2, title: 'Shin Pad Height', description: 'Rest pad 1-2 inches above shoe tongue.' }
+    ],
+    videoDurationSec: 35,
+    featured: true
+  },
+  {
+    id: 'seated-leg-curl',
+    name: 'Seated Leg Curl Machine',
+    alternativeNames: ['Seated Hamstring Curl', 'Knee Flexion Machine', 'Pin-Loaded Leg Curl'],
+    category: 'Legs',
+    tagline: 'Target the hamstrings in a lengthened hip position for peak muscle hypertrophy',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Hamstrings (Biceps Femoris, Semitendinosus, Semimembranosus)'],
+    secondaryMuscles: ['Gastrocnemius (Calves)', 'Gracilis'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-LEG-04',
+    matchKeywords: ['leg curl', 'seated curl', 'hamstring curl', 'hamstrings', 'seated leg curl', 'back of legs'],
+    imageSvg: 'leg-curl',
+    description: 'Flexes the knees against a padded lever arm while seated with hips bent at 90 degrees, maximizing hamstring tension.',
+    brand: 'Life Fitness Signature Series',
+    visualCharacteristics: ['Seated station with upper thigh lockdown pad', 'Lower padded ankle roller bar behind Achilles tendon', 'Dual side stabilization grips', 'Weight stack tower'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust backrest so the machine pivot aligns with your knee joint.',
+      'Place lower legs on top of the lower padded lever so it rests right below your calves.',
+      'Lower the upper thigh hold-down pad tightly over your quads to prevent hips from rising.'
+    ],
+    movementGuidance: [
+      'Exhale and curl your heels downward and back underneath your seat as far as possible.',
+      'Squeeze the hamstrings hard for 1 second at full knee flexion.',
+      'Inhale and slowly resist the weight back up over 3 seconds to the top position.'
+    ],
+    commonMistakes: [
+      { mistake: 'Leaving thigh clamp loose', correction: 'Tighten thigh clamp securely so your knees cannot lift off the seat cushion.' },
+      { mistake: 'Hyperextending lower back', correction: 'Keep lumbar spine neutral and engage abdominals.' }
+    ],
+    safetyReminders: ['Never let the weight stack smash at full stretch.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Thigh Clamp Tightening', description: 'Pull the thigh clamp lever down until it is snug against your lower thighs.' }
+    ],
+    videoDurationSec: 40,
+    featured: true
+  },
+  {
+    id: 'lying-leg-curl',
+    name: 'Lying Leg Curl Machine',
+    alternativeNames: ['Prone Hamstring Curl', 'Prone Leg Curl Machine', 'Horizontal Leg Curl'],
+    category: 'Legs',
+    tagline: 'Prone position hamstring curl isolating knee flexion without spinal load',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Hamstrings'],
+    secondaryMuscles: ['Gastrocnemius (Calf)'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-LEG-05',
+    matchKeywords: ['lying leg curl', 'prone leg curl', 'prone curl', 'hamstring curl lying'],
+    imageSvg: 'leg-curl',
+    description: 'An angled prone bench station where you lie face down and curl the padded roller upward against the glutes.',
+    brand: 'Matrix Ultra Series',
+    visualCharacteristics: ['V-angled prone bench to prevent lower back arching', 'Roller pad behind calves', 'Front hand grips'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Lie face down with knees just over the edge of the bench pad.',
+      'Position ankle pad just below calves/above ankles.',
+      'Grasp front handles and keep hips pressed flat.'
+    ],
+    movementGuidance: [
+      'Curl heels up toward glutes in a smooth arc.',
+      'Hold contraction at the top for 1 count and lower under control.'
+    ],
+    commonMistakes: [{ mistake: 'Hips lifting off the bench during curl', correction: 'Press pelvic bone down into pad throughout.' }],
+    safetyReminders: ['Control the downward descent to prevent hamstring strain.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Pelvis Glued to Pad', description: 'Maintain hip contact to prevent lower back hyperextension.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'standing-leg-curl',
+    name: 'Standing Leg Curl Machine',
+    alternativeNames: ['Single Leg Hamstring Curl', 'Unilateral Standing Leg Curl'],
+    category: 'Legs',
+    tagline: 'Unilateral single-leg hamstring isolation for fixing strength imbalances',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Hamstrings (Single Leg)'],
+    secondaryMuscles: ['Calves'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-LEG-06',
+    matchKeywords: ['standing leg curl', 'single leg curl', 'unilateral curl'],
+    imageSvg: 'leg-curl',
+    description: 'Allows one leg at a time to curl upward against a roller, identifying and correcting left-to-right hamstring discrepancies.',
+    brand: 'Technogym Pure Strength',
+    visualCharacteristics: ['Standing upright frame with forearm support pad', 'Lower single-leg padded lever arm', 'Selectorized weight stack'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Rest forearms on upper support pad with non-working foot planted.',
+      'Hook the back of working ankle under the roller pad.'
+    ],
+    movementGuidance: [
+      'Curl the ankle upward toward your glute while keeping torso stationary.',
+      'Lower smoothly and switch legs after completing target reps.'
+    ],
+    commonMistakes: [{ mistake: 'Swinging the torso to throw the weight', correction: 'Keep upper body locked into the arm pad.' }],
+    safetyReminders: ['Perform equal repetitions on both legs.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Torso Lock', description: 'Brace forearms on pad to prevent momentum.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'hip-abduction-machine',
+    name: 'Hip Abduction Machine',
+    alternativeNames: ['Outer Thigh Machine', 'Seated Abductor Machine', 'Glute Abductor'],
+    category: 'Legs',
+    tagline: 'Isolate gluteus medius and outer hip stabilizers for pelvic stability',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Gluteus Medius', 'Gluteus Minimus', 'Tensor Fasciae Latae (TFL)'],
+    secondaryMuscles: ['Gluteus Maximus (Upper Fibers)'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-LEG-07',
+    matchKeywords: ['hip abduction', 'outer thigh', 'abductor machine', 'glute machine', 'thigh machine'],
+    imageSvg: 'leg-press',
+    description: 'A seated machine where the user pushes the padded knee levers outward against stack resistance, targeting the outer hips and glutes.',
+    brand: 'Life Fitness Signature Series Abductor',
+    visualCharacteristics: ['Seated bucket chair with foot pegs', 'Dual outer knee pads', 'Central pin adjustment to start pads close together'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Sit back firmly and adjust the start lever so pads touch outside of knees.',
+      'Place feet on footrests and grip side handles.'
+    ],
+    movementGuidance: [
+      'Push knees outward as wide as possible against the pads.',
+      'Hold peak outer glute squeeze for 2 seconds before returning.'
+    ],
+    commonMistakes: [{ mistake: 'Using momentum and leaning torso back and forth', correction: 'Sit upright and isolate hip joint movement.' }],
+    safetyReminders: ['Do not set the starting pin too narrow if hip mobility is restricted.'],
+    tutorialSteps: [{ stepNumber: 1, title: '2-Second Peak Hold', description: 'Pause at the widest point to trigger gluteus medius fibers.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'hip-adduction-machine',
+    name: 'Hip Adduction Machine',
+    alternativeNames: ['Inner Thigh Machine', 'Seated Adductor Machine', 'Groin Machine'],
+    category: 'Legs',
+    tagline: 'Strengthen inner thigh adductors for knee stability and groin strength',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Adductor Longus', 'Adductor Magnus', 'Gracilis'],
+    secondaryMuscles: ['Pectineus', 'Pelvic Floor'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-LEG-08',
+    matchKeywords: ['hip adduction', 'inner thigh', 'adductor machine', 'groin machine'],
+    imageSvg: 'leg-press',
+    description: 'A seated machine where pads rest inside your knees, requiring you to squeeze thighs together against resistance.',
+    brand: 'Life Fitness Signature Series Adductor',
+    visualCharacteristics: ['Seated bucket chair with foot rests', 'Dual inner knee pads', 'Central release lever to open pads wide'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Pull the release lever and open legs into a comfortable stretch.',
+      'Sit upright and place feet securely on the foot pegs.'
+    ],
+    movementGuidance: [
+      'Squeeze knees together in a smooth, controlled motion until pads touch.',
+      'Slowly open legs back to the stretch position over 3 seconds.'
+    ],
+    commonMistakes: [{ mistake: 'Letting weights bounce at wide stretch', correction: 'Stop just before weight stack contacts.' }],
+    safetyReminders: ['Start with light weight to protect groin tendons.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Gentle Stretch Start', description: 'Do not force extreme wide opening beyond normal hip mobility.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'calf-raise-machine',
+    name: 'Calf Raise Machine',
+    alternativeNames: ['Seated Calf Raise', 'Standing Calf Raise Machine', 'Calf Extension Machine'],
+    category: 'Legs',
+    tagline: 'Isolate gastrocnemius and soleus calf muscles through full ankle dorsiflexion',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Gastrocnemius', 'Soleus'],
+    secondaryMuscles: ['Tibialis Posterior', 'Peroneals'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-LEG-09',
+    matchKeywords: ['calf raise', 'seated calf', 'standing calf', 'calves', 'soleus', 'gastrocnemius', 'lower leg'],
+    imageSvg: 'calf-raise',
+    description: 'Elevated textured toe block and padded resistance bar allow full ankle range of motion to build dense lower leg strength.',
+    brand: 'Matrix Versa Calf',
+    visualCharacteristics: ['Narrow textured foot ledge for balls of feet', 'Padded shoulder blocks or thigh rest', 'Weight stack tower with safety catch handle'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Place the balls of your feet on the edge of the textured step block with heels hanging off.',
+      'Adjust shoulder or thigh pads securely.',
+      'Disengage the safety catch lever by pressing upward.'
+    ],
+    movementGuidance: [
+      'Slowly lower your heels as far as possible for a full 2-second calf stretch at the bottom.',
+      'Drive upward onto the balls of your feet as high as possible.',
+      'Hold peak calf contraction at the top for 1-2 seconds.'
+    ],
+    commonMistakes: [
+      { mistake: 'Bouncing rapidly using Achilles tendon elasticity', correction: 'Pause for 1 full second at the bottom stretch before pushing up.' }
+    ],
+    safetyReminders: ['Ensure balls of feet have solid traction on the step bar.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Full Ankle Excursion', description: 'Deep bottom stretch and maximal high tiptoe extension are crucial.' }
+    ],
+    videoDurationSec: 30
+  },
+  {
+    id: 'glute-drive-machine',
+    name: 'Glute Drive Machine',
+    alternativeNames: ['Hip Thrust Machine', 'Plate-Loaded Glute Drive', 'Booty Builder Machine'],
+    category: 'Legs',
+    tagline: 'Biomechanically optimized hip thrust station for maximal gluteus maximus hypertrophy',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Gluteus Maximus'],
+    secondaryMuscles: ['Hamstrings', 'Adductor Magnus', 'Core'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-LEG-10',
+    matchKeywords: ['glute drive', 'hip thrust', 'booty builder', 'glute machine', 'thrust machine'],
+    imageSvg: 'leg-press',
+    description: 'A dedicated hip thrust station with padded buckle belt and pivot backrest that eliminates the awkward barbell setup.',
+    brand: 'Nautilus Glute Drive',
+    visualCharacteristics: ['Upper back pivoting bench pad', 'Wide textured diamond footplate', 'Padded heavy-duty seatbelt harness', 'Side weight plate horns'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Sit on the bench, place feet flat on the textured platform shoulder-width apart.',
+      'Fasten the padded belt snugly across your hips / pelvis.',
+      'Drive hips upward to disengage the safety release catch.'
+    ],
+    movementGuidance: [
+      'Lower hips in a deep hinge until glutes approach the bottom.',
+      'Drive through your heels to lock hips straight, squeezing glutes hard at the top.',
+      'Maintain chin tucked slightly toward chest to keep neutral spine.'
+    ],
+    commonMistakes: [{ mistake: 'Hyperextending lumbar spine at the top', correction: 'Tuck pelvis into posterior tilt and squeeze glutes, not lower back.' }],
+    safetyReminders: ['Ensure safety release handle is re-engaged before unbuckling belt.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Padded Belt Placement', description: 'Position belt directly across pelvic crease, not on soft stomach.' }],
+    videoDurationSec: 40,
+    featured: true
+  },
+  {
+    id: 'smith-machine-squats',
+    name: 'Smith Machine for Squats',
+    alternativeNames: ['Smith Squat Station', 'Guided Squat Machine', 'Vertical Sled Squat'],
+    category: 'Legs',
+    tagline: 'Guided linear barbell squats allowing customized foot placement and knee safety',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Quadriceps', 'Gluteus Maximus'],
+    secondaryMuscles: ['Hamstrings', 'Calves', 'Core'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-LEG-11',
+    matchKeywords: ['smith squat', 'smith machine squat', 'guided squat', 'smith legs'],
+    imageSvg: 'smith-machine',
+    description: 'Utilizes the Smith machine vertical guide rails to perform squats with feet placed forward, reducing shearing forces on the lower back.',
+    brand: 'Hammer Strength Smith',
+    visualCharacteristics: ['Vertical steel rails', 'Barbell with rotating safety hooks', 'Adjustable bottom safety stop pins'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Position bar at upper chest / shoulder height across your upper trapezius pad.',
+      'Set bottom safety stop catches at parallel squat depth.',
+      'Place feet 6-10 inches forward of the bar centerline for quad-focused squatting.'
+    ],
+    movementGuidance: [
+      'Rotate bar with wrists to unhook from safety pegs.',
+      'Squat down by bending knees and sitting back into hips until thighs reach parallel.',
+      'Drive through midfoot and heels to return to top and re-hook bar.'
+    ],
+    commonMistakes: [{ mistake: 'Squatting without setting safety stop pegs', correction: 'Always set both bottom safety pegs.' }],
+    safetyReminders: ['Lock wrist hooks into pegs securely at the end of set.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Forward Foot Stance', description: 'Step feet slightly forward to lean back into the guided bar.' }],
+    videoDurationSec: 45
+  },
+
+  // ===================== ARM MACHINES (5) =====================
+  {
+    id: 'preacher-curl',
+    name: 'Preacher Curl Machine',
+    alternativeNames: ['Seated Arm Curl Machine', 'Bicep Preacher Station', 'Incline Bicep Curl'],
+    category: 'Arms',
+    tagline: 'Strict bicep isolation with upper arms locked into a 45-degree angled pad',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Biceps Brachii (Short & Long Head)'],
+    secondaryMuscles: ['Brachialis', 'Brachioradialis (Forearms)'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-ARM-01',
+    matchKeywords: ['preacher curl', 'bicep machine', 'arm curl', 'preacher bench', 'biceps', 'curls'],
+    imageSvg: 'preacher-curl',
+    description: 'Locks upper arms against an angled padded support to completely eliminate shoulder swing, isolating the biceps.',
+    brand: 'Life Fitness Signature Series Arm Curl',
+    visualCharacteristics: ['45-degree angled arm rest cushion', 'Swivel rotating curl handles', 'Adjustable seat height', 'Pin-loaded weight stack'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat height so your armpits rest comfortably over the top crest of the angled pad.',
+      'Rest your triceps and elbows flush against the pad surface.',
+      'Grasp rotating handles with an underhand (palms up) grip.'
+    ],
+    movementGuidance: [
+      'Exhale and curl handles upward toward your shoulders.',
+      'Squeeze biceps hard for 1-2 seconds at peak contraction.',
+      'Inhale and slowly lower arms over 3 seconds (STOP just short of full hyperextended elbow lockout).'
+    ],
+    commonMistakes: [
+      { mistake: 'Letting elbows lift off the arm pad during the curl', correction: 'Keep upper arms glued flat against cushion.' },
+      { mistake: 'Hyperextending and slamming elbows straight at the bottom', correction: 'Maintain a soft 5-degree bend at bottom.' }
+    ],
+    safetyReminders: ['Never hyperextend elbows under heavy load.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Armpit Cushion Lock', description: 'Fit armpits snugly over the top crest of the pad.' }
+    ],
+    videoDurationSec: 35,
+    featured: true
+  },
+  {
+    id: 'biceps-curl-machine',
+    name: 'Biceps Curl Machine',
+    alternativeNames: ['Machine Bicep Curl', 'Selectorized Arm Curl', 'Rotary Bicep Machine'],
+    category: 'Arms',
+    tagline: 'Smooth rotating cam resistance for continuous bicep tension',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Biceps Brachii', 'Brachialis'],
+    secondaryMuscles: ['Forearm Flexors'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-ARM-02',
+    matchKeywords: ['bicep curl machine', 'biceps machine', 'curls machine', 'rotary curl'],
+    imageSvg: 'preacher-curl',
+    description: 'A dedicated seated arm station with rotating cam pulley that matches the natural strength curve of the human elbow.',
+    brand: 'Technogym Selection Arm Curl',
+    visualCharacteristics: ['Seated upright posture with chest rest pad', 'Dual rotating handles', 'Cam axis aligned with elbow joints'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Set seat so elbow joints align with the pivot axis cam.',
+      'Grasp handles and sit tall with chest against pad.'
+    ],
+    movementGuidance: [
+      'Curl handles smoothly toward chin.',
+      'Hold peak squeeze for 1 second and lower under control.'
+    ],
+    commonMistakes: [{ mistake: 'Leaning back to swing weight', correction: 'Keep torso still against chest pad.' }],
+    safetyReminders: ['Select manageable weights to protect the distal bicep tendon.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Cam Alignment', description: 'Verify elbow pivot point matches machine red dot.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'triceps-extension-machine',
+    name: 'Triceps Extension Machine',
+    alternativeNames: ['Seated Triceps Machine', 'Machine Triceps Extension', 'Overhead Tricep Machine'],
+    category: 'Arms',
+    tagline: 'Direct triceps isolation with locked elbow pivot mechanics',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Triceps Brachii (Lateral, Medial & Long Head)'],
+    secondaryMuscles: ['Anconeus'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-ARM-03',
+    matchKeywords: ['triceps extension', 'tricep machine', 'seated triceps', 'tricep press'],
+    imageSvg: 'cable-station',
+    description: 'A seated machine with elbow rest pads and downward pressing levers that completely isolate all three heads of the triceps.',
+    brand: 'Matrix Versa Triceps',
+    visualCharacteristics: ['Angled arm support cushions', 'Rotating downward press handles', 'Padded backrest and weight stack'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat so elbows rest comfortably on pads aligned with machine pivot.',
+      'Grasp handles with palms facing inward or downward.'
+    ],
+    movementGuidance: [
+      'Push handles downward until arms are fully extended.',
+      'Squeeze triceps hard for 1 second at lockout and return slowly.'
+    ],
+    commonMistakes: [{ mistake: 'Flaring elbows off pads', correction: 'Keep elbows planted firmly on cushions.' }],
+    safetyReminders: ['Control the return so weights do not slam.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Elbow Pad Anchor', description: 'Anchor elbows on pad to prevent shoulder involvement.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'triceps-pushdown-cable',
+    name: 'Triceps Pushdown Cable Station',
+    alternativeNames: ['Cable Triceps Pushdown', 'High Pulley Tricep Station', 'Rope Pushdown Station'],
+    category: 'Arms',
+    tagline: 'Overhead high pulley cable for rope, V-bar, and straight bar triceps pushdowns',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Triceps Brachii (Lateral & Medial Heads)'],
+    secondaryMuscles: ['Anconeus', 'Core Stabilizers'],
+    equipmentType: 'Cable Pulley',
+    qrCodeId: 'GYM-ARM-04',
+    matchKeywords: ['tricep pushdown', 'cable pushdown', 'rope pushdown', 'tricep cable', 'cable pressdown', 'triceps'],
+    imageSvg: 'cable-station',
+    description: 'A high pulley cable station where an athlete presses a rope or bar downward with pinned elbows to isolate the triceps.',
+    brand: 'Life Fitness Cable Column',
+    visualCharacteristics: ['Overhead high pulley wheel with steel cable', 'Tricep braided rope attachment or steel V-bar', 'Vertical weight stack tower'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Attach a braided tricep rope or angled steel V-bar to high cable carabiner.',
+      'Grip the attachment and step back slightly with knees soft and torso inclined 10 degrees.',
+      'Pin your upper arms and elbows tight against your ribcage.'
+    ],
+    movementGuidance: [
+      'Exhale and push your hands downward until arms are locked out straight beside thighs.',
+      'If using rope, spread the rope ends apart at the bottom for intense lateral tricep squeeze.',
+      'Inhale and allow forearms to hinge upward to 90 degrees while keeping elbows pinned.'
+    ],
+    commonMistakes: [
+      { mistake: 'Elbows drifting forward and backward like a row', correction: 'Glue elbows to your sides like hinges.' },
+      { mistake: 'Hunching shoulders over the bar', correction: 'Keep chest proud and shoulders pulled down.' }
+    ],
+    safetyReminders: ['Do not let the weight pull your elbows above chest level between reps.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Elbow Ribcage Anchor', description: 'Keep elbows glued to sides throughout every single rep.' }
+    ],
+    videoDurationSec: 40,
+    featured: true
+  },
+  {
+    id: 'assisted-dip-machine',
+    name: 'Assisted Dip Machine',
+    alternativeNames: ['Counterbalanced Dip Station', 'Assisted Tricep Dip Machine', 'Gravitron Dip'],
+    category: 'Arms',
+    tagline: 'Counterweighted kneeling platform for mastering full range tricep and chest dips',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Triceps Brachii', 'Lower Pectoralis Major'],
+    secondaryMuscles: ['Anterior Deltoids', 'Rhomboids'],
+    equipmentType: 'Bodyweight Assisted',
+    qrCodeId: 'GYM-ARM-05',
+    matchKeywords: ['assisted dip', 'dip machine', 'counterbalance dip', 'tricep dips'],
+    imageSvg: 'assisted-pullup',
+    description: 'Provides counterweight assistance through a kneeling pad to allow users of all strength levels to perform deep tricep dips.',
+    brand: 'Life Fitness Signature Series Assisted Dip',
+    visualCharacteristics: ['Dual parallel dip handles (narrow & wide settings)', 'Counterbalanced kneeling pad', 'Weight stack tower'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Set assistance weight pin (more weight = easier).',
+      'Step onto side footpegs, grip dip handles, and place knees on pad.'
+    ],
+    movementGuidance: [
+      'Lower body until elbows bend to 90 degrees.',
+      'Press upward through palms until arms are straight.'
+    ],
+    commonMistakes: [{ mistake: 'Dipping too deep with shoulder pain', correction: 'Stop at 90-degree elbow bend.' }],
+    safetyReminders: ['Step off carefully one foot at a time.'],
+    tutorialSteps: [{ stepNumber: 1, title: '90-Degree Depth Limit', description: 'Do not dip deeper than parallel elbow angle.' }],
+    videoDurationSec: 40
+  },
+
+  // ===================== CARDIO EQUIPMENT (6) =====================
+  {
+    id: 'treadmill-commercial',
+    name: 'Treadmill',
+    alternativeNames: ['Commercial Running Treadmill', 'Motorized Treadmill', 'Running Machine'],
+    category: 'Cardio',
+    tagline: 'Variable speed and incline deck for low-impact walking, jogging, and sprint intervals',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Quadriceps', 'Hamstrings', 'Calves', 'Cardiovascular System'],
+    secondaryMuscles: ['Gluteus Maximus', 'Core Stabilizers'],
+    equipmentType: 'Cardio Ergometer',
+    qrCodeId: 'GYM-CARDIO-01',
+    matchKeywords: ['treadmill', 'running machine', 'jogging', 'cardio machine', 'incline walker', 'running'],
+    imageSvg: 'treadmill',
+    description: 'Motorized continuous running deck with shock absorption, digital heart rate monitors, and motorized incline angles up to 15%.',
+    brand: 'Life Fitness Elevation Series',
+    visualCharacteristics: ['Long motorized black textured running belt', 'Dual safety handrails with contact heart-rate sensors', 'Red magnetic emergency stop clip', 'Digital touch LCD console'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Straddle the belt with feet on side rails before starting.',
+      'Attach the red safety clip firmly to your shirt waistband.',
+      'Press Quick Start, allow belt to move at 1.0 km/h, then step on smoothly.'
+    ],
+    movementGuidance: [
+      'Walk or jog near the center of the belt with tall posture and eyes forward.',
+      'Swing arms naturally without holding handrails once comfortable.',
+      'Adjust speed and incline via console controls.'
+    ],
+    commonMistakes: [
+      { mistake: 'Holding tightly to front handrails while walking at steep inclines', correction: 'Pump arms freely to engage core and burn more calories.' },
+      { mistake: 'Looking down at feet', correction: 'Keep head upright to maintain balance.' }
+    ],
+    safetyReminders: [
+      'ALWAYS attach the emergency red clip to your clothing.',
+      'Never step off a moving belt at high speeds.'
+    ],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Emergency Stop Clip Attachment', description: 'Clamp red magnetic lanyard to shirt hem before pressing Quick Start.' }
+    ],
+    videoDurationSec: 40,
+    featured: true
+  },
+  {
+    id: 'elliptical-trainer',
+    name: 'Elliptical Trainer',
+    alternativeNames: ['Cross Trainer', 'Elliptical Machine', 'Total Body Cross Trainer'],
+    category: 'Cardio',
+    tagline: 'Zero-impact fluid stride cardio engaging upper and lower body simultaneously',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Quadriceps', 'Hamstrings', 'Glutes', 'Cardiovascular System'],
+    secondaryMuscles: ['Chest', 'Back', 'Arms', 'Calves'],
+    equipmentType: 'Cardio Ergometer',
+    qrCodeId: 'GYM-CARDIO-02',
+    matchKeywords: ['elliptical', 'cross trainer', 'elliptical trainer', 'zero impact cardio'],
+    imageSvg: 'elliptical',
+    description: 'An elliptical motion path eliminates joint impact while dual-action handlebars provide upper body push-pull conditioning.',
+    brand: 'Precor EFX 885',
+    visualCharacteristics: ['Dual large foot pedals on elliptical tracks', 'Long dual-action moving handlebars', 'Front flywheel housing and digital console'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Step onto lowest pedal, then place second foot on opposite pedal.',
+      'Grasp moving handles and begin gliding forward.'
+    ],
+    movementGuidance: [
+      'Push and pull handlebars while driving heels into pedals.',
+      'Maintain smooth, continuous forward revolutions at 120-140 strides per minute.'
+    ],
+    commonMistakes: [{ mistake: 'Riding on tiptoes only', correction: 'Keep feet flat in pedals to distribute weight evenly.' }],
+    safetyReminders: ['Wait until pedals stop spinning before dismounting.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Full Foot Pedal Contact', description: 'Keep heels in contact with footpads.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'stationary-bike-upright',
+    name: 'Stationary Bike',
+    alternativeNames: ['Upright Exercise Bike', 'Stationary Cycling Ergometer', 'Fitness Cycle'],
+    category: 'Cardio',
+    tagline: 'Low-impact cardiovascular conditioning and lower body endurance cycling',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Quadriceps', 'Cardiovascular System'],
+    secondaryMuscles: ['Hamstrings', 'Calves', 'Core Stabilizers'],
+    equipmentType: 'Cardio Ergometer',
+    qrCodeId: 'GYM-CARDIO-03',
+    matchKeywords: ['stationary bike', 'exercise bike', 'cycle', 'cardio bike', 'cycling', 'upright bike'],
+    imageSvg: 'stationary-bike',
+    description: 'An ergonomic upright cycling machine featuring electromagnetic resistance, interval programs, and pulse heart rate monitors.',
+    brand: 'Matrix Lifestyle Upright Cycle',
+    visualCharacteristics: ['Adjustable saddle with numbered seat post', 'Pedals with rubber foot straps', 'Triathlon-style multi-grip handlebars with digital screen'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust saddle height so the seat aligns with your hip bone when standing next to it.',
+      'When seated with pedal at 6 o’clock position, your knee should have a slight 25-30 degree bend.',
+      'Slide feet into pedal cages and strap snug.'
+    ],
+    movementGuidance: [
+      'Begin pedaling in smooth full circular revolutions.',
+      'Maintain steady cadence (70-90 RPM) with moderate resistance.',
+      'Keep upper body relaxed with light grip on handlebars.'
+    ],
+    commonMistakes: [
+      { mistake: 'Seat set too low causing knee joint stress', correction: 'Raise seat until leg is almost fully extended at bottom stroke.' }
+    ],
+    safetyReminders: ['Ensure the seat adjustment pin clicks securely before sitting down.'],
+    tutorialSteps: [
+      { stepNumber: 1, title: 'Hip-Height Saddle Alignment', description: 'Position saddle level with hip bone for knee safety.' }
+    ],
+    videoDurationSec: 35
+  },
+  {
+    id: 'spin-bike',
+    name: 'Spin Bike',
+    alternativeNames: ['Indoor Cycling Bike', 'Studio Cycle', 'Flywheel Spin Bike'],
+    category: 'Cardio',
+    tagline: 'Direct-drive heavy flywheel bike for high-intensity indoor cycling intervals',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Quadriceps', 'Hamstrings', 'Glutes', 'Calves'],
+    secondaryMuscles: ['Core'],
+    equipmentType: 'Cardio Ergometer',
+    qrCodeId: 'GYM-CARDIO-04',
+    matchKeywords: ['spin bike', 'indoor cycle', 'flywheel bike', 'spinning'],
+    imageSvg: 'stationary-bike',
+    description: 'A heavy perimeter-weighted flywheel and manual friction/magnetic resistance knob simulate real outdoor road cycling.',
+    brand: 'Schwinn AC Performance Plus',
+    visualCharacteristics: ['Heavy front perimeter-weighted metal flywheel', 'Manual red resistance knob and emergency brake lever', 'Racing saddle and drop handlebars'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust saddle height to hip level and fore/aft distance so knee sits over pedal spindle.',
+      'Adjust handlebar height to comfortable level.'
+    ],
+    movementGuidance: [
+      'Clip into SPD pedals or tighten toe cages.',
+      'Turn resistance knob clockwise to add road resistance.'
+    ],
+    commonMistakes: [{ mistake: 'Riding with zero flywheel resistance', correction: 'Always keep light tension to prevent flywheel from over-spinning legs.' }],
+    safetyReminders: ['Push DOWN on red emergency brake knob to stop spinning flywheel.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Emergency Brake Demonstration', description: 'Press down directly on resistance knob to stop flywheel instantly.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'stair-climber',
+    name: 'Stair Climber',
+    alternativeNames: ['StairMaster', 'StepMill', 'Rotating Stair Climber', 'Step Machine'],
+    category: 'Cardio',
+    tagline: 'Continuous revolving staircase for intense glute, quad, and cardiovascular conditioning',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Gluteus Maximus', 'Quadriceps', 'Calves', 'Cardiovascular System'],
+    secondaryMuscles: ['Hamstrings', 'Core'],
+    equipmentType: 'Cardio Ergometer',
+    qrCodeId: 'GYM-CARDIO-05',
+    matchKeywords: ['stair climber', 'stairmaster', 'stepmill', 'stair machine', 'revolving stairs'],
+    imageSvg: 'treadmill',
+    description: 'A continuous rotating flight of 8-inch stairs with electronic step speed control for intense lower body calorie burning.',
+    brand: 'StairMaster Gauntlet 8-Series',
+    visualCharacteristics: ['Tall revolving staircase with 3-4 visible steps', 'Surround handrails with stop buttons', 'Console screen at eye level'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Step onto lowest step, select Level 3-5 on console, and press Start.',
+      'Maintain upright posture with light fingertip contact on side rails.'
+    ],
+    movementGuidance: [
+      'Step fully onto each revolving step with entire foot (not just toes).',
+      'Maintain rhythm without skipping steps or leaning heavily on rails.'
+    ],
+    commonMistakes: [{ mistake: 'Slouching forward and supporting bodyweight on handles', correction: 'Stand tall with core braced and support yourself with legs.' }],
+    safetyReminders: ['Never look down at phone while revolving steps are moving.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Upright Posture Rule', description: 'Keep spine vertical to maximize glute contraction.' }],
+    videoDurationSec: 40,
+    featured: true
+  },
+  {
+    id: 'rowing-machine',
+    name: 'Rowing Machine',
+    alternativeNames: ['Indoor Rower', 'Concept2 Ergometer', 'Air Rower'],
+    category: 'Cardio',
+    tagline: 'Full-body cardiovascular and muscular endurance ergometer engaging 86% of muscles',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Legs', 'Back (Lats & Rhomboids)', 'Cardiovascular System'],
+    secondaryMuscles: ['Arms', 'Core', 'Glutes'],
+    equipmentType: 'Cardio Ergometer',
+    qrCodeId: 'GYM-CARDIO-06',
+    matchKeywords: ['rowing machine', 'concept 2', 'rower', 'air rower', 'ergometer', 'rowing'],
+    imageSvg: 'seated-row',
+    description: 'A sliding seat rail and air/water flywheel resistance system providing dynamic total-body endurance training.',
+    brand: 'Concept2 RowErg',
+    visualCharacteristics: ['Long aluminum monorail with sliding seat', 'Front flywheel housing with damper lever (1-10)', 'Chain pull handle and PM5 monitor'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Strap feet securely into footplates with strap across the widest part of shoe.',
+      'Set damper lever to 3-5 for realistic rowing resistance.',
+      'Grasp handle with overhand grip and sit tall with knees bent.'
+    ],
+    movementGuidance: [
+      'Sequence: Legs push first, then hips swing back, then arms pull handle to ribcage.',
+      'Recovery: Arms extend first, hips hinge forward, then knees bend to slide forward.'
+    ],
+    commonMistakes: [{ mistake: 'Pulling with arms before legs have extended', correction: 'Drive 60% of power through legs before pulling with arms.' }],
+    safetyReminders: ['Keep flat neutral spine during the catch and drive.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Drive Sequence (Legs-Core-Arms)', description: 'Master the 1-2-3 sequence for maximum power and spine safety.' }],
+    videoDurationSec: 45
+  },
+
+  // ===================== FUNCTIONAL & FREE WEIGHT EQUIPMENT (12) =====================
+  {
+    id: 'power-rack',
+    name: 'Power Rack',
+    alternativeNames: ['Full Power Cage', 'Squat Cage', 'Safety Power Rack'],
+    category: 'Other',
+    tagline: 'Enclosed four-pillar steel safety cage for heavy barbell squats, presses, and pulls',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Full Body Compound (Quads, Glutes, Chest, Back)'],
+    secondaryMuscles: ['Core Stabilizers'],
+    equipmentType: 'Free Motion / Other',
+    qrCodeId: 'GYM-FUNC-01',
+    matchKeywords: ['power rack', 'power cage', 'squat cage', 'safety rack', 'barbell cage'],
+    imageSvg: 'smith-machine',
+    description: 'A heavy-duty 4-post steel cage featuring adjustable J-cups, full-length safety spotter bars, and multi-grip pull-up bars.',
+    brand: 'Rogue Monster Lite R-4',
+    visualCharacteristics: ['Four vertical steel box uprights with hole numbering', 'Heavy horizontal safety pipe/pin bars', 'Upper multi-grip chin-up crossbar'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Set J-cups to upper chest height for squats, or mid-chest for bench press.',
+      'Insert horizontal safety spotter bars 2 inches below the bottom of your deepest rep.'
+    ],
+    movementGuidance: [
+      'Step under barbell, un-rack with balanced posture, take 2 steps back, perform exercise, then step forward to re-rack.'
+    ],
+    commonMistakes: [{ mistake: 'Lifting heavy without setting safety bars', correction: 'Always position safety bars to catch the bar in case of fatigue.' }],
+    safetyReminders: ['Ensure barbell spring collars or lock jaws are clamped onto both sides.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Safety Pin Height Test', description: 'Perform an unweighted squat to ensure safety bars catch the barbell below bottom depth.' }],
+    videoDurationSec: 45,
+    featured: true
+  },
+  {
+    id: 'squat-rack',
+    name: 'Squat Rack',
+    alternativeNames: ['Squat Stand', 'Half Rack', 'Open Squat Station'],
+    category: 'Other',
+    tagline: 'Open two-post steel rack for squats, overhead presses, and lunges',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Quadriceps', 'Glutes', 'Core'],
+    secondaryMuscles: ['Hamstrings', 'Upper Back'],
+    equipmentType: 'Free Motion / Other',
+    qrCodeId: 'GYM-FUNC-02',
+    matchKeywords: ['squat rack', 'squat stands', 'half rack', 'barbell squat stand'],
+    imageSvg: 'smith-machine',
+    description: 'An open two-column rack with adjustable bar holders and front safety arms, providing easy walk-in access for barbell lifting.',
+    brand: 'Eleiko Classic Half Rack',
+    visualCharacteristics: ['Two vertical steel posts with J-hooks', 'Shorter front safety spotter arms', 'Integrated Olympic plate storage pegs'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust J-hooks so barbell sits at collarbone height.',
+      'Lock safety spotter arms into place at hip/squat depth.'
+    ],
+    movementGuidance: [
+      'Step under bar, un-rack, step back 2 paces, and execute lift with strict form.'
+    ],
+    commonMistakes: [{ mistake: 'Setting J-hooks too high requiring tiptoeing to un-rack', correction: 'Set hooks lower so you can un-rack with bent knees.' }],
+    safetyReminders: ['Always use barbell collars on weight plates.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Barbell Collar Clamp', description: 'Clamp barbell collars on both plate sleeves before lifting.' }],
+    videoDurationSec: 40
+  },
+  {
+    id: 'cable-tower',
+    name: 'Cable Tower',
+    alternativeNames: ['4-Stack Cable Jungle', 'Multi-Station Cable Tower', 'Cable Multi-Gym'],
+    category: 'Cable Equipment',
+    tagline: 'Central multi-station cable jungle combining lat pulldowns, low rows, and hi-lo pulleys',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Full Body (Back, Chest, Arms, Delts)'],
+    secondaryMuscles: ['Core'],
+    equipmentType: 'Cable Pulley',
+    qrCodeId: 'GYM-FUNC-03',
+    matchKeywords: ['cable tower', 'cable jungle', 'multi stack cable', 'cable machine station'],
+    imageSvg: 'cable-station',
+    description: 'A 4-way or 8-way multi-station cable complex featuring lat pulldowns, low seated rows, tricep pushdowns, and adjustable pulley columns.',
+    brand: 'Life Fitness MJ4 Multi-Jungle',
+    visualCharacteristics: ['Central 4-sided steel tower with 4 independent weight stacks', 'Integrated overhead pull-up handles and cables on all sides'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Select the desired station on the tower and adjust pulley carriage to desired height.',
+      'Insert magnetic weight pin and attach appropriate cable handle.'
+    ],
+    movementGuidance: [
+      'Maintain smooth, uniform cable velocity along the pulley line.'
+    ],
+    commonMistakes: [{ mistake: 'Letting weights drop heavily on the stack', correction: 'Control the eccentric phase until the weight stack is silent.' }],
+    safetyReminders: ['Verify carabiners are fully clicked closed.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Carabiner Safety Check', description: 'Ensure safety screw/latch is closed on cable end.' }],
+    videoDurationSec: 40
+  },
+  {
+    id: 'functional-trainer',
+    name: 'Functional Trainer',
+    alternativeNames: ['Dual Adjustable Pulley', 'Freemotion Functional Trainer', 'DAP Cable Machine'],
+    category: 'Cable Equipment',
+    tagline: 'Dual independently adjustable cable arms for athletic multi-planar functional movements',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Full Body (Multi-Planar Strength)'],
+    secondaryMuscles: ['Core Stabilizers', 'Rotator Cuff'],
+    equipmentType: 'Cable Pulley',
+    qrCodeId: 'GYM-FUNC-04',
+    matchKeywords: ['functional trainer', 'dual adjustable pulley', 'dap', 'freemotion trainer'],
+    imageSvg: 'cable-station',
+    description: 'Twin independent swivel pulley arms that move vertically and horizontally, mimicking sports movements with smooth cable resistance.',
+    brand: 'Keiser Functional Trainer / Life Fitness DAP',
+    visualCharacteristics: ['Two vertical columns with sliding carriages', 'Wide center instructional mirror or placard', 'Dual weight stacks with 2:1 or 4:1 cable ratio'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust both left and right pulley carriages to identical height settings using the numbered indicators.',
+      'Select matching weight on both stacks and attach handles.'
+    ],
+    movementGuidance: [
+      'Brace core and execute movement through the desired anatomical plane with steady control.'
+    ],
+    commonMistakes: [{ mistake: 'Unequal height pin settings', correction: 'Check that both numbered height indicators match exactly.' }],
+    safetyReminders: ['Stand centered between the dual towers.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Numbered Notch Match', description: 'Verify left and right pulleys are locked into the same number notch.' }],
+    videoDurationSec: 45
+  },
+  {
+    id: 'adjustable-bench',
+    name: 'Adjustable Bench',
+    alternativeNames: ['FID Bench', 'Incline Decline Flat Bench', 'Multi-Angle Workout Bench'],
+    category: 'Other',
+    tagline: 'Multi-position padded workout bench from -15 decline to 85 incline degrees',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Chest', 'Shoulders', 'Arms', 'Back'],
+    secondaryMuscles: ['Core'],
+    equipmentType: 'Free Motion / Other',
+    qrCodeId: 'GYM-FUNC-05',
+    matchKeywords: ['adjustable bench', 'incline bench', 'workout bench', 'fid bench', 'gym bench'],
+    imageSvg: 'chest-press',
+    description: 'Heavy-duty steel frame bench with independent ladder or pop-pin adjustments for the seat and backrest from flat to upright.',
+    brand: 'Rogue AB-3 Multi-Angle Bench',
+    visualCharacteristics: ['Thick vinyl padded back pad and seat pad', 'Ladder notch or spring-pin angle adjustment', 'Rear transport wheels and front handle'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Lift backrest and place ladder strut into desired angle notch (0 flat, 30 incline, 85 upright).',
+      'Adjust seat pad angle up to prevent sliding during incline presses.'
+    ],
+    movementGuidance: [
+      'Keep feet firmly planted on floor and head, shoulders, and hips in contact with pad.'
+    ],
+    commonMistakes: [{ mistake: 'Leaving backrest loose without seating pin into notch', correction: 'Ensure adjustment bar is locked firmly into the slot.' }],
+    safetyReminders: ['Check ladder bar engagement before sitting down with heavy dumbbells.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Angle Pin Engagement', description: 'Give backrest a firm downward push to verify it is locked into place.' }],
+    videoDurationSec: 30
+  },
+  {
+    id: 'flat-bench',
+    name: 'Flat Bench',
+    alternativeNames: ['Olympic Flat Bench', 'Utility Flat Bench', 'Standard Weight Bench'],
+    category: 'Other',
+    tagline: 'Solid, non-adjustable horizontal bench providing stable foundation for pressing and rows',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Pectoralis Major', 'Triceps', 'Deltoids'],
+    secondaryMuscles: ['Core'],
+    equipmentType: 'Free Motion / Other',
+    qrCodeId: 'GYM-FUNC-06',
+    matchKeywords: ['flat bench', 'bench press flat', 'utility bench', 'flat weight bench'],
+    imageSvg: 'chest-press',
+    description: 'A heavy rigid steel horizontal bench pad designed for flat dumbbell bench presses, dumbbell rows, and hip thrusts.',
+    brand: 'Rogue Monster Flat Bench',
+    visualCharacteristics: ['Single horizontal steel base spine', 'Heavy 12-inch wide thick foam vinyl pad', 'Rubber non-slip feet'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Position bench on flat gym flooring away from walking traffic.'
+    ],
+    movementGuidance: [
+      'Plant feet flat on the floor, arch thoracic spine slightly, and retract shoulder blades.'
+    ],
+    commonMistakes: [{ mistake: 'Putting feet up on the bench cushion', correction: 'Plant feet wide on the floor for maximum pressing stability.' }],
+    safetyReminders: ['Wipe down vinyl pad after use.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Tripod Foot Plant', description: 'Plant both feet firmly on the floor to generate leg drive.' }],
+    videoDurationSec: 30
+  },
+  {
+    id: 'incline-bench',
+    name: 'Incline Bench',
+    alternativeNames: ['Fixed Incline Bench', 'Olympic Incline Bench Press Station'],
+    category: 'Other',
+    tagline: 'Dedicated 30-degree incline bench with integrated barbell racking uprights',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Upper Chest (Clavicular)', 'Front Shoulders'],
+    secondaryMuscles: ['Triceps'],
+    equipmentType: 'Free Motion / Other',
+    qrCodeId: 'GYM-FUNC-07',
+    matchKeywords: ['incline bench', 'olympic incline bench', 'upper chest bench'],
+    imageSvg: 'incline-press',
+    description: 'Fixed 30-35 degree angle bench station equipped with dual-level barbell uprights and spotter platform.',
+    brand: 'Hammer Strength Olympic Incline',
+    visualCharacteristics: ['Fixed 35-degree angled padded bench', 'Integrated heavy upright barbell hooks', 'Rear elevated spotter standing platform'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat height so un-racking barbell is in easy reach without shoulder strain.',
+      'Grip barbell slightly wider than shoulder width.'
+    ],
+    movementGuidance: [
+      'Lower barbell smoothly to touch upper collarbone area and press straight upward.'
+    ],
+    commonMistakes: [{ mistake: 'Setting grip too narrow causing wrist strain', correction: 'Align forearms vertically at the bottom of the press.' }],
+    safetyReminders: ['Always have a trained spotter for heavy barbell sets.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Upper Chest Bar Touch', description: 'Touch barbell gently to the clavicle area before pressing.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'decline-bench',
+    name: 'Decline Bench',
+    alternativeNames: ['Olympic Decline Bench', 'Decline Sit-Up Bench', 'Adjustable Decline Bench'],
+    category: 'Other',
+    tagline: 'Downward-angled bench with padded ankle rollers for lower chest presses and core',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Lower Chest (Sternal Head)', 'Abdominals'],
+    secondaryMuscles: ['Triceps'],
+    equipmentType: 'Free Motion / Other',
+    qrCodeId: 'GYM-FUNC-08',
+    matchKeywords: ['decline bench', 'decline sit up', 'lower chest bench', 'ab decline bench'],
+    imageSvg: 'chest-press',
+    description: 'A 20-30 degree decline bench featuring padded leg and ankle lock rollers for secure lower chest pressing and steep abdominal crunches.',
+    brand: 'Life Fitness Olympic Decline',
+    visualCharacteristics: ['Downward sloping bench pad (-20 degrees)', 'Dual foam cylindrical leg/ankle lock rollers', 'Barbell upright catches'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Hook legs over and under the foam ankle lock pads securely.',
+      'Lie back with head resting at the lowest end.'
+    ],
+    movementGuidance: [
+      'Execute lower chest presses or crunches with smooth cadence.'
+    ],
+    commonMistakes: [{ mistake: 'Sitting up too fast after heavy decline set', correction: 'Sit up slowly to allow blood pressure to normalize.' }],
+    safetyReminders: ['Verify ankles are securely locked behind rollers before lying back.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Ankle Lock Verification', description: 'Ensure feet and shins are locked behind foam rollers.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'dumbbell-rack',
+    name: 'Dumbbell Rack',
+    alternativeNames: ['Free Weight Dumbbell Saddle Rack', '3-Tier Dumbbell Station', 'Pro-Style Dumbbell Rack'],
+    category: 'Other',
+    tagline: 'Organized multi-tier steel storage rack housing paired dumbbells from 2.5kg to 50kg',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Full Body (Free Weight Training)'],
+    secondaryMuscles: ['Grip & Forearms'],
+    equipmentType: 'Free Motion / Other',
+    qrCodeId: 'GYM-FUNC-09',
+    matchKeywords: ['dumbbell rack', 'dumbbells', 'free weights', 'hand weights', 'weight rack'],
+    imageSvg: 'chest-press',
+    description: 'Angled heavy steel shelving with molded plastic saddles designed to hold pairs of urethane/rubber dumbbells in ascending weight order.',
+    brand: 'Eleiko / Rogue 3-Tier Dumbbell Rack',
+    visualCharacteristics: ['Long angled steel shelves with individual curved dumbbell saddles', 'Numbered weight indicator badges (e.g. 5kg to 50kg)'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Select matching weight dumbbells with two hands, bending at knees (not back).',
+      'Step back 2-3 paces from the rack to allow other gym members access.'
+    ],
+    movementGuidance: [
+      'Perform free weight exercises with strict form.',
+      'Always return dumbbells to their matching numbered saddle slots.'
+    ],
+    commonMistakes: [{ mistake: 'Dropping dumbbells from height onto the floor', correction: 'Lower dumbbells to thighs and gently place on the floor or rack.' }],
+    safetyReminders: ['Never leave dumbbells rolling on the floor where members can trip.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Safe Dumbbell Pickup', description: 'Squat with legs and brace core when lifting dumbbells off the bottom shelf.' }],
+    videoDurationSec: 25
+  },
+  {
+    id: 'barbell-rack',
+    name: 'Barbell Rack',
+    alternativeNames: ['Fixed Barbell Rack', 'Olympic Bar Storage', 'EZ-Curl Barbell Rack'],
+    category: 'Other',
+    tagline: 'Vertical & A-frame storage rack for pre-weighted straight bars and EZ-curl bars',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Arms', 'Shoulders', 'Back'],
+    secondaryMuscles: ['Full Body'],
+    equipmentType: 'Free Motion / Other',
+    qrCodeId: 'GYM-FUNC-10',
+    matchKeywords: ['barbell rack', 'fixed barbells', 'ez curl rack', 'barbell stand'],
+    imageSvg: 'preacher-curl',
+    description: 'A heavy dual-sided A-frame or horizontal rack holding fixed-weight straight barbells and EZ-curl barbells ranging from 10kg to 45kg.',
+    brand: 'Troy Barbell Dual-Sided Rack',
+    visualCharacteristics: ['Double-sided angled A-frame steel rack with polyurethane hooks', 'Pairs of fixed rubber-coated straight and curl barbells'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Select fixed barbell weight suited for curls, overhead presses, or lunges.',
+      'Lift with both hands and clear the rack area.'
+    ],
+    movementGuidance: [
+      'Execute movement with balanced hand grip.'
+    ],
+    commonMistakes: [{ mistake: 'Re-racking bar unevenly on hooks', correction: 'Ensure both left and right sides rest fully inside the hooks.' }],
+    safetyReminders: ['Lift from knees when picking up heavy barbells from low rungs.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Both-Hook Placement', description: 'Confirm both bar ends are resting securely in the cradle hooks.' }],
+    videoDurationSec: 25
+  },
+  {
+    id: 'kettlebell-station',
+    name: 'Kettlebell',
+    alternativeNames: ['Kettlebell Station', 'Cast Iron Kettlebell Set', 'Competition Kettlebells'],
+    category: 'Other',
+    tagline: 'Cast iron ball with top handle for ballistic swings, Turkish get-ups, and functional strength',
+    difficulty: 'Intermediate',
+    primaryMuscles: ['Posterior Chain (Glutes, Hamstrings, Erector Spinae)', 'Core'],
+    secondaryMuscles: ['Shoulders', 'Grip & Forearms', 'Cardiovascular System'],
+    equipmentType: 'Free Motion / Other',
+    qrCodeId: 'GYM-FUNC-11',
+    matchKeywords: ['kettlebell', 'kettlebells', 'kettlebell swing', 'cast iron weights'],
+    imageSvg: 'calf-raise',
+    description: 'Versatile cast iron/steel weight spheres with top loop handles, used for swings, cleans, snatches, and functional athletic conditioning.',
+    brand: 'Rogue Rubber Coated Kettlebells',
+    visualCharacteristics: ['Cast iron round cannonball body with flat base', 'Single looped handle with color-coded weight rings (8kg to 32kg)'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Select kettlebell weight and place on open rubber mat area.',
+      'Hinge hips backwards with flat spine and grasp handle firmly.'
+    ],
+    movementGuidance: [
+      'Hinge at hips (do not squat) to swing kettlebell back between thighs.',
+      'Explosively snap hips forward and squeeze glutes to project kettlebell to chest level.'
+    ],
+    commonMistakes: [{ mistake: 'Squatting and lifting kettlebell with arms/shoulders', correction: 'Drive the bell purely from the explosive hip hinge snap.' }],
+    safetyReminders: ['Ensure wide clearance around your swing path.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Hip Hinge Snap', description: 'Power comes 100% from your glutes and hamstrings, not arm lifting.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'smith-machine-functional',
+    name: 'Smith Machine',
+    alternativeNames: ['Guided Multi-Purpose Smith Station', 'Commercial Smith System'],
+    category: 'Other',
+    tagline: 'Fixed vertical track barbell for multi-exercise inverted rows, calf raises, and shrugs',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Full Body Multi-Compound'],
+    secondaryMuscles: ['Core'],
+    equipmentType: 'Plate-Loaded',
+    qrCodeId: 'GYM-FUNC-12',
+    matchKeywords: ['smith machine', 'guided barbell', 'smith station', 'functional smith'],
+    imageSvg: 'smith-machine',
+    description: 'The versatile guided barbell system configured for standing shrugs, calf raises, inverted bodyweight rows, and hip thrusts.',
+    brand: 'Hammer Strength Smith Machine',
+    visualCharacteristics: ['Dual vertical steel guide poles with linear ball bearings', 'Barbell with rotating safety hooks and bottom stops'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Set barbell height to waist or chest level depending on the target exercise.',
+      'Adjust bottom safety stops.'
+    ],
+    movementGuidance: [
+      'Rotate wrists to unhook and perform exercise with guided linear path.'
+    ],
+    commonMistakes: [{ mistake: 'Neglecting safety catches', correction: 'Always engage safety pins below exercise stroke.' }],
+    safetyReminders: ['Re-hook barbell securely before stepping away.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Wrist Hook Lock', description: 'Rotate barbell hooks into catches until fully engaged.' }],
+    videoDurationSec: 35
+  },
+  {
+    id: 'ab-crunch-machine',
+    name: 'Abdominal Crunch Machine',
+    alternativeNames: ['Seated Ab Machine', 'Selectorized Ab Crunch', 'Rotary Torso Machine'],
+    category: 'Core',
+    tagline: 'Ergonomic lumbar-supported spinal flexion against stack resistance',
+    difficulty: 'Beginner',
+    primaryMuscles: ['Rectus Abdominis (Six-Pack Core)'],
+    secondaryMuscles: ['Internal & External Obliques', 'Transverse Abdominis'],
+    equipmentType: 'Pin-Loaded (Selectorized)',
+    qrCodeId: 'GYM-CORE-01',
+    matchKeywords: ['ab crunch', 'abdominal machine', 'abs', 'core machine', 'ab cruncher', 'six pack'],
+    imageSvg: 'ab-crunch',
+    description: 'A seated machine with chest roller pad and overhead handles that isolates abdominal spinal flexion while stabilizing the lower back.',
+    brand: 'Matrix Versa Abdominal',
+    visualCharacteristics: ['Curved ergonomic backrest', 'Overhead dual padded elbow/shoulder levers', 'Foot peg brace', 'Pin-loaded weight stack'],
+    verificationStatus: 'Verified',
+    setupInstructions: [
+      'Adjust seat height so the machine rotational axis aligns with your naval / lumbar spine.',
+      'Place feet behind lower foot pegs and rest upper chest/shoulders against top padded handles.'
+    ],
+    movementGuidance: [
+      'Exhale and curl your ribs downward toward your pelvis using only abdominal contraction.',
+      'Hold peak crunch for 2 seconds.',
+      'Inhale and slowly return upright over 3 seconds.'
+    ],
+    commonMistakes: [{ mistake: 'Pulling with arms and neck', correction: 'Focus purely on curling ribs toward hips.' }],
+    safetyReminders: ['Do not hyperextend spine past vertical.'],
+    tutorialSteps: [{ stepNumber: 1, title: 'Rib-to-Pelvis Flexion', description: 'Focus on shortening the distance between ribs and belt line.' }],
+    videoDurationSec: 30
+  }
+];
+
+const fileHeader = `import { Machine } from '../types';
+
+export const MACHINES_DATABASE: Machine[] = ` + JSON.stringify(machines, null, 2) + `;
+
+export const MACHINE_CATEGORIES: Array<{ id: Machine['category']; name: string; count: number; icon: string }> = [
+  { id: 'Chest', name: 'Chest', count: 7, icon: 'shield' },
+  { id: 'Back', name: 'Back', count: 8, icon: 'feather' },
+  { id: 'Shoulders', name: 'Shoulders', count: 4, icon: 'zap' },
+  { id: 'Arms', name: 'Arms', count: 5, icon: 'biceps' },
+  { id: 'Legs', name: 'Legs', count: 11, icon: 'activity' },
+  { id: 'Cardio', name: 'Cardio', count: 6, icon: 'activity' },
+  { id: 'Core', name: 'Core', count: 1, icon: 'zap' },
+  { id: 'Cable Equipment', name: 'Cable Equipment', count: 2, icon: 'anchor' },
+  { id: 'Other', name: 'Other', count: 9, icon: 'grid' },
+];
+
+export const INITIAL_ACHIEVEMENTS = [
+  {
+    id: 'first-discovery',
+    title: 'First Discovery',
+    description: 'Scan or identify your very first gym machine.',
+    icon: 'compass',
+    category: 'discovery' as const,
+    targetCount: 1,
+    currentCount: 0,
+    unlocked: false,
+    rewardXP: 25
+  },
+  {
+    id: 'explorer-5',
+    title: 'Gym Explorer',
+    description: 'Discover and learn about 5 unique gym machines.',
+    icon: 'map-pin',
+    category: 'discovery' as const,
+    targetCount: 5,
+    currentCount: 0,
+    unlocked: false,
+    rewardXP: 50
+  },
+  {
+    id: 'master-10',
+    title: 'Machine Scholar',
+    description: 'Discover 10 unique gym machines in the facility.',
+    icon: 'award',
+    category: 'discovery' as const,
+    targetCount: 10,
+    currentCount: 0,
+    unlocked: false,
+    rewardXP: 100
+  },
+  {
+    id: 'tutorial-learner-1',
+    title: 'Tutorial Learner',
+    description: 'Complete your first step-by-step equipment tutorial checklist.',
+    icon: 'book-open',
+    category: 'learning' as const,
+    targetCount: 1,
+    currentCount: 0,
+    unlocked: false,
+    rewardXP: 30
+  },
+  {
+    id: 'tutorial-scholar-5',
+    title: 'Master of Form',
+    description: 'Complete 5 equipment tutorial checklists and safety reviews.',
+    icon: 'check-circle-2',
+    category: 'learning' as const,
+    targetCount: 5,
+    currentCount: 0,
+    unlocked: false,
+    rewardXP: 75
+  },
+  {
+    id: 'vault-keeper',
+    title: 'Routine Architect',
+    description: 'Save 3 or more machines to your favorites list.',
+    icon: 'bookmark',
+    category: 'mastery' as const,
+    targetCount: 3,
+    currentCount: 0,
+    unlocked: false,
+    rewardXP: 40
+  },
+  {
+    id: 'all-rounder',
+    title: 'Full Body Explorer',
+    description: 'Scan machines across 4 different muscle categories.',
+    icon: 'layers',
+    category: 'consistency' as const,
+    targetCount: 4,
+    currentCount: 0,
+    unlocked: false,
+    rewardXP: 80
+  }
+];
+`;
+
+fs.writeFileSync('src/data/machines.ts', fileHeader, 'utf8');
+console.log('Successfully written machines.ts with ' + machines.length + ' machines!');
