@@ -17,9 +17,9 @@ import { MachineDetailPage } from './pages/MachineDetailPage';
 import { ActivityPage } from './pages/ActivityPage';
 import { AchievementsPage } from './pages/AchievementsPage';
 import { ProfilePage } from './pages/ProfilePage';
-import { AdminDashboardPage } from './pages/AdminDashboardPage';
 
-const KNOWN_TABS = ['landing', 'pricing', 'home', 'scan', 'library', 'activity', 'achievements', 'profile', 'admin'];
+
+const KNOWN_TABS = ['landing', 'pricing', 'home', 'scan', 'library', 'activity', 'achievements', 'profile'];
 
 const AppContent: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('landing');
@@ -134,12 +134,7 @@ const AppContent: React.FC = () => {
               />
             )}
 
-            {currentTab === 'admin' && (
-              <AdminDashboardPage
-                onNavigate={handleNavigate}
-                onSelectMachine={handleSelectMachine}
-              />
-            )}
+
 
             {/* 404 Fallback for unknown tabs */}
             {!KNOWN_TABS.includes(currentTab) && (

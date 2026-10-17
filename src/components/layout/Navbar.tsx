@@ -1,18 +1,14 @@
 import React from 'react';
 import { useGym } from '../../context/GymContext';
-import { useAuth } from '../../context/AuthContext';
 import { UserMenu } from '../auth/UserMenu';
 import { 
   Dumbbell, 
-  Sparkles, 
   QrCode, 
   BookOpen, 
   History, 
   Trophy, 
   User, 
-  Home,
-  ShieldAlert,
-  Crown
+  Home
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -22,7 +18,6 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
   const { totalXP, currentLevel, userProfile } = useGym();
-  const { isAdmin } = useAuth();
 
   // Synced user total XP and Level across all routes
   const displayXP = totalXP || userProfile?.totalXP || 95;
@@ -131,29 +126,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
             );
           })}
 
-          {/* Admin Tab (Visible if Admin) */}
-          {isAdmin && (
-            <button
-              onClick={() => onTabChange('admin')}
-              style={{
-                background: currentTab === 'admin' ? 'rgba(255, 184, 0, 0.2)' : 'rgba(255, 184, 0, 0.08)',
-                color: '#FFB800',
-                border: currentTab === 'admin' ? '1px solid #FFB800' : '1px solid rgba(255, 184, 0, 0.3)',
-                borderRadius: '8px',
-                padding: '0.5rem 0.85rem',
-                fontSize: '0.82rem',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.45rem',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <Crown size={15} color="#FFB800" />
-              Admin
-            </button>
-          )}
         </nav>
 
         {/* Right Controls: XP Pill & UserMenu */}
