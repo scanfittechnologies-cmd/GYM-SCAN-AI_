@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import jsQR from 'jsqr';
 import { useGym } from '../../context/GymContext';
 import { Machine } from '../../types';
 import { 
@@ -15,7 +16,8 @@ import {
   Clock,
   HelpCircle,
   FileSearch,
-  ShieldAlert
+  ShieldAlert,
+  QrCode
 } from 'lucide-react';
 import { MachineSvgIllustration } from '../machines/MachineSvgIllustrations';
 import ScanningLoader from './ScanningLoader';
@@ -26,17 +28,59 @@ import {
   AnalysisDebugRecord,
   markAnalysisDebugRecordConfirmed
 } from '../../services/visionService';
+import { playSuccessFeedback, extractGymMachineCode } from '../../utils/scannerFeedback';
+
+/**
+ * Compress/downscale an image data URL if it's too large.
+ * Keeps images under 1200px wide and under ~1MB base64 size for fast scanning.
+ */
+export const compressImageIfNeeded = (dataUrl: string): Promise<string> => {
+  return new Promise((resolve) => {
+    const MAX_SIDE = 1200;
+    const MAX_B64_BYTES = 1 * 1024 * 1024; // 1MB base64
+    const b64Part = dataUrl.split(',')[1] || '';
+    const approxBytes = b64Part.length * 0.75;
+
+    const img = new Image();
+    img.onload = () => {
+      const needsResize = img.width > MAX_SIDE || img.height > MAX_SIDE;
+      const needsCompress = approxBytes > MAX_B64_BYTES;
+
+      if (!needsResize && !needsCompress) {
+        resolve(dataUrl);
+        return;
+      }
+
+      const scale = needsResize
+        ? Math.min(MAX_SIDE / img.width, MAX_SIDE / img.height)
+        : 1;
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.88));
+    };
+    img.onerror = () => resolve(dataUrl); // fallback: use original
+    img.src = dataUrl;
+  });
+};
 
 interface PhotoAIAnalyzerProps {
   onMachineConfirmed: (machine: Machine, scanType: 'photo', imageUrl?: string, confidence?: number) => void;
   onOpenSettingsDocs: () => void;
   onSelectManual?: () => void;
+  initialMode?: 'ai' | 'qr';
 }
 
 export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   onMachineConfirmed,
   onOpenSettingsDocs,
-  onSelectManual
+  onSelectManual,
+  initialMode = 'ai'
 }) => {
   const { machines, userProfile } = useGym();
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
@@ -52,6 +96,11 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isLiveCameraOpen, setIsLiveCameraOpen] = useState(false);
   const [cameraFacing, setCameraFacing] = useState<'environment' | 'user'>('environment');
+  const [liveCameraMode, setLiveCameraMode] = useState<'ai' | 'qr'>(initialMode);
+
+  const qrCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const qrAnimationRef = useRef<number | null>(null);
+  const isQrScanningRef = useRef<boolean>(false);
 
   // Analysis State
   const [analyzing, setAnalyzing] = useState(false);
@@ -75,6 +124,140 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     '3. Authenticating request with Gemini Vision AI service...',
     '4. Processing structured machine identification response...'
   ];
+
+  // Stop live WebRTC camera stream
+  const stopLiveCamera = useCallback(() => {
+    isQrScanningRef.current = false;
+    if (qrAnimationRef.current) {
+      cancelAnimationFrame(qrAnimationRef.current);
+      qrAnimationRef.current = null;
+    }
+    if (activeStreamRef.current) {
+      activeStreamRef.current.getTracks().forEach(track => track.stop());
+      activeStreamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+    setIsLiveCameraOpen(false);
+    setCameraError(null);
+  }, []);
+
+  // Helper for dynamic content based on liveCameraMode ('ai' vs 'qr')
+  const getModeContent = () => {
+    if (liveCameraMode === 'qr') {
+      return {
+        icon: <QrCode size={34} color="#00F59B" />,
+        badgeText: 'Equipment QR Badge Scanner',
+        title: 'Equipment QR Badge Scanner',
+        subtitle: 'Align the equipment QR sticker inside the frame for automatic instant detection.',
+        mainButton: '📷 Open QR Badge Scanner',
+        liveStatusText: 'Real-Time QR Scanner Active',
+        helperText: 'Position QR badge inside green box',
+        accentColor: '#00F59B',
+        buttonGradient: 'linear-gradient(135deg, #00F59B 0%, #00B36B 100%)',
+        buttonTextColor: '#040810',
+        boxShadow: '0 6px 20px rgba(0, 245, 155, 0.35)'
+      };
+    }
+    return {
+      icon: <Sparkles size={34} color="#00D2FF" />,
+      badgeText: 'AI Machine Photo Recognition',
+      title: 'AI Machine Photo Recognition',
+      subtitle: 'Point your camera directly at any gym machine and take a photo for 3-second Gemini AI identification.',
+      mainButton: '⚡ Open AI Camera Scanner',
+      liveStatusText: 'Live AI Machine Frame Active',
+      helperText: 'Align gym machine inside frame & tap Snap Photo',
+      accentColor: '#00D2FF',
+      buttonGradient: 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)',
+      buttonTextColor: '#FFFFFF',
+      boxShadow: '0 6px 20px rgba(0, 210, 255, 0.35)'
+    };
+  };
+
+  // Real-time QR scanner loop for live camera feed
+  const scanQrFrameRef = useRef<() => void>(() => {});
+
+  const scanQrFrame = useCallback(() => {
+    if (!videoRef.current || videoRef.current.readyState !== videoRef.current.HAVE_ENOUGH_DATA) {
+      if (isQrScanningRef.current) {
+        qrAnimationRef.current = requestAnimationFrame(() => scanQrFrameRef.current());
+      }
+      return;
+    }
+
+    // When Mode === 'AI', hide the continuous QR auto-scanner loop
+    if (liveCameraMode !== 'qr') {
+      return;
+    }
+
+    const video = videoRef.current;
+    if (!qrCanvasRef.current) {
+      qrCanvasRef.current = document.createElement('canvas');
+    }
+    const canvas = qrCanvasRef.current;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+    if (ctx && video.videoWidth > 0 && video.videoHeight > 0) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: 'dontInvert',
+      });
+
+      if (code && code.data) {
+        const cleanCode = extractGymMachineCode(code.data);
+        const match = machines.find(m => 
+          (m.qrCodeId && m.qrCodeId.toUpperCase() === cleanCode) || 
+          m.id.toUpperCase() === cleanCode ||
+          m.name.toUpperCase() === cleanCode
+        );
+
+        if (match) {
+          playSuccessFeedback();
+          stopLiveCamera();
+          setSelectedMatch(match);
+          setPossibleMatches([{
+            machine: match,
+            matchingFeatures: match.visualCharacteristics || ['QR Badge Verified'],
+            notes: `Instant match via QR Badge (${match.qrCodeId}).`
+          }]);
+          setVisionOutput({
+            equipmentVisible: true,
+            equipment_detected: true,
+            imageQuality: 'good',
+            machineIdentified: true,
+            machineName: match.name,
+            machineCategory: match.category,
+            equipment_category: match.category,
+            possible_machine_name: match.name,
+            confidence: 100,
+            possibleMatches: [{ name: match.name, confidence: 100 }],
+            alternative_matches: [],
+            visualFeatures: match.visualCharacteristics || [],
+            visible_features: match.visualCharacteristics || [],
+            primaryMuscles: match.primaryMuscles,
+            setupSteps: match.setupInstructions || [],
+            needs_more_photos: false,
+            result_status: 'MACHINE_IDENTIFIED'
+          });
+          setAnalysisCompleted(true);
+          return;
+        }
+      }
+    }
+
+    if (isQrScanningRef.current) {
+      qrAnimationRef.current = requestAnimationFrame(() => scanQrFrameRef.current());
+    }
+  }, [machines, stopLiveCamera, liveCameraMode]);
+
+  useEffect(() => {
+    scanQrFrameRef.current = scanQrFrame;
+  }, [scanQrFrame]);
 
   // Start live WebRTC camera stream
   const startLiveCamera = async (facing: 'environment' | 'user' = cameraFacing) => {
@@ -110,23 +293,13 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
         };
         videoRef.current.play().catch(console.error);
       }
+
+      isQrScanningRef.current = true;
+      qrAnimationRef.current = requestAnimationFrame(scanQrFrame);
     } catch (err: any) {
       console.warn('Live camera access error:', err);
       setCameraError(err?.message || 'Could not access camera. Please check camera permissions.');
     }
-  };
-
-  // Stop live WebRTC camera stream
-  const stopLiveCamera = () => {
-    if (activeStreamRef.current) {
-      activeStreamRef.current.getTracks().forEach(track => track.stop());
-      activeStreamRef.current = null;
-    }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-    setIsLiveCameraOpen(false);
-    setCameraError(null);
   };
 
   // Capture photo from live video feed
@@ -257,46 +430,6 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
       img.src = dataUrl;
     });
   };
-
-  /**
-   * Compress/downscale an image data URL if it's too large.
-   * Keeps images under 1200px wide and under ~1MB base64 size for fast scanning.
-   */
-  const compressImageIfNeeded = (dataUrl: string): Promise<string> => {
-    return new Promise((resolve) => {
-      const MAX_SIDE = 1200;
-      const MAX_B64_BYTES = 1 * 1024 * 1024; // 1MB base64
-      const b64Part = dataUrl.split(',')[1] || '';
-      const approxBytes = b64Part.length * 0.75;
-
-      const img = new Image();
-      img.onload = () => {
-        const needsResize = img.width > MAX_SIDE || img.height > MAX_SIDE;
-        const needsCompress = approxBytes > MAX_B64_BYTES;
-
-        if (!needsResize && !needsCompress) {
-          resolve(dataUrl);
-          return;
-        }
-
-        const scale = needsResize
-          ? Math.min(MAX_SIDE / img.width, MAX_SIDE / img.height)
-          : 1;
-        const w = Math.round(img.width * scale);
-        const h = Math.round(img.height * scale);
-
-        const canvas = document.createElement('canvas');
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext('2d')!;
-        ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', 0.88));
-      };
-      img.onerror = () => resolve(dataUrl); // fallback: use original
-      img.src = dataUrl;
-    });
-  };
-
 
   const validateAndProcessFile = async (file: File) => {
     setFileError(null);
@@ -469,34 +602,95 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
       {/* 0. Fullscreen AI Vision Scanning Loader */}
       <ScanningLoader isScanning={analyzing} />
 
-      {/* User-Facing Info Banner */}
-      <div className="w-full max-w-xl mx-auto my-4 p-4 rounded-2xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <div>
-            <h4 className="text-xs font-bold text-white">Instant AI Analysis</h4>
-            <p className="text-[11px] text-slate-400">Upload any commercial strength machine for instant setup & exercise guidance.</p>
-          </div>
-        </div>
-        <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold tracking-wider uppercase whitespace-nowrap">
-          ⚡ AI Online
-        </span>
+      {/* Viewfinder Mode Switcher: QR Badge vs AI Snapshot */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '0.5rem',
+        background: 'rgba(15, 23, 42, 0.65)',
+        padding: '5px',
+        borderRadius: '16px',
+        border: '1px solid rgba(255, 255, 255, 0.08)'
+      }}>
+        <button
+          type="button"
+          onClick={() => {
+            setLiveCameraMode('qr');
+            setFileError(null);
+          }}
+          style={{
+            background: liveCameraMode === 'qr'
+              ? 'linear-gradient(135deg, rgba(0, 245, 155, 0.2) 0%, rgba(13, 20, 28, 0.95) 100%)'
+              : 'transparent',
+            border: liveCameraMode === 'qr'
+              ? '1.5px solid #00F59B'
+              : '1px solid transparent',
+            borderRadius: '12px',
+            padding: '0.65rem 0.75rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            color: liveCameraMode === 'qr' ? '#00F59B' : '#94A3B8',
+            fontWeight: 700,
+            fontSize: '0.85rem',
+            transition: 'all 0.2s ease',
+            boxShadow: liveCameraMode === 'qr' ? '0 4px 16px rgba(0, 245, 155, 0.15)' : 'none'
+          }}
+        >
+          <QrCode size={16} />
+          <span>Scan QR Badge</span>
+          {liveCameraMode === 'qr' && (
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00F59B' }} />
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setLiveCameraMode('ai');
+            setFileError(null);
+          }}
+          style={{
+            background: liveCameraMode === 'ai'
+              ? 'linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(12, 19, 32, 0.95) 100%)'
+              : 'transparent',
+            border: liveCameraMode === 'ai'
+              ? '1.5px solid #00D2FF'
+              : '1px solid transparent',
+            borderRadius: '12px',
+            padding: '0.65rem 0.75rem',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            color: liveCameraMode === 'ai' ? '#00D2FF' : '#94A3B8',
+            fontWeight: 700,
+            fontSize: '0.85rem',
+            transition: 'all 0.2s ease',
+            boxShadow: liveCameraMode === 'ai' ? '0 4px 16px rgba(0, 210, 255, 0.15)' : 'none'
+          }}
+        >
+          <Sparkles size={16} />
+          <span>Snap Machine Photo (AI)</span>
+          {liveCameraMode === 'ai' && (
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00D2FF' }} />
+          )}
+        </button>
       </div>
 
       {/* 2. Live WebRTC Camera Stream Viewport OR Upload Dropzone */}
       {isLiveCameraOpen ? (
         <div style={{
           position: 'relative',
-          height: '340px',
+          height: '380px',
           backgroundColor: '#07090E',
           borderRadius: '24px',
           overflow: 'hidden',
-          border: '1.5px solid #00D2FF',
-          boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
+          border: liveCameraMode === 'ai' ? '1.5px solid #00D2FF' : '1.5px solid #00F59B',
+          boxShadow: liveCameraMode === 'ai' ? '0 16px 36px rgba(0, 210, 255, 0.25)' : '0 16px 36px rgba(0, 245, 155, 0.25)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -511,158 +705,296 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
 
-          {/* Viewfinder Overlay with Laser & Target Frame */}
-          <div style={{
-            position: 'absolute',
-            width: '210px',
-            height: '210px',
-            border: '2px dashed rgba(0, 210, 255, 0.6)',
-            borderRadius: '16px',
-            boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.45)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            pointerEvents: 'none'
-          }}>
-            <div className="viewfinder-corner corner-tl" />
-            <div className="viewfinder-corner corner-tr" />
-            <div className="viewfinder-corner corner-bl" />
-            <div className="viewfinder-corner corner-br" />
-          </div>
-
-          {/* Top Bar Controls */}
+          {/* Mode Switcher Segmented Control */}
           <div style={{
             position: 'absolute',
             top: '12px',
-            left: '12px',
-            right: '12px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(7, 10, 18, 0.88)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '999px',
+            padding: '3px',
             display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            zIndex: 20
+            gap: '4px',
+            zIndex: 25
           }}>
-            <div style={{
-              background: 'rgba(10, 14, 22, 0.85)',
-              backdropFilter: 'blur(8px)',
-              padding: '4px 10px',
-              borderRadius: '999px',
-              border: '1px solid rgba(0, 210, 255, 0.3)',
-              fontSize: '0.72rem',
-              color: '#00D2FF',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00D2FF', animation: 'pulse 1.5s infinite' }} />
-              Live Camera Feed
-            </div>
-
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <button
-                type="button"
-                onClick={() => {
-                  const next = cameraFacing === 'environment' ? 'user' : 'environment';
-                  setCameraFacing(next);
-                  startLiveCamera(next);
-                }}
-                className="btn-ghost"
-                style={{
-                  background: 'rgba(10, 14, 22, 0.85)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  borderRadius: '50%',
-                  width: '32px',
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: 0
-                }}
-                title="Switch Camera"
-              >
-                <RotateCcw size={14} color="#F1F5F9" />
-              </button>
-              <button
-                type="button"
-                onClick={stopLiveCamera}
-                className="btn-ghost"
-                style={{
-                  background: 'rgba(10, 14, 22, 0.85)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  borderRadius: '50%',
-                  width: '32px',
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: 0
-                }}
-                title="Close Camera"
-              >
-                <XCircle size={16} color="#FF6B81" />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setLiveCameraMode('qr')}
+              style={{
+                background: liveCameraMode === 'qr' ? 'linear-gradient(135deg, #00F59B 0%, #00B36B 100%)' : 'transparent',
+                border: 'none',
+                borderRadius: '999px',
+                padding: '4px 12px',
+                color: liveCameraMode === 'qr' ? '#040810' : '#94A3B8',
+                fontWeight: 700,
+                fontSize: '0.73rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <QrCode size={12} /> Scan QR Badge
+            </button>
+            <button
+              type="button"
+              onClick={() => setLiveCameraMode('ai')}
+              style={{
+                background: liveCameraMode === 'ai' ? 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)' : 'transparent',
+                border: 'none',
+                borderRadius: '999px',
+                padding: '4px 12px',
+                color: liveCameraMode === 'ai' ? '#040810' : '#94A3B8',
+                fontWeight: 700,
+                fontSize: '0.73rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Sparkles size={12} /> Snap Machine Photo (AI)
+            </button>
           </div>
 
-          {/* Bottom Snap Button */}
+          {/* Viewfinder Overlay with Laser & Target Frame */}
+          {liveCameraMode === 'qr' ? (
+            <div style={{
+              position: 'absolute',
+              width: '210px',
+              height: '210px',
+              border: '2px dashed rgba(0, 245, 155, 0.7)',
+              borderRadius: '16px',
+              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.45)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'none'
+            }}>
+              <div className="viewfinder-corner corner-tl" style={{ borderColor: '#00F59B' }} />
+              <div className="viewfinder-corner corner-tr" style={{ borderColor: '#00F59B' }} />
+              <div className="viewfinder-corner corner-bl" style={{ borderColor: '#00F59B' }} />
+              <div className="viewfinder-corner corner-br" style={{ borderColor: '#00F59B' }} />
+              <div className="scanner-laser" />
+            </div>
+          ) : (
+            <div style={{
+              position: 'absolute',
+              width: '82%',
+              maxWidth: '340px',
+              height: '220px',
+              border: '1.5px dashed rgba(0, 210, 255, 0.65)',
+              borderRadius: '18px',
+              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.45)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              pointerEvents: 'none'
+            }}>
+              <div className="viewfinder-corner corner-tl" style={{ borderColor: '#00D2FF' }} />
+              <div className="viewfinder-corner corner-tr" style={{ borderColor: '#00D2FF' }} />
+              <div className="viewfinder-corner corner-bl" style={{ borderColor: '#00D2FF' }} />
+              <div className="viewfinder-corner corner-br" style={{ borderColor: '#00D2FF' }} />
+            </div>
+          )}
+
+          {/* Camera Header Actions (Switch Camera / Close) */}
+          <div style={{
+            position: 'absolute',
+            top: '12px',
+            right: '12px',
+            display: 'flex',
+            gap: '6px',
+            zIndex: 26
+          }}>
+            <button
+              type="button"
+              onClick={() => {
+                const next = cameraFacing === 'environment' ? 'user' : 'environment';
+                setCameraFacing(next);
+                startLiveCamera(next);
+              }}
+              className="btn-ghost"
+              style={{
+                background: 'rgba(10, 14, 22, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 0
+              }}
+              title="Switch Camera (Front/Back)"
+            >
+              <RotateCcw size={14} color="#F1F5F9" />
+            </button>
+            <button
+              type="button"
+              onClick={stopLiveCamera}
+              className="btn-ghost"
+              style={{
+                background: 'rgba(10, 14, 22, 0.85)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 0
+              }}
+              title="Close Camera"
+            >
+              <XCircle size={16} color="#FF6B81" />
+            </button>
+          </div>
+
+          {/* Bottom Controls Overlay */}
           <div style={{
             position: 'absolute',
             bottom: '16px',
             left: 0,
             right: 0,
             display: 'flex',
-            justifyContent: 'center',
+            flexDirection: 'column',
             alignItems: 'center',
-            zIndex: 20
+            gap: '8px',
+            zIndex: 25
           }}>
-            <button
-              type="button"
-              onClick={captureLivePhoto}
-              className="btn-primary"
-              style={{
-                borderRadius: '999px',
-                padding: '0.65rem 1.4rem',
-                fontSize: '0.85rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                boxShadow: '0 4px 20px rgba(0, 210, 255, 0.4)'
-              }}
-            >
-              <Camera size={16} /> Snap Photo & Analyze
-            </button>
+            {/* When Mode === 'ai', display prominent glowing shutter button */}
+            {liveCameraMode === 'ai' && (
+              <button
+                type="button"
+                onClick={captureLivePhoto}
+                style={{
+                  background: 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)',
+                  color: '#FFFFFF',
+                  border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                  borderRadius: '999px',
+                  padding: '0.75rem 1.85rem',
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  boxShadow: '0 8px 25px rgba(0, 210, 255, 0.45)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
+                }}
+              >
+                <Camera size={18} />
+                <span>📸 Snap Photo for AI Scan</span>
+                <Sparkles size={15} />
+              </button>
+            )}
+
+            <div style={{
+              background: 'rgba(10, 14, 22, 0.88)',
+              backdropFilter: 'blur(8px)',
+              padding: '5px 14px',
+              borderRadius: '999px',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              fontSize: '0.75rem',
+              color: '#CBD5E1',
+              textAlign: 'center',
+              maxWidth: '90%'
+            }}>
+              {getModeContent().helperText}
+            </div>
           </div>
         </div>
-      ) : (
-        <PhotoUploadTab
-          onImageSelected={validateAndProcessFile}
-          isScanning={analyzing}
-          previewUrl={uploadedImage}
-        />
-      )}
-
-      {/* Button to toggle live camera when closed and no image uploaded */}
-      {!isLiveCameraOpen && !uploadedImage && (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '-0.5rem', marginBottom: '0.75rem' }}>
-          <button
-            type="button"
-            onClick={() => startLiveCamera()}
-            disabled={analyzing}
-            className="btn-secondary"
-            style={{
-              fontSize: '0.82rem',
-              padding: '0.55rem 1.1rem',
+      ) : !uploadedImage ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+          {/* Dynamic Idle Card Content */}
+          <div style={{
+            backgroundColor: '#07090E',
+            borderRadius: '24px',
+            border: liveCameraMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid rgba(0, 210, 255, 0.3)',
+            boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
+            padding: '2.5rem 1.5rem',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '1.25rem',
+            animation: 'fadeIn 0.25s ease-out'
+          }}>
+            <div style={{
+              width: '68px',
+              height: '68px',
+              borderRadius: '22px',
+              background: liveCameraMode === 'qr' ? 'rgba(0, 245, 155, 0.12)' : 'rgba(0, 210, 255, 0.12)',
+              border: liveCameraMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.35)' : '1px solid rgba(0, 210, 255, 0.35)',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              border: '1px solid rgba(0, 210, 255, 0.3)',
-              color: '#00D2FF'
-            }}
-          >
-            <Camera size={15} /> Open Live Camera Scanner
-          </button>
+              justifyContent: 'center',
+              color: getModeContent().accentColor,
+              boxShadow: liveCameraMode === 'qr' ? '0 0 25px rgba(0, 245, 155, 0.15)' : '0 0 25px rgba(0, 210, 255, 0.15)'
+            }}>
+              {getModeContent().icon}
+            </div>
+
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', marginBottom: '0.45rem' }}>
+                <span className={liveCameraMode === 'qr' ? 'badge badge-emerald' : 'badge badge-blue'} style={{ fontSize: '0.72rem' }}>
+                  {getModeContent().badgeText}
+                </span>
+              </div>
+              <h3 style={{ fontSize: '1.25rem', color: '#F1F5F9', marginBottom: '0.45rem', fontWeight: 700 }}>
+                {getModeContent().title}
+              </h3>
+              <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.5, margin: 0, maxWidth: '380px' }}>
+                {getModeContent().subtitle}
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', maxWidth: '320px' }}>
+              <button
+                type="button"
+                onClick={() => startLiveCamera()}
+                disabled={analyzing}
+                style={{
+                  background: getModeContent().buttonGradient,
+                  color: getModeContent().buttonTextColor,
+                  fontWeight: 700,
+                  fontSize: '0.9rem',
+                  padding: '0.8rem 1.5rem',
+                  borderRadius: '14px',
+                  border: 'none',
+                  boxShadow: getModeContent().boxShadow,
+                  cursor: analyzing ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.2s ease',
+                  width: '100%'
+                }}
+              >
+                {getModeContent().mainButton}
+              </button>
+            </div>
+          </div>
+
+          {/* When in AI mode and idle, provide Photo Upload option below */}
+          {liveCameraMode === 'ai' && (
+            <PhotoUploadTab
+              onImageSelected={validateAndProcessFile}
+              isScanning={analyzing}
+              previewUrl={uploadedImage}
+            />
+          )}
         </div>
-      )}
+      ) : null}
 
       {cameraError && (
         <div style={{

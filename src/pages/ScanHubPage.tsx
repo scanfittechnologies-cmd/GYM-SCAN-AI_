@@ -143,7 +143,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
     {/* 3. Active Identification Tool View */}
     {activeMode === 'qr' ? (
       <CameraScanner
-        onMachineIdentified={(m) => handleScanSuccess(m, 'qr')}
+        onMachineIdentified={(m, type, img, conf) => handleScanSuccess(m, type || 'qr', img, conf)}
         onSwitchToManual={() => onNavigate('library')}
         onSwitchToPhoto={() => setActiveMode('photo')}
       />
