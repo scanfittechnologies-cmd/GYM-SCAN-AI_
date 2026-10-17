@@ -6,6 +6,7 @@ import {
   User, 
   Settings, 
   Trash2, 
+  Camera, 
   ShieldCheck, 
   AlertTriangle, 
   Check, 
