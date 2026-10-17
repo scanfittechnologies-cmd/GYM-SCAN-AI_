@@ -6,16 +6,10 @@ import {
   User, 
   Settings, 
   Trash2, 
-  Camera, 
   ShieldCheck, 
-  Database, 
-  Sparkles, 
-  Code2, 
   AlertTriangle, 
   Check, 
   Star,
-  Layers,
-  Server,
   Crown,
   LogOut,
   Mail,
@@ -47,7 +41,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
   const [isEditingName, setIsEditingName] = useState(false);
   const [showClearConfirmModal, setShowClearConfirmModal] = useState(false);
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'profile' | 'favorites' | 'api-docs'>('profile');
+  const [activeTab, setActiveTab] = useState<'profile' | 'favorites'>('profile');
 
   const favoriteMachines = machines.filter(m => favoriteMachineIds.includes(m.id));
   const unlockedAchievementsCount = achievements.filter(a => a.unlocked).length;
@@ -170,26 +164,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
         >
           <Star size={14} />
           Saved Routine ({favoriteMachines.length})
-        </button>
-
-        <button
-          onClick={() => setActiveTab('api-docs')}
-          style={{
-            background: activeTab === 'api-docs' ? 'rgba(0, 210, 255, 0.12)' : 'transparent',
-            color: activeTab === 'api-docs' ? '#00D2FF' : '#94A3B8',
-            border: activeTab === 'api-docs' ? '1px solid rgba(0, 210, 255, 0.3)' : '1px solid transparent',
-            borderRadius: '10px',
-            padding: '0.5rem 1rem',
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
-        >
-          <Code2 size={14} />
-          Connect Cloud Services
         </button>
       </div>
 
@@ -408,55 +382,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
         </div>
       )}
 
-      {/* 3. API & Cloud Integration Guide Tab */}
-      {activeTab === 'api-docs' && (
-        <div className="glass-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', animation: 'fadeIn 0.2s ease-out' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Code2 size={20} color="#00D2FF" />
-                <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0 }}>
-                  Backend Integration & Deployment Checklist
-                </h3>
-              </div>
-              <p style={{ fontSize: '0.82rem', color: '#94A3B8', marginTop: '4px', margin: '4px 0 0 0' }}>
-                Production database schema and environment variables guide.
-              </p>
-            </div>
 
-            <span className="bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold inline-flex items-center px-2.5 py-1 rounded-full">
-              Developer Deployment Docs
-            </span>
-          </div>
-
-          <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#00F59B', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.4rem' }}>
-              <Database size={16} /> Step 1: PostgreSQL Schemas & RLS Migration Files
-            </div>
-            <p style={{ fontSize: '0.8rem', color: '#CBD5E1', lineHeight: 1.45, margin: 0 }}>
-              Schema migrations are generated in <code>supabase/migrations/01_initial_schema.sql</code> and <code>supabase/migrations/02_security_rls.sql</code>. Execute these in your Supabase SQL Editor to provision all 11 tables with Row Level Security rules.
-            </p>
-          </div>
-
-          <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FFB800', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.4rem' }}>
-              <Server size={16} /> Step 2: Express Server & Environment Variables
-            </div>
-            <p style={{ fontSize: '0.8rem', color: '#CBD5E1', lineHeight: 1.45, margin: 0 }}>
-              Configure <code>VITE_BACKEND_URL</code> in your <code>.env</code> file (default: <code>https://gymscan-server-2026.onrender.com</code>). For local backend development, configure <code>PORT=3001</code> and run <code>npm run server</code>.
-            </p>
-          </div>
-
-          <div style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#00D2FF', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.4rem' }}>
-              <Sparkles size={16} /> Step 3: Backend AI Vision Scanner (/api/scan-machine)
-            </div>
-            <p style={{ fontSize: '0.8rem', color: '#CBD5E1', lineHeight: 1.45, margin: 0 }}>
-              The frontend connects to <code>POST /api/scan-machine</code> (pointing to live Render server: <code>https://gymscan-server-2026.onrender.com</code>) to analyze images with ONNX and Gemini Vision without exposing server secrets to the browser.
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* Clear Data Confirmation Modal */}
       {showClearConfirmModal && (
