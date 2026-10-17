@@ -597,27 +597,27 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', maxWidth: '680px', margin: '0 auto' }}>
+    <div className="pb-28 md:pb-6" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', maxWidth: '680px', margin: '0 auto' }}>
       
       {/* 0. Fullscreen AI Vision Scanning Loader */}
       <ScanningLoader isScanning={analyzing} />
 
       {/* Viewfinder Mode Switcher: QR Badge vs AI Snapshot */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '0.5rem',
-        background: 'rgba(15, 23, 42, 0.65)',
-        padding: '5px',
-        borderRadius: '16px',
-        border: '1px solid rgba(255, 255, 255, 0.08)'
-      }}>
+      <div
+        className="flex flex-col sm:flex-row gap-2 w-full max-w-xl mx-auto p-1.5 sm:p-2"
+        style={{
+          background: 'rgba(15, 23, 42, 0.65)',
+          borderRadius: '16px',
+          border: '1px solid rgba(255, 255, 255, 0.08)'
+        }}
+      >
         <button
           type="button"
           onClick={() => {
             setLiveCameraMode('qr');
             setFileError(null);
           }}
+          className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
           style={{
             background: liveCameraMode === 'qr'
               ? 'linear-gradient(135deg, rgba(0, 245, 155, 0.2) 0%, rgba(13, 20, 28, 0.95) 100%)'
@@ -626,20 +626,12 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
               ? '1.5px solid #00F59B'
               : '1px solid transparent',
             borderRadius: '12px',
-            padding: '0.65rem 0.75rem',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
             color: liveCameraMode === 'qr' ? '#00F59B' : '#94A3B8',
             fontWeight: 700,
-            fontSize: '0.85rem',
-            transition: 'all 0.2s ease',
             boxShadow: liveCameraMode === 'qr' ? '0 4px 16px rgba(0, 245, 155, 0.15)' : 'none'
           }}
         >
-          <QrCode size={16} />
+          <QrCode size={16} className="shrink-0" />
           <span>Scan QR Badge</span>
           {liveCameraMode === 'qr' && (
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00F59B' }} />
@@ -652,6 +644,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             setLiveCameraMode('ai');
             setFileError(null);
           }}
+          className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
           style={{
             background: liveCameraMode === 'ai'
               ? 'linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(12, 19, 32, 0.95) 100%)'
@@ -660,20 +653,12 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
               ? '1.5px solid #00D2FF'
               : '1px solid transparent',
             borderRadius: '12px',
-            padding: '0.65rem 0.75rem',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
             color: liveCameraMode === 'ai' ? '#00D2FF' : '#94A3B8',
             fontWeight: 700,
-            fontSize: '0.85rem',
-            transition: 'all 0.2s ease',
             boxShadow: liveCameraMode === 'ai' ? '0 4px 16px rgba(0, 210, 255, 0.15)' : 'none'
           }}
         >
-          <Sparkles size={16} />
+          <Sparkles size={16} className="shrink-0" />
           <span>Snap Machine Photo (AI)</span>
           {liveCameraMode === 'ai' && (
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00D2FF' }} />
@@ -683,9 +668,10 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
 
       {/* 2. Live WebRTC Camera Stream Viewport OR Upload Dropzone */}
       {isLiveCameraOpen ? (
-        <div style={{
+        <div
+          className="h-[55vh] max-h-[420px] md:h-[480px]"
+          style={{
           position: 'relative',
-          height: '380px',
           backgroundColor: '#07090E',
           borderRadius: '24px',
           overflow: 'hidden',
@@ -914,20 +900,25 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
       ) : !uploadedImage ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
           {/* Dynamic Idle Card Content */}
-          <div style={{
-            backgroundColor: '#07090E',
-            borderRadius: '24px',
-            border: liveCameraMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid rgba(0, 210, 255, 0.3)',
-            boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
-            padding: '2.5rem 1.5rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1.25rem',
-            animation: 'fadeIn 0.25s ease-out'
-          }}>
+          <div
+            className="pb-28 md:pb-6"
+            style={{
+              backgroundColor: '#07090E',
+              borderRadius: '24px',
+              border: liveCameraMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid rgba(0, 210, 255, 0.3)',
+              boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
+              paddingTop: '2.5rem',
+              paddingLeft: '1.5rem',
+              paddingRight: '1.5rem',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1.25rem',
+              animation: 'fadeIn 0.25s ease-out'
+            }}
+          >
             <div style={{
               width: '68px',
               height: '68px',
@@ -957,7 +948,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
               </p>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', maxWidth: '320px' }}>
+            <div className="mb-20 md:mb-0" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', maxWidth: '320px' }}>
               <button
                 type="button"
                 onClick={() => startLiveCamera()}

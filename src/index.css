@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   --bg-primary: #0a0c10;
   --bg-secondary: #11141c;
@@ -489,12 +493,16 @@ button.text-emerald-400 {
 .app-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 1rem calc(5.5rem + env(safe-area-inset-bottom, 16px)) 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 16px));
 }
 
 @media (min-width: 768px) {
   .app-container {
-    padding: 1.5rem 2rem 3rem 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-bottom: 3rem;
   }
 }
 

@@ -61,7 +61,7 @@ const AppContent: React.FC = () => {
 
       {/* Main Responsive App Content Area */}
       <main
-        className={isFullWidthPage ? '' : 'app-container'}
+        className={isFullWidthPage ? '' : 'app-container pt-20 md:pt-6'}
         style={{ flex: 1 }}
       >
         {selectedMachine ? (
@@ -83,7 +83,7 @@ const AppContent: React.FC = () => {
             )}
 
             {currentTab === 'pricing' && (
-              <div className="app-container" style={{ paddingTop: '1.5rem' }}>
+              <div className="app-container pt-20 md:pt-6">
                 <PricingPage onNavigate={handleNavigate} />
               </div>
             )}

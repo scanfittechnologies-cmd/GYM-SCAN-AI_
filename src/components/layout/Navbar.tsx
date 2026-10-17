@@ -48,54 +48,41 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
       borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
       width: '100%'
     }}>
-      <div style={{
-        maxWidth: '1280px',
-        margin: '0 auto',
-        padding: '0.75rem 1.25rem',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '1rem'
-      }}>
+      <div className="w-full max-w-[1280px] mx-auto px-3 md:px-5 py-2.5 md:py-3 flex items-center justify-between gap-2 md:gap-4">
         {/* Brand Logo */}
         <div 
           onClick={() => onTabChange('home')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.65rem',
-            cursor: 'pointer',
-            userSelect: 'none'
-          }}
+          className="flex items-center gap-2 md:gap-2.5 cursor-pointer select-none shrink-0"
         >
           <div style={{
-            width: '38px',
-            height: '38px',
+            width: '36px',
+            height: '36px',
             borderRadius: '10px',
             background: 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             color: '#05140F',
-            boxShadow: '0 0 16px rgba(0, 245, 155, 0.4)'
+            boxShadow: '0 0 16px rgba(0, 245, 155, 0.4)',
+            flexShrink: 0
           }}>
-            <Dumbbell size={22} strokeWidth={2.5} />
+            <Dumbbell size={20} strokeWidth={2.5} />
           </div>
 
           <div>
             <div style={{
               fontFamily: 'var(--font-heading)',
               fontWeight: 900,
-              fontSize: '1.2rem',
+              fontSize: '1.1rem',
               letterSpacing: '-0.02em',
               lineHeight: 1,
               background: 'linear-gradient(90deg, #FFFFFF 30%, #00F59B 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
-            }}>
+            }} className="md:text-[1.2rem]">
               GYM SCAN <span style={{ color: '#00F59B', WebkitTextFillColor: '#00F59B' }}>AI</span>
             </div>
-            <div style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            <div className="text-[0.6rem] md:text-[0.65rem] text-[#64748B] font-semibold tracking-wider uppercase hidden sm:block">
               Equipment Vision & Guide
             </div>
           </div>

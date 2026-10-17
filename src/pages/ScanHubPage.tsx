@@ -36,7 +36,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
   };
 
   return (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '800px', margin: '0 auto', paddingBottom: '2rem' }}>
+  <div className="pb-28 md:pb-8" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '800px', margin: '0 auto' }}>
 
     {/* 1. Page Header */}
     <div style={{ textAlign: 'center', maxWidth: '580px', margin: '0 auto' }}>
@@ -54,19 +54,19 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
     </div>
 
     {/* 2. Compact Scanner Mode Selector Tabs */}
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: '0.75rem',
-      background: 'rgba(15, 23, 42, 0.6)',
-      padding: '6px',
-      borderRadius: '16px',
-      border: '1px solid rgba(255, 255, 255, 0.08)'
-    }}>
+    <div
+      className="flex flex-col sm:flex-row gap-2 w-full max-w-xl mx-auto p-1.5 sm:p-2"
+      style={{
+        background: 'rgba(15, 23, 42, 0.6)',
+        borderRadius: '16px',
+        border: '1px solid rgba(255, 255, 255, 0.08)'
+      }}
+    >
       {/* Primary Option: Scan QR Code */}
       <button
         type="button"
         onClick={() => setActiveMode('qr')}
+        className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
         style={{
           background: activeMode === 'qr'
             ? 'linear-gradient(135deg, rgba(0, 245, 155, 0.2) 0%, rgba(13, 20, 28, 0.95) 100%)'
@@ -75,20 +75,12 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
             ? '1.5px solid #00F59B'
             : '1px solid transparent',
           borderRadius: '12px',
-          padding: '0.75rem 1rem',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
           color: activeMode === 'qr' ? '#00F59B' : '#94A3B8',
           fontWeight: 700,
-          fontSize: '0.9rem',
-          transition: 'all 0.2s ease',
           boxShadow: activeMode === 'qr' ? '0 4px 16px rgba(0, 245, 155, 0.15)' : 'none'
         }}
       >
-        <QrCode size={18} />
+        <QrCode size={18} className="shrink-0" />
         <span>Scan QR Code</span>
         {activeMode === 'qr' && (
           <span style={{
@@ -105,6 +97,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
       <button
         type="button"
         onClick={() => setActiveMode('photo')}
+        className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
         style={{
           background: activeMode === 'photo'
             ? 'linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(12, 19, 32, 0.95) 100%)'
@@ -113,20 +106,12 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
             ? '1.5px solid #00D2FF'
             : '1px solid transparent',
           borderRadius: '12px',
-          padding: '0.75rem 1rem',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
           color: activeMode === 'photo' ? '#00D2FF' : '#94A3B8',
           fontWeight: 700,
-          fontSize: '0.9rem',
-          transition: 'all 0.2s ease',
           boxShadow: activeMode === 'photo' ? '0 4px 16px rgba(0, 210, 255, 0.15)' : 'none'
         }}
       >
-        <Upload size={18} />
+        <Upload size={18} className="shrink-0" />
         <span>Upload Machine Photo</span>
         {activeMode === 'photo' && (
           <span style={{

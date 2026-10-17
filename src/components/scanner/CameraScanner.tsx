@@ -424,45 +424,37 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', maxWidth: '640px', margin: '0 auto' }}>
+    <div className="pb-28 md:pb-6" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', maxWidth: '640px', margin: '0 auto' }}>
       
       {/* 0. Top Viewfinder Mode Switcher Toggle Pill */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '6px',
-        background: 'rgba(11, 15, 23, 0.85)',
-        padding: '4px',
-        borderRadius: '16px',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        backdropFilter: 'blur(10px)'
-      }}>
+      <div
+        className="flex flex-col sm:flex-row gap-2 w-full max-w-xl mx-auto p-1.5 sm:p-2"
+        style={{
+          background: 'rgba(11, 15, 23, 0.85)',
+          borderRadius: '16px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)'
+        }}
+      >
         <button
           type="button"
           onClick={() => {
             setScannerMode('qr');
             setScanError(null);
           }}
+          className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
           style={{
             background: scannerMode === 'qr'
               ? 'linear-gradient(135deg, rgba(0, 245, 155, 0.22) 0%, rgba(13, 22, 28, 0.95) 100%)'
               : 'transparent',
             border: scannerMode === 'qr' ? '1.5px solid #00F59B' : '1px solid transparent',
             borderRadius: '12px',
-            padding: '0.65rem 0.85rem',
             color: scannerMode === 'qr' ? '#00F59B' : '#94A3B8',
             fontWeight: 700,
-            fontSize: '0.82rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
             boxShadow: scannerMode === 'qr' ? '0 4px 14px rgba(0, 245, 155, 0.18)' : 'none'
           }}
         >
-          <QrCode size={16} />
+          <QrCode size={16} className="shrink-0" />
           <span>Scan QR Badge</span>
           {scannerMode === 'qr' && (
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00F59B' }} />
@@ -475,26 +467,19 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
             setScannerMode('ai-snapshot');
             setScanError(null);
           }}
+          className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
           style={{
             background: scannerMode === 'ai-snapshot'
               ? 'linear-gradient(135deg, rgba(0, 210, 255, 0.22) 0%, rgba(12, 20, 34, 0.95) 100%)'
               : 'transparent',
             border: scannerMode === 'ai-snapshot' ? '1.5px solid #00D2FF' : '1px solid transparent',
             borderRadius: '12px',
-            padding: '0.65rem 0.85rem',
             color: scannerMode === 'ai-snapshot' ? '#00D2FF' : '#94A3B8',
             fontWeight: 700,
-            fontSize: '0.82rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
             boxShadow: scannerMode === 'ai-snapshot' ? '0 4px 14px rgba(0, 210, 255, 0.18)' : 'none'
           }}
         >
-          <Sparkles size={16} />
+          <Sparkles size={16} className="shrink-0" />
           <span>Snap Machine Photo (AI)</span>
           {scannerMode === 'ai-snapshot' && (
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00D2FF' }} />
@@ -503,26 +488,28 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       </div>
 
       {/* 1. Camera Viewport / Scanner View */}
-      <div style={{
-        position: 'relative',
-        minHeight: '380px',
-        backgroundColor: '#07090E',
-        borderRadius: '24px',
-        overflow: 'hidden',
-        border: detectedMachine 
-          ? (detectedScanType === 'qr' ? '2px solid #00F59B' : '2px solid #00D2FF')
-          : scannerMode === 'qr' 
-            ? '1px solid rgba(0, 245, 155, 0.3)' 
-            : '1px solid rgba(0, 210, 255, 0.3)',
-        boxShadow: detectedMachine 
-          ? (detectedScanType === 'qr' ? '0 0 35px rgba(0, 245, 155, 0.25)' : '0 0 35px rgba(0, 210, 255, 0.25)')
-          : '0 16px 36px rgba(0, 0, 0, 0.6)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transition: 'border 0.3s ease, box-shadow 0.3s ease'
-      }}>
+      <div
+        className="h-[55vh] max-h-[420px] md:h-[480px] w-full"
+        style={{
+          position: 'relative',
+          backgroundColor: '#07090E',
+          borderRadius: '24px',
+          overflow: 'hidden',
+          border: detectedMachine 
+            ? (detectedScanType === 'qr' ? '2px solid #00F59B' : '2px solid #00D2FF')
+            : scannerMode === 'qr' 
+              ? '1px solid rgba(0, 245, 155, 0.3)' 
+              : '1px solid rgba(0, 210, 255, 0.3)',
+          boxShadow: detectedMachine 
+            ? (detectedScanType === 'qr' ? '0 0 35px rgba(0, 245, 155, 0.25)' : '0 0 35px rgba(0, 210, 255, 0.25)')
+            : '0 16px 36px rgba(0, 0, 0, 0.6)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transition: 'border 0.3s ease, box-shadow 0.3s ease'
+        }}
+      >
         {/* Fullscreen AI Scanning Loader overlay */}
         <ScanningLoader isScanning={isAiScanning} />
 
@@ -902,17 +889,22 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
           </>
         ) : (
           /* Dynamic Idle Card Content (QR Mode vs AI Mode) */
-          <div style={{
-            padding: '2.5rem 1.5rem',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1.25rem',
-            maxWidth: '460px',
-            animation: 'fadeIn 0.25s ease-out'
-          }}>
+          <div
+            className="pb-28 md:pb-6"
+            style={{
+              paddingTop: '2.5rem',
+              paddingLeft: '1.5rem',
+              paddingRight: '1.5rem',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '1.25rem',
+              maxWidth: '460px',
+              animation: 'fadeIn 0.25s ease-out'
+            }}
+          >
             <div style={{
               width: '68px',
               height: '68px',
@@ -968,7 +960,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
               </p>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', maxWidth: '320px' }}>
+            <div className="mb-20 md:mb-0" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', maxWidth: '320px' }}>
               <button
                 type="button"
                 onClick={startCamera}
