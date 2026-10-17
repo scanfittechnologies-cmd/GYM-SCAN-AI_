@@ -23,6 +23,7 @@ export const MACHINE_EXERCISES_MAP: Record<string, MachineExercise[]> = {
       commonMistakes: [
         {
           mistake: 'Flaring elbows outward at 90 degrees',
+          fix: 'Keep elbows tucked at 45-60 degrees from your torso.',
           correction: 'Keep elbows tucked at 45-60 degrees from your torso.'
         }
       ],
@@ -47,6 +48,7 @@ export const MACHINE_EXERCISES_MAP: Record<string, MachineExercise[]> = {
       commonMistakes: [
         {
           mistake: 'Bending wrists backwards',
+          fix: 'Keep knuckles pointing forward and wrists rigid.',
           correction: 'Keep knuckles pointing forward and wrists rigid.'
         }
       ],
@@ -75,6 +77,7 @@ export const MACHINE_EXERCISES_MAP: Record<string, MachineExercise[]> = {
       commonMistakes: [
         {
           mistake: 'Pulling bar behind the neck',
+          fix: 'Always pull in front to upper chest to safeguard cervical spine and rotator cuff.',
           correction: 'Always pull in front to upper chest to safeguard cervical spine and rotator cuff.'
         }
       ],
@@ -99,6 +102,7 @@ export const MACHINE_EXERCISES_MAP: Record<string, MachineExercise[]> = {
       commonMistakes: [
         {
           mistake: 'Swinging torso excessively',
+          fix: 'Keep torso stationary and pull with back muscles.',
           correction: 'Keep torso stationary and pull with back muscles.'
         }
       ],
@@ -127,6 +131,7 @@ export const MACHINE_EXERCISES_MAP: Record<string, MachineExercise[]> = {
       commonMistakes: [
         {
           mistake: 'Hyperextending and slamming knees locked out',
+          fix: 'CRITICAL: Never lock knees straight under load; always keep a soft bend at the top.',
           correction: 'CRITICAL: Never lock knees straight under load; always keep a soft bend at the top.'
         }
       ],
@@ -151,6 +156,7 @@ export const MACHINE_EXERCISES_MAP: Record<string, MachineExercise[]> = {
       commonMistakes: [
         {
           mistake: 'Allowing heels to peel off platform',
+          fix: 'Keep entire foot planted firmly to protect knees.',
           correction: 'Keep entire foot planted firmly to protect knees.'
         }
       ],
@@ -179,6 +185,7 @@ export const MACHINE_EXERCISES_MAP: Record<string, MachineExercise[]> = {
       commonMistakes: [
         {
           mistake: 'Rounding lower back while reaching forward',
+          fix: 'Keep core tight and maintain natural spinal arch.',
           correction: 'Keep core tight and maintain natural spinal arch.'
         }
       ],
@@ -215,6 +222,7 @@ export const getExercisesForMachine = (machineId: string, machineName: string, c
       commonMistakes: [
         {
           mistake: 'Using momentum or jerking the weight stack',
+          fix: 'Use deliberate, slow cadence to isolate the target muscles.',
           correction: 'Use deliberate, slow cadence to isolate the target muscles.'
         }
       ],

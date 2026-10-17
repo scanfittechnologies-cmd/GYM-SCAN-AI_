@@ -14,9 +14,23 @@ export interface MuscleInfo {
   isPrimary: boolean;
 }
 
+export interface MachineStep {
+  title: string;
+  description: string;
+  icon: string;
+  stage: string;
+}
+
+export interface MovementCues {
+  exhale: string;
+  inhale: string;
+  tempo: string;
+}
+
 export interface MachineCommonMistake {
   mistake: string;
-  correction: string;
+  fix: string;
+  correction?: string;
 }
 
 export interface TutorialStep {
@@ -76,6 +90,8 @@ export interface Machine {
   updatedDate?: string;
   availabilityStatus?: 'Available' | 'In Use' | 'Maintenance' | 'Availability Not Provided';
   isDiscovered?: boolean;
+  steps?: MachineStep[];
+  movementCues?: MovementCues;
 }
 
 export interface ActivityRecord {

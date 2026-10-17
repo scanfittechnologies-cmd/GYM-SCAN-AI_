@@ -358,87 +358,262 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
         <div style={{ marginTop: '1.25rem' }}>
           
           {/* 5. STEP-BY-STEP USAGE INSTRUCTIONS — Visual Action Card Grid */}
-          {activeTab === 'overview' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', animation: 'fadeIn 0.2s ease-out' }}>
+          {activeTab === 'overview' && (() => {
+            // Helper to generate machine/category tailored Stage 4 (Execute) fallback
+            const getCategoryTailoredExecution = (category: string, primaryMuscles: string[] = [], name: string = '') => {
+              const cat = (category || '').toLowerCase();
+              const muscles = (primaryMuscles || []).join(' ').toLowerCase();
+              const n = (name || '').toLowerCase();
 
-              {/* Section header */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ width: 6, height: 24, borderRadius: 3, background: 'linear-gradient(180deg, #00F59B, #00D2FF)' }} />
-                  <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>Step-by-Step Usage</h3>
-                </div>
-                <span style={{
-                  fontSize: '0.7rem', color: '#00F59B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
-                  background: 'rgba(0,245,155,0.1)', border: '1px solid rgba(0,245,155,0.25)',
-                  padding: '2px 10px', borderRadius: '999px'
-                }}>Standard Execution</span>
-              </div>
+              // 1. Chest & Shoulders -> Pressing cues & elbow angle warnings
+              if (cat.includes('chest') || muscles.includes('pectoral') || cat.includes('shoulder') || muscles.includes('deltoid')) {
+                return {
+                  title: 'Press & Protect Rotator Cuffs',
+                  description: 'Press firmly through palms in a converging arc without locking elbows harshly; keep wrists rigid and maintain a 45–60° elbow angle to torso to safeguard shoulder joints.'
+                };
+              }
 
-              {machine.setupInstructions && machine.setupInstructions.length > 0 ? (
-                <>
-                  {/* ─── Visual Action Step Cards Grid ─── */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                    {machine.setupInstructions.map((instruction, idx) => {
-                      const stepMeta = [
-                        { emoji: '🪑', stage: 'Setup',    accent: '#00F59B', accentBg: 'rgba(0,245,155,0.1)',  border: 'rgba(0,245,155,0.25)' },
-                        { emoji: '🎯', stage: 'Adjust',   accent: '#38BDF8', accentBg: 'rgba(56,189,248,0.1)', border: 'rgba(56,189,248,0.25)' },
-                        { emoji: '🧘', stage: 'Position', accent: '#C084FC', accentBg: 'rgba(192,132,252,0.1)',border: 'rgba(192,132,252,0.25)' },
-                        { emoji: '💥', stage: 'Execute',  accent: '#FFB800', accentBg: 'rgba(255,184,0,0.1)',  border: 'rgba(255,184,0,0.25)' },
-                      ];
-                      const meta = stepMeta[idx] ?? stepMeta[stepMeta.length - 1];
-                      return (
-                        <div
-                          key={idx}
-                          style={{
-                            background: 'rgba(255,255,255,0.03)',
-                            border: `1px solid ${meta.border}`,
-                            borderRadius: '18px',
-                            padding: '1.1rem',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '0.6rem',
-                            position: 'relative',
-                            overflow: 'hidden',
-                            transition: 'transform 0.2s, box-shadow 0.2s',
-                          }}
-                        >
-                          {/* Step number watermark */}
-                          <div style={{
-                            position: 'absolute', top: '0.6rem', right: '0.8rem',
-                            fontSize: '2.2rem', fontWeight: 900, fontFamily: 'var(--font-heading)',
-                            color: meta.accentBg, lineHeight: 1, userSelect: 'none', pointerEvents: 'none'
-                          }}>{idx + 1}</div>
+              // 2. Back & Lats -> Pulling cues, elbow drive & scapular squeeze
+              if (cat.includes('back') || muscles.includes('lat') || muscles.includes('rhomboid') || muscles.includes('trapezius')) {
+                return {
+                  title: 'Drive Elbows & Squeeze Scapulae',
+                  description: 'Lead the movement by driving elbows downward and back toward ribs; squeeze shoulder blades together for 1s at peak contraction and resist over 3s.'
+                };
+              }
 
-                          {/* Icon + Stage pill */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>{meta.emoji}</span>
-                            <span style={{
-                              fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase',
-                              letterSpacing: '0.07em', color: meta.accent,
-                              background: meta.accentBg, border: `1px solid ${meta.border}`,
-                              padding: '2px 8px', borderRadius: '999px'
-                            }}>{meta.stage}</span>
-                          </div>
+              // 3. Legs -> Foot placement, joint lockout safety & range of motion
+              if (cat.includes('leg') || muscles.includes('quad') || muscles.includes('hamstring') || muscles.includes('glute') || muscles.includes('calf')) {
+                return {
+                  title: 'Midfoot Drive & Joint Protection',
+                  description: 'Drive through midfoot and heels through a controlled 90° range of motion; never violently hyperextend or lock knees at top and maintain knee-toe alignment.'
+                };
+              }
 
-                          {/* Step label */}
-                          <div style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            Step {idx + 1}
-                          </div>
+              // 4. Arms (Biceps/Triceps) -> Isolation cues & fixed pivot points
+              if (cat.includes('arm') || muscles.includes('bicep') || muscles.includes('tricep') || n.includes('curl') || n.includes('extension') || n.includes('dip')) {
+                return {
+                  title: 'Fixed Pivots & Peak Squeeze',
+                  description: 'Pin your elbows firmly in place as fixed pivot points; squeeze target biceps or triceps intensely for 1 full second at peak contraction and resist momentum on reset.'
+                };
+              }
 
-                          {/* Instruction text */}
-                          <p style={{ margin: 0, fontSize: '0.84rem', color: '#E2E8F0', lineHeight: 1.45, fontWeight: 500 }}>
-                            {instruction}
-                          </p>
+              // 5. Cardio -> Cadence pacing, posture & gradual ramp up
+              if (cat.includes('cardio') || n.includes('treadmill') || n.includes('bike') || n.includes('rower') || n.includes('climber')) {
+                return {
+                  title: 'Cadence Flow & Posture Ramp',
+                  description: 'Maintain tall upright spine and relaxed shoulders; begin at a light baseline pace and gradually ramp up speed and resistance while synchronizing breathing cycles.'
+                };
+              }
 
-                          {/* Bottom accent bar */}
-                          <div style={{ height: '3px', borderRadius: '999px', background: `linear-gradient(90deg, ${meta.accent}, transparent)`, marginTop: 'auto' }} />
-                        </div>
-                      );
-                    })}
+              // 6. Core -> Ribs-to-pelvis flexion & isometric hold
+              if (cat.includes('core') || muscles.includes('abdominis') || muscles.includes('oblique')) {
+                return {
+                  title: 'Rib-to-Pelvis Flexion & Hold',
+                  description: 'Exhale and curl your ribcage down toward your pelvic line strictly using abdominal flexion; hold the peak contraction for 2s without straining your neck.'
+                };
+              }
+
+              return {
+                title: 'Controlled Execution & Squeeze',
+                description: 'Initiate deliberate muscular contraction through full range of motion; pause for 1s at peak tension and control the 3-second negative return under active control.'
+              };
+            };
+
+            const categoryExec = getCategoryTailoredExecution(machine.category, machine.primaryMuscles, machine.name);
+
+            // Resolve steps dynamically with category-tailored graceful fallback
+            const displaySteps = machine.steps && machine.steps.length > 0
+              ? machine.steps.map((step, idx) => {
+                  // If stage 4 description in an older/fallback machine is generic or missing, ensure tailored execution cues
+                  if (idx === 3 && (!step.description || step.description.length < 20)) {
+                    return {
+                      ...step,
+                      stage: 'Execute',
+                      icon: step.icon || '💥',
+                      title: step.title || categoryExec.title,
+                      description: categoryExec.description,
+                    };
+                  }
+                  return step;
+                })
+              : [
+                  {
+                    stage: 'Setup',
+                    icon: '🪑',
+                    title: 'Machine Setup & Anchoring',
+                    description: machine.setupInstructions?.[0] || 'Adjust machine seat, pads, or cables to fit your body height and natural joint alignment.'
+                  },
+                  {
+                    stage: 'Adjust',
+                    icon: '🎯',
+                    title: 'Select Resistance & Pins',
+                    description: machine.setupInstructions?.[1] || 'Insert selector pin into weight stack or load weight plates suited to your current strength level.'
+                  },
+                  {
+                    stage: 'Position',
+                    icon: '🧘',
+                    title: 'Body Stance & Core Brace',
+                    description: machine.setupInstructions?.[2] || 'Sit or stand with torso braced, feet planted flat on floor, and grip handles securely.'
+                  },
+                  {
+                    stage: 'Execute',
+                    icon: '💥',
+                    title: categoryExec.title,
+                    description: categoryExec.description
+                  }
+                ];
+
+            // Helper to get stage aesthetic styling with glowing amber Stage 4
+            const getStageMeta = (stage: string, idx: number, customIcon?: string) => {
+              const normalized = (stage || '').toLowerCase();
+              if (normalized.includes('setup')) {
+                return {
+                  emoji: customIcon || '🪑',
+                  stage: stage || 'Setup',
+                  accent: '#00F59B',
+                  accentBg: 'rgba(0, 245, 155, 0.1)',
+                  border: 'rgba(0, 245, 155, 0.25)',
+                  glow: 'none',
+                  isExecute: false,
+                };
+              }
+              if (normalized.includes('adjust')) {
+                return {
+                  emoji: customIcon || '🎯',
+                  stage: stage || 'Adjust',
+                  accent: '#38BDF8',
+                  accentBg: 'rgba(56, 189, 248, 0.1)',
+                  border: 'rgba(56, 189, 248, 0.25)',
+                  glow: 'none',
+                  isExecute: false,
+                };
+              }
+              if (normalized.includes('pos')) {
+                return {
+                  emoji: customIcon || '🧘',
+                  stage: stage || 'Position',
+                  accent: '#C084FC',
+                  accentBg: 'rgba(192, 132, 252, 0.1)',
+                  border: 'rgba(192, 132, 252, 0.25)',
+                  glow: 'none',
+                  isExecute: false,
+                };
+              }
+              if (normalized.includes('exec') || normalized.includes('push') || normalized.includes('pull') || idx === 3) {
+                return {
+                  emoji: customIcon || '💥',
+                  stage: stage || 'Execute',
+                  accent: '#FFB800',
+                  accentBg: 'rgba(255, 184, 0, 0.16)',
+                  border: 'rgba(255, 184, 0, 0.38)',
+                  glow: '0 0 20px rgba(255, 184, 0, 0.14)',
+                  isExecute: true,
+                };
+              }
+              const defaultMetas = [
+                { emoji: '🪑', stage: 'Setup', accent: '#00F59B', accentBg: 'rgba(0, 245, 155, 0.1)', border: 'rgba(0, 245, 155, 0.25)', glow: 'none', isExecute: false },
+                { emoji: '🎯', stage: 'Adjust', accent: '#38BDF8', accentBg: 'rgba(56, 189, 248, 0.1)', border: 'rgba(56, 189, 248, 0.25)', glow: 'none', isExecute: false },
+                { emoji: '🧘', stage: 'Position', accent: '#C084FC', accentBg: 'rgba(192, 132, 252, 0.1)', border: 'rgba(192, 132, 252, 0.25)', glow: 'none', isExecute: false },
+                { emoji: '💥', stage: 'Execute', accent: '#FFB800', accentBg: 'rgba(255, 184, 0, 0.16)', border: 'rgba(255, 184, 0, 0.38)', glow: '0 0 20px rgba(255, 184, 0, 0.14)', isExecute: true },
+              ];
+              const fb = defaultMetas[idx % defaultMetas.length];
+              return {
+                ...fb,
+                emoji: customIcon || fb.emoji,
+                stage: stage || fb.stage,
+              };
+            };
+
+            // Resolve dynamic movement cues
+            const cues = machine.movementCues || {
+              exhale: machine.movementGuidance?.[0] || 'On concentric exertion phase (pushing or pulling the weight)',
+              inhale: machine.movementGuidance?.[2] || 'On controlled 3-second eccentric return phase',
+              tempo: '1s Explosive Drive | 1s Peak Hold | 3s Controlled Negative'
+            };
+
+            return (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', animation: 'fadeIn 0.2s ease-out' }}>
+
+                {/* Section header */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: 6, height: 24, borderRadius: 3, background: 'linear-gradient(180deg, #00F59B, #00D2FF)' }} />
+                    <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>Step-by-Step Usage</h3>
                   </div>
+                  <span style={{
+                    fontSize: '0.7rem', color: '#00F59B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
+                    background: 'rgba(0,245,155,0.1)', border: '1px solid rgba(0,245,155,0.25)',
+                    padding: '2px 10px', borderRadius: '999px'
+                  }}>Standard Execution</span>
+                </div>
 
-                  {/* ─── Movement Cue Pills ─── */}
-                  {machine.movementGuidance && machine.movementGuidance.length > 0 ? (
+                {displaySteps.length > 0 ? (
+                  <>
+                    {/* ─── Visual Action Step Cards Grid ─── */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                      {displaySteps.map((step, idx) => {
+                        const meta = getStageMeta(step.stage, idx, step.icon);
+                        return (
+                          <div
+                            key={idx}
+                            style={{
+                              background: meta.isExecute 
+                                ? 'linear-gradient(145deg, rgba(255, 184, 0, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%)' 
+                                : 'rgba(255,255,255,0.03)',
+                              border: `1px solid ${meta.border}`,
+                              borderRadius: '18px',
+                              padding: '1.15rem',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '0.65rem',
+                              position: 'relative',
+                              overflow: 'hidden',
+                              boxShadow: meta.glow,
+                              transition: 'transform 0.2s, box-shadow 0.2s',
+                            }}
+                          >
+                            {/* Step number watermark */}
+                            <div style={{
+                              position: 'absolute', top: '0.6rem', right: '0.8rem',
+                              fontSize: '2.2rem', fontWeight: 900, fontFamily: 'var(--font-heading)',
+                              color: meta.accentBg, lineHeight: 1, userSelect: 'none', pointerEvents: 'none'
+                            }}>{idx + 1}</div>
+
+                            {/* Icon + Stage pill with glowing amber/gold badge on Stage 4 */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>{meta.emoji}</span>
+                              <span style={{
+                                fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase',
+                                letterSpacing: '0.07em', color: meta.accent,
+                                background: meta.accentBg, border: `1px solid ${meta.border}`,
+                                padding: '2px 9px', borderRadius: '999px',
+                                boxShadow: meta.isExecute ? '0 0 12px rgba(255, 184, 0, 0.45)' : 'none',
+                              }}>{meta.stage}</span>
+                            </div>
+
+                            {/* Step label & Title */}
+                            <div>
+                              <div style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>
+                                Step {idx + 1}
+                              </div>
+                              <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: meta.isExecute ? '#FEF08A' : '#F8FAFC', margin: 0, lineHeight: 1.3 }}>
+                                {step.title}
+                              </h4>
+                            </div>
+
+                            {/* Instruction text */}
+                            <p style={{ margin: 0, fontSize: '0.84rem', color: '#CBD5E1', lineHeight: 1.48, fontWeight: 400 }}>
+                              {step.description}
+                            </p>
+
+                            {/* Bottom accent bar */}
+                            <div style={{ height: '3px', borderRadius: '999px', background: `linear-gradient(90deg, ${meta.accent}, transparent)`, marginTop: 'auto' }} />
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* ─── Movement Cue Pills ─── */}
                     <div style={{
                       padding: '1rem 1.25rem',
                       background: 'rgba(0,210,255,0.04)',
@@ -452,81 +627,46 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                         </span>
                       </div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                        {machine.movementGuidance.map((cue, idx) => {
-                          const cueStyles = [
-                            { dot: '#00F59B', bg: 'rgba(0,245,155,0.1)',  border: 'rgba(0,245,155,0.3)',  prefix: '🟢 Exhale:' },
-                            { dot: '#38BDF8', bg: 'rgba(56,189,248,0.1)', border: 'rgba(56,189,248,0.3)', prefix: '🔵 Inhale:' },
-                            { dot: '#FFB800', bg: 'rgba(255,184,0,0.1)',  border: 'rgba(255,184,0,0.3)',  prefix: '⚡ Tempo:' },
-                          ];
-                          const cs = cueStyles[idx % cueStyles.length];
-                          return (
-                            <span key={idx} style={{
-                              display: 'inline-flex', alignItems: 'center', gap: '6px',
-                              background: cs.bg, border: `1px solid ${cs.border}`,
-                              borderRadius: '999px', padding: '5px 12px',
-                              fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 500,
-                            }}>
-                              <strong style={{ color: cs.dot, fontWeight: 700 }}>{cs.prefix}</strong> {cue}
-                            </span>
-                          );
-                        })}
+                        <span style={{
+                          display: 'inline-flex', alignItems: 'center', gap: '6px',
+                          background: 'rgba(0,245,155,0.1)', border: '1px solid rgba(0,245,155,0.3)',
+                          borderRadius: '999px', padding: '5px 12px',
+                          fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 500,
+                        }}>
+                          <strong style={{ color: '#00F59B', fontWeight: 700 }}>🟢 Exhale:</strong> {cues.exhale}
+                        </span>
 
-                        {/* Fallback default pills if movementGuidance doesn't include tempo */}
-                        {machine.movementGuidance.length < 3 && (
-                          <span style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '6px',
-                            background: 'rgba(255,184,0,0.1)', border: '1px solid rgba(255,184,0,0.3)',
-                            borderRadius: '999px', padding: '5px 12px',
-                            fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 500,
-                          }}>
-                            <strong style={{ color: '#FFB800', fontWeight: 700 }}>⚡ Tempo:</strong> 1s Push | 1s Hold | 3s Release
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    /* Static default cue pills if no movementGuidance data */
-                    <div style={{
-                      padding: '1rem 1.25rem',
-                      background: 'rgba(0,210,255,0.04)',
-                      border: '1px solid rgba(0,210,255,0.18)',
-                      borderRadius: '16px',
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.75rem' }}>
-                        <Sparkles size={14} color="#00D2FF" />
-                        <span style={{ fontSize: '0.78rem', color: '#00D2FF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                          High-Contrast Movement Cues
+                        <span style={{
+                          display: 'inline-flex', alignItems: 'center', gap: '6px',
+                          background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.3)',
+                          borderRadius: '999px', padding: '5px 12px',
+                          fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 500,
+                        }}>
+                          <strong style={{ color: '#38BDF8', fontWeight: 700 }}>🔵 Inhale:</strong> {cues.inhale}
+                        </span>
+
+                        <span style={{
+                          display: 'inline-flex', alignItems: 'center', gap: '6px',
+                          background: 'rgba(255,184,0,0.1)', border: '1px solid rgba(255,184,0,0.3)',
+                          borderRadius: '999px', padding: '5px 12px',
+                          fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 500,
+                        }}>
+                          <strong style={{ color: '#FFB800', fontWeight: 700 }}>⚡ Tempo:</strong> {cues.tempo}
                         </span>
                       </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                        {[
-                          { label: '🟢 Exhale:', value: 'On pressing forward',           dot: '#00F59B', bg: 'rgba(0,245,155,0.1)',  border: 'rgba(0,245,155,0.3)' },
-                          { label: '🔵 Inhale:', value: 'On 3-second controlled return', dot: '#38BDF8', bg: 'rgba(56,189,248,0.1)', border: 'rgba(56,189,248,0.3)' },
-                          { label: '⚡ Tempo:',  value: '1s Push | 1s Hold | 3s Release',dot: '#FFB800', bg: 'rgba(255,184,0,0.1)',  border: 'rgba(255,184,0,0.3)' },
-                        ].map(cue => (
-                          <span key={cue.label} style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '6px',
-                            background: cue.bg, border: `1px solid ${cue.border}`,
-                            borderRadius: '999px', padding: '5px 12px',
-                            fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 500,
-                          }}>
-                            <strong style={{ color: cue.dot, fontWeight: 700 }}>{cue.label}</strong> {cue.value}
-                          </span>
-                        ))}
-                      </div>
                     </div>
-                  )}
-                </>
-              ) : (
-                <div style={{ textAlign: 'center', padding: '2rem 1rem', color: '#94A3B8' }}>
-                  <Info size={32} style={{ margin: '0 auto 8px auto', opacity: 0.6 }} />
-                  <p style={{ fontSize: '0.88rem', margin: 0 }}>
-                    Information for this machine is still being reviewed.
-                  </p>
-                </div>
-              )}
-            </div>
-          )}
+                  </>
+                ) : (
+                  <div style={{ textAlign: 'center', padding: '2rem 1rem', color: '#94A3B8' }}>
+                    <Info size={32} style={{ margin: '0 auto 8px auto', opacity: 0.6 }} />
+                    <p style={{ fontSize: '0.88rem', margin: 0 }}>
+                      Information for this machine is still being reviewed.
+                    </p>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* 4. MACHINE ADJUSTMENT INSTRUCTIONS */}
           {activeTab === 'adjustments' && (
@@ -640,25 +780,40 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
           )}
 
           {/* 6. COMMON MISTAKES — Side-by-Side Do's & Don'ts Cards */}
-          {activeTab === 'mistakes' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', animation: 'fadeIn 0.2s ease-out' }}>
+          {activeTab === 'mistakes' && (() => {
+            const mistakesList = machine.commonMistakes && machine.commonMistakes.length > 0
+              ? machine.commonMistakes
+              : [
+                  {
+                    mistake: 'Using momentum or torso swinging to heave the weight',
+                    fix: 'Lock your core solid, maintain neutral spine, and isolate the target muscles with zero swinging.',
+                    correction: 'Lock your core solid, maintain neutral spine, and isolate the target muscles with zero swinging.'
+                  },
+                  {
+                    mistake: 'Letting weight stack slam down uncontrollably',
+                    fix: 'Control the 3-second eccentric return so the weight stack hovers smoothly without slamming.',
+                    correction: 'Control the 3-second eccentric return so the weight stack hovers smoothly without slamming.'
+                  }
+                ];
 
-              {/* Section header */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ width: 6, height: 24, borderRadius: 3, background: 'linear-gradient(180deg, #FF4757, #FF6B81)' }} />
-                  <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>Common Mistakes &amp; Fixes</h3>
+            return (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', animation: 'fadeIn 0.2s ease-out' }}>
+
+                {/* Section header */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: 6, height: 24, borderRadius: 3, background: 'linear-gradient(180deg, #FF4757, #FF6B81)' }} />
+                    <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>Common Mistakes &amp; Fixes</h3>
+                  </div>
+                  <span style={{
+                    fontSize: '0.7rem', color: '#FF6B81', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
+                    background: 'rgba(255,71,87,0.1)', border: '1px solid rgba(255,71,87,0.25)',
+                    padding: '2px 10px', borderRadius: '999px'
+                  }}>Form Check</span>
                 </div>
-                <span style={{
-                  fontSize: '0.7rem', color: '#FF6B81', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
-                  background: 'rgba(255,71,87,0.1)', border: '1px solid rgba(255,71,87,0.25)',
-                  padding: '2px 10px', borderRadius: '999px'
-                }}>Form Check</span>
-              </div>
 
-              {machine.commonMistakes && machine.commonMistakes.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {machine.commonMistakes.map((item, idx) => (
+                  {mistakesList.map((item, idx) => (
                     <div
                       key={idx}
                       className="grid grid-cols-1 md:grid-cols-2 gap-3"
@@ -706,7 +861,7 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                           }}>✅ Correct Form</span>
                         </div>
                         <p style={{ margin: 0, fontSize: '0.88rem', color: '#6EE7B7', fontWeight: 600, lineHeight: 1.4 }}>
-                          {item.correction}
+                          {item.fix || item.correction}
                         </p>
                         {/* Bottom accent */}
                         <div style={{ height: '2px', borderRadius: '999px', background: 'linear-gradient(90deg, rgba(0,245,155,0.6), transparent)', marginTop: 'auto' }} />
@@ -714,14 +869,9 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                     </div>
                   ))}
                 </div>
-              ) : (
-                <div style={{ textAlign: 'center', padding: '2rem 1rem', color: '#94A3B8' }}>
-                  <Info size={32} style={{ margin: '0 auto 8px auto', opacity: 0.6 }} />
-                  <p style={{ fontSize: '0.88rem', margin: 0 }}>Information for this machine is still being reviewed.</p>
-                </div>
-              )}
-            </div>
-          )}
+              </div>
+            );
+          })()}
 
           {/* Muscle Anatomy Diagram */}
           {activeTab === 'anatomy' && (
