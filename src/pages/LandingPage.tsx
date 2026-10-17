@@ -989,18 +989,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onSelectMa
           ))}
         </div>
       </footer>
-
-      {/* Floating Scan Machine Action Button */}
-      <button
-        type="button"
-        onClick={() => onNavigate('scan')}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 rounded-full bg-emerald-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/20 hover:scale-105 active:scale-95 transition-all duration-200"
-        style={{ border: 'none', cursor: 'pointer' }}
-        title="Scan Machine"
-      >
-        <span className="text-lg">📸</span>
-        <span>Scan Machine</span>
-      </button>
     </div>
   );
 };
