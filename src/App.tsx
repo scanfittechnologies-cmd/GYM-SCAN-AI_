@@ -25,12 +25,18 @@ const AppContent: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('landing');
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
   const [machineSource, setMachineSource] = useState<'qr' | 'photo' | 'library' | 'activity'>('library');
-  const [scanInitialMode, setScanInitialMode] = useState<'qr' | 'photo'>('qr');
+  const [scanInitialMode, setScanInitialMode] = useState<'qr' | 'photo' | 'ai_camera' | 'upload'>('qr');
 
   const handleNavigate = (tab: string, scanModeOrMachineId?: string) => {
     setSelectedMachine(null);
-    if (tab === 'scan' && (scanModeOrMachineId === 'photo' || scanModeOrMachineId === 'qr')) {
-      setScanInitialMode(scanModeOrMachineId);
+    if (tab === 'scan') {
+      if (scanModeOrMachineId === 'upload') {
+        setScanInitialMode('upload');
+      } else if (scanModeOrMachineId === 'photo' || scanModeOrMachineId === 'ai_camera') {
+        setScanInitialMode('ai_camera');
+      } else if (scanModeOrMachineId === 'qr') {
+        setScanInitialMode('qr');
+      }
     }
     setCurrentTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -61,7 +67,7 @@ const AppContent: React.FC = () => {
 
       {/* Main Responsive App Content Area */}
       <main
-        className={isFullWidthPage ? '' : 'app-container pt-16 sm:pt-20 md:pt-6'}
+        className={isFullWidthPage ? '' : currentTab === 'library' ? 'app-container' : 'app-container pt-16 sm:pt-20 md:pt-6'}
         style={{ flex: 1 }}
       >
         {selectedMachine ? (

@@ -509,7 +509,10 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
   }, [onNavigate]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', animation: 'fadeIn 0.3s ease-out' }}>
+    <div 
+      className="pt-16 sm:pt-20 md:pt-6 pb-28 md:pb-8 flex flex-col gap-5 sm:gap-6" 
+      style={{ animation: 'fadeIn 0.3s ease-out' }}
+    >
 
       {/* ── Offline Banner Simulation Notice ── */}
       {isOfflineSimulation && (
@@ -538,14 +541,13 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
       )}
 
       {/* ── 1. Page Header ── */}
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(17,24,39,0.95) 0%, rgba(10,14,22,0.98) 100%)',
-        border: '1px solid rgba(0,245,155,0.18)',
-        borderRadius: '22px',
-        padding: '1.75rem 1.5rem',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
+      <div 
+        className="p-4 sm:p-6 md:p-7 rounded-[22px] relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, rgba(17,24,39,0.95) 0%, rgba(10,14,22,0.98) 100%)',
+          border: '1px solid rgba(0,245,155,0.18)',
+        }}
+      >
         {/* Glow gradients */}
         <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,245,155,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '-30px', left: '-30px', width: '180px', height: '180px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,210,255,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -562,63 +564,64 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
               </span>
             </div>
 
-            <h1 style={{ fontSize: 'clamp(1.6rem, 4vw, 2.1rem)', color: '#F1F5F9', margin: '0 0 0.35rem 0', lineHeight: 1.2 }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.1rem)', color: '#F1F5F9', margin: '0 0 0.35rem 0', lineHeight: 1.2 }}>
               Machine Library
             </h1>
-            <p style={{ fontSize: '0.88rem', color: '#94A3B8', margin: 0, maxWidth: '560px', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '0.85rem', color: '#94A3B8', margin: 0, maxWidth: '560px', lineHeight: 1.5 }}>
               Explore gym equipment, discover exercises, and learn how to use each machine.
             </p>
           </div>
 
           {/* Action CTAs */}
-          <div style={{ display: 'flex', gap: '0.65rem', flexShrink: 0, flexWrap: 'wrap' }}>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               id="btn-header-scan"
               onClick={() => handleNavigate('scan', 'qr')}
-              className="btn-primary"
-              style={{ fontSize: '0.85rem', padding: '0.65rem 1.15rem' }}
+              className="btn-primary flex-1 sm:flex-initial"
+              style={{ fontSize: '0.82rem', padding: '0.6rem 1rem' }}
             >
               <QrCode size={15} /> Scan Machine
             </button>
             <button
-              onClick={() => handleNavigate('scan', 'photo')}
-              className="btn-secondary"
-              style={{ fontSize: '0.85rem', padding: '0.65rem 1.05rem' }}
+              onClick={() => handleNavigate('scan', 'upload')}
+              className="btn-secondary flex-1 sm:flex-initial"
+              style={{ fontSize: '0.82rem', padding: '0.6rem 1rem' }}
             >
               <Camera size={15} /> Upload Photo
             </button>
           </div>
         </div>
 
-        {/* Header Stats Bar */}
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '1.25rem',
-          marginTop: '1.25rem',
-          paddingTop: '1rem',
-          borderTop: '1px solid rgba(255,255,255,0.06)',
-          position: 'relative',
-          zIndex: 1,
-        }}>
+        {/* Header Stats Bar: Mobile-friendly 3-column layout */}
+        <div 
+          className="grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-6 p-3 sm:p-4 mt-4 border-t border-white/[0.06] relative z-10"
+        >
           {[
-            { label: 'Total Machines', value: machines.length, color: '#00F59B', icon: <Layers size={14} /> },
-            { label: 'Discovered', value: totalDiscovered, color: '#38BDF8', icon: <CheckCircle size={14} /> },
-            { label: 'Saved Favorites', value: totalFavorites, color: '#FFB800', icon: <Star size={14} /> },
-            { label: 'Categories', value: MACHINE_CATEGORIES.length, color: '#C084FC', icon: <LayoutGrid size={14} /> },
+            { label: 'Total Machines', mobileLabel: 'Total', value: machines.length, color: '#00F59B', icon: <Layers size={14} /> },
+            { label: 'Discovered', mobileLabel: 'Discovered', value: totalDiscovered, color: '#38BDF8', icon: <CheckCircle size={14} /> },
+            { label: 'Saved Favorites', mobileLabel: 'Favorites', value: totalFavorites, color: '#FFB800', icon: <Star size={14} /> },
+            { label: 'Categories', mobileLabel: 'Categories', value: MACHINE_CATEGORIES.length, color: '#C084FC', icon: <LayoutGrid size={14} />, desktopOnly: true },
           ].map(stat => (
-            <div key={stat.label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div 
+              key={stat.label} 
+              className={`flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 p-2 sm:p-0 text-center sm:text-left text-xs rounded-xl bg-white/[0.03] sm:bg-transparent border border-white/[0.05] sm:border-transparent ${
+                stat.desktopOnly ? 'hidden sm:flex' : 'flex'
+              }`}
+            >
               <span style={{ color: stat.color }}>{stat.icon}</span>
-              <span style={{ fontSize: '0.82rem', color: stat.color, fontWeight: 700 }}>{stat.value}</span>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>{stat.label}</span>
+              <span className="font-bold text-xs sm:text-sm" style={{ color: stat.color }}>{stat.value}</span>
+              <span className="text-[10px] sm:text-xs text-[#94A3B8] sm:text-[#64748B]">
+                <span className="sm:hidden">{stat.mobileLabel}</span>
+                <span className="hidden sm:inline">{stat.label}</span>
+              </span>
             </div>
           ))}
         </div>
       </div>
 
       {/* ── 2. Search Bar ── */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        <div style={{ position: 'relative' }}>
+      <div className="flex flex-col gap-2 w-full">
+        <div className="relative w-full">
           <Search
             size={18}
             color="#64748B"
@@ -632,12 +635,13 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
             placeholder="Search machine name, category, muscle group, or exercise (e.g. Chest Press, Lats, Treadmill, Quads)..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            className="input-modern"
+            className="input-modern w-full sm:w-auto"
             style={{
+              width: '100%',
               paddingLeft: '3rem',
               paddingRight: searchQuery ? '2.8rem' : '1rem',
-              height: '52px',
-              fontSize: '0.9rem',
+              height: '50px',
+              fontSize: '0.88rem',
               borderRadius: '14px',
               border: searchQuery ? '1px solid rgba(0, 245, 155, 0.4)' : '1px solid rgba(255,255,255,0.1)'
             }}
@@ -707,13 +711,9 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
           )}
         </div>
 
-        <div style={{
-          display: 'flex',
-          gap: '0.5rem',
-          overflowX: 'auto',
-          paddingBottom: '6px',
-          scrollbarWidth: 'none',
-        }}>
+        <div 
+          className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 w-full"
+        >
           {allCategories.map(cat => {
             const isSelected = selectedCategory === cat.id;
             const catColor = CATEGORY_COLORS[cat.id];
@@ -723,6 +723,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
                 id={`cat-btn-${cat.id}`}
                 onClick={() => setSelectedCategory(cat.id)}
                 aria-pressed={isSelected}
+                className="whitespace-nowrap shrink-0 text-xs sm:text-sm cursor-pointer transition-all duration-150 flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full"
                 style={{
                   background: isSelected
                     ? (cat.id === 'all'
@@ -735,17 +736,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
                   border: isSelected
                     ? `1.5px solid ${cat.id === 'all' ? '#00F59B' : catColor?.border ?? 'rgba(0,245,155,0.4)'}`
                     : '1px solid rgba(255,255,255,0.08)',
-                  padding: '0.5rem 0.95rem',
-                  borderRadius: '999px',
-                  fontSize: '0.8rem',
                   fontWeight: isSelected ? 700 : 500,
-                  whiteSpace: 'nowrap',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'all 0.15s ease',
-                  flexShrink: 0,
                 }}
               >
                 <span>{cat.emoji}</span>
@@ -757,7 +748,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
                   borderRadius: '999px',
                   padding: '1px 6px',
                   fontWeight: 700,
-                  minWidth: '20px',
+                  minWidth: '18px',
                   textAlign: 'center',
                 }}>
                   {cat.count}
@@ -769,29 +760,22 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
       </div>
 
       {/* ── 4. Secondary Filter + Sort Toolbar ── */}
-      <div style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '0.75rem',
-        padding: '0.85rem 1.1rem',
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.07)',
-        borderRadius: '16px',
-      }}>
-        {/* Left Filters Group */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.72rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div 
+        className="flex flex-col sm:flex-row gap-2.5 w-full p-2.5 sm:p-3.5 bg-white/[0.02] border border-white/[0.07] rounded-2xl items-stretch sm:items-center justify-between"
+      >
+        {/* Left Filters Group (Horizontal Scroll on Mobile, Wrapped on Desktop) */}
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0 w-full sm:w-auto flex-nowrap sm:flex-wrap shrink-0">
+          <span className="text-[11px] text-[#64748B] font-semibold uppercase tracking-wider shrink-0 pr-1">
             Filters:
           </span>
 
           {/* Muscle dropdown filter */}
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }} className="shrink-0">
             <select
               aria-label="Filter by primary muscle group"
               value={selectedMuscle}
               onChange={e => setSelectedMuscle(e.target.value)}
+              className="shrink-0"
               style={{
                 background: selectedMuscle !== 'all' ? 'rgba(0,245,155,0.12)' : 'rgba(255,255,255,0.04)',
                 color: selectedMuscle !== 'all' ? '#00F59B' : '#94A3B8',
@@ -818,6 +802,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
             id="filter-favorites"
             onClick={() => setFilterFavoritesOnly(v => !v)}
             aria-pressed={filterFavoritesOnly}
+            className="shrink-0 whitespace-nowrap"
             style={{
               background: filterFavoritesOnly ? 'rgba(255,184,0,0.18)' : 'transparent',
               color: filterFavoritesOnly ? '#FFB800' : '#94A3B8',
@@ -834,7 +819,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
             }}
           >
             <Star size={12} fill={filterFavoritesOnly ? '#FFB800' : 'none'} />
-            Saved Favorites ({totalFavorites})
+            Saved ({totalFavorites})
           </button>
 
           {/* Discovered toggle */}
@@ -842,6 +827,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
             id="filter-discovered"
             onClick={() => setFilterDiscoveredOnly(v => !v)}
             aria-pressed={filterDiscoveredOnly}
+            className="shrink-0 whitespace-nowrap"
             style={{
               background: filterDiscoveredOnly ? 'rgba(0,245,155,0.12)' : 'transparent',
               color: filterDiscoveredOnly ? '#00F59B' : '#94A3B8',
@@ -871,6 +857,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
                 id={`filter-diff-${diff}`}
                 onClick={() => setFilterDifficulty(isActive ? 'all' : diff)}
                 aria-pressed={isActive}
+                className="shrink-0 whitespace-nowrap"
                 style={{
                   background: isActive ? `rgba(${diff === 'Beginner' ? '0,245,155' : diff === 'Intermediate' ? '255,184,0' : '255,99,102'},0.14)` : 'transparent',
                   color: isActive ? diffColor : '#94A3B8',
@@ -892,6 +879,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
           {activeFilterCount > 0 && (
             <button
               onClick={clearAllFilters}
+              className="shrink-0 whitespace-nowrap"
               style={{
                 background: 'rgba(255,71,87,0.1)',
                 color: '#FF6B81',
@@ -906,61 +894,63 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
                 gap: '4px',
               }}
             >
-              <X size={11} /> Clear All ({activeFilterCount})
+              <X size={11} /> Clear ({activeFilterCount})
             </button>
           )}
         </div>
 
-        {/* Right Sort & View Modes */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
-          <span style={{ fontSize: '0.75rem', color: '#64748B', whiteSpace: 'nowrap' }}>
-            <strong style={{ color: '#F1F5F9' }}>{filteredMachines.length}</strong> of {machines.length}
+        {/* Right Sort & View Modes - Group dropdowns and list/grid toggles neatly: flex items-center justify-between gap-2 w-full */}
+        <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t border-white/[0.06] sm:border-t-0 shrink-0">
+          <span className="text-xs text-[#64748B] whitespace-nowrap">
+            <strong className="text-[#F1F5F9]">{filteredMachines.length}</strong> of {machines.length}
           </span>
 
-          <SortDropdown value={sortBy} onChange={setSortBy} />
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            <SortDropdown value={sortBy} onChange={setSortBy} />
 
-          {/* Grid / List View Toggle */}
-          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
-            {(['grid', 'list'] as ViewMode[]).map(mode => (
-              <button
-                key={mode}
-                id={`view-${mode}`}
-                onClick={() => setViewMode(mode)}
-                aria-pressed={viewMode === mode}
-                title={mode === 'grid' ? 'Grid View' : 'List View'}
-                style={{
-                  background: viewMode === mode ? 'rgba(0,245,155,0.15)' : 'transparent',
-                  color: viewMode === mode ? '#00F59B' : '#64748B',
-                  border: 'none',
-                  padding: '6px 10px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  transition: 'all 0.15s',
-                }}
-              >
-                {mode === 'grid' ? <LayoutGrid size={15} /> : <List size={15} />}
-              </button>
-            ))}
+            {/* Grid / List View Toggle */}
+            <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
+              {(['grid', 'list'] as ViewMode[]).map(mode => (
+                <button
+                  key={mode}
+                  id={`view-${mode}`}
+                  onClick={() => setViewMode(mode)}
+                  aria-pressed={viewMode === mode}
+                  title={mode === 'grid' ? 'Grid View' : 'List View'}
+                  style={{
+                    background: viewMode === mode ? 'rgba(0,245,155,0.15)' : 'transparent',
+                    color: viewMode === mode ? '#00F59B' : '#64748B',
+                    border: 'none',
+                    padding: '6px 10px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {mode === 'grid' ? <LayoutGrid size={15} /> : <List size={15} />}
+                </button>
+              ))}
+            </div>
+
+            {/* Refresh / Re-index button */}
+            <button
+              onClick={triggerRefresh}
+              title="Refresh equipment library data"
+              style={{
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                color: '#94A3B8',
+                borderRadius: '10px',
+                padding: '6px 8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <RefreshCw size={14} className={isSimulatingLoading ? 'spin-animation' : ''} />
+            </button>
           </div>
-
-          {/* Refresh / Re-index button */}
-          <button
-            onClick={triggerRefresh}
-            title="Refresh equipment library data"
-            style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: '#94A3B8',
-              borderRadius: '10px',
-              padding: '6px 8px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <RefreshCw size={14} className={isSimulatingLoading ? 'spin-animation' : ''} />
-          </button>
         </div>
       </div>
 

@@ -73,14 +73,18 @@ interface PhotoAIAnalyzerProps {
   onMachineConfirmed: (machine: Machine, scanType: 'photo', imageUrl?: string, confidence?: number) => void;
   onOpenSettingsDocs: () => void;
   onSelectManual?: () => void;
-  initialMode?: 'ai' | 'qr';
+  initialMode?: 'ai' | 'qr' | 'upload';
+  activeMode?: 'qr' | 'ai_camera' | 'upload';
+  onModeChange?: (mode: 'qr' | 'ai_camera' | 'upload') => void;
 }
 
 export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   onMachineConfirmed,
   onOpenSettingsDocs,
   onSelectManual,
-  initialMode = 'ai'
+  initialMode = 'ai',
+  activeMode,
+  onModeChange
 }) => {
   const { machines, userProfile } = useGym();
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
@@ -96,7 +100,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [isLiveCameraOpen, setIsLiveCameraOpen] = useState(false);
   const [cameraFacing, setCameraFacing] = useState<'environment' | 'user'>('environment');
-  const [liveCameraMode, setLiveCameraMode] = useState<'ai' | 'qr'>(initialMode);
+  const [liveCameraMode, setLiveCameraMode] = useState<'ai' | 'qr'>(initialMode === 'qr' ? 'qr' : 'ai');
 
   const qrCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const qrAnimationRef = useRef<number | null>(null);
@@ -142,6 +146,32 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     setIsLiveCameraOpen(false);
     setCameraError(null);
   }, []);
+
+  const currentMode: 'qr' | 'ai_camera' | 'upload' = activeMode || (initialMode === 'upload' ? 'upload' : liveCameraMode === 'qr' ? 'qr' : 'ai_camera');
+
+  const handleSelectMode = (newMode: 'qr' | 'ai_camera' | 'upload') => {
+    if (newMode === 'upload') {
+      stopLiveCamera();
+    } else if (newMode === 'qr') {
+      setLiveCameraMode('qr');
+    } else {
+      setLiveCameraMode('ai');
+    }
+    setFileError(null);
+    if (onModeChange) {
+      onModeChange(newMode);
+    }
+  };
+
+  useEffect(() => {
+    if (activeMode === 'upload') {
+      stopLiveCamera();
+    } else if (activeMode === 'qr') {
+      setLiveCameraMode('qr');
+    } else if (activeMode === 'ai_camera') {
+      setLiveCameraMode('ai');
+    }
+  }, [activeMode, stopLiveCamera]);
 
   // Helper for dynamic content based on liveCameraMode ('ai' vs 'qr')
   const getModeContent = () => {
@@ -602,65 +632,85 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
       {/* 0. Fullscreen AI Vision Scanning Loader */}
       <ScanningLoader isScanning={analyzing} />
 
-      {/* Viewfinder Mode Switcher: QR Badge vs AI Snapshot */}
+      {/* Viewfinder Mode Switcher: QR Badge vs AI Snapshot vs Upload File */}
       <div
         className="flex flex-row w-full gap-1.5 p-1 bg-slate-900/80 rounded-xl max-w-xl mx-auto border border-white/10"
       >
         <button
           type="button"
-          onClick={() => {
-            setLiveCameraMode('qr');
-            setFileError(null);
-          }}
-          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap"
+          onClick={() => handleSelectMode('qr')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap ${
+            currentMode === 'qr' ? 'text-[#00F59B]' : 'text-[#94A3B8] hover:text-[#F1F5F9]'
+          }`}
           style={{
-            background: liveCameraMode === 'qr'
+            background: currentMode === 'qr'
               ? 'linear-gradient(135deg, rgba(0, 245, 155, 0.2) 0%, rgba(13, 20, 28, 0.95) 100%)'
               : 'transparent',
-            border: liveCameraMode === 'qr'
+            border: currentMode === 'qr'
               ? '1.5px solid #00F59B'
               : '1px solid transparent',
-            color: liveCameraMode === 'qr' ? '#00F59B' : '#94A3B8',
             fontWeight: 700,
-            boxShadow: liveCameraMode === 'qr' ? '0 4px 16px rgba(0, 245, 155, 0.15)' : 'none'
+            boxShadow: currentMode === 'qr' ? '0 4px 16px rgba(0, 245, 155, 0.15)' : 'none'
           }}
         >
           <QrCode size={14} className="shrink-0" />
           <span className="truncate whitespace-nowrap">Scan QR Badge</span>
-          {liveCameraMode === 'qr' && (
+          {currentMode === 'qr' && (
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#00F59B' }} className="shrink-0" />
           )}
         </button>
 
         <button
           type="button"
-          onClick={() => {
-            setLiveCameraMode('ai');
-            setFileError(null);
-          }}
-          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap"
+          onClick={() => handleSelectMode('ai_camera')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap ${
+            currentMode === 'ai_camera' ? 'text-[#00D2FF]' : 'text-[#94A3B8] hover:text-[#F1F5F9]'
+          }`}
           style={{
-            background: liveCameraMode === 'ai'
+            background: currentMode === 'ai_camera'
               ? 'linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(12, 19, 32, 0.95) 100%)'
               : 'transparent',
-            border: liveCameraMode === 'ai'
+            border: currentMode === 'ai_camera'
               ? '1.5px solid #00D2FF'
               : '1px solid transparent',
-            color: liveCameraMode === 'ai' ? '#00D2FF' : '#94A3B8',
             fontWeight: 700,
-            boxShadow: liveCameraMode === 'ai' ? '0 4px 16px rgba(0, 210, 255, 0.15)' : 'none'
+            boxShadow: currentMode === 'ai_camera' ? '0 4px 16px rgba(0, 210, 255, 0.15)' : 'none'
           }}
         >
           <Sparkles size={14} className="shrink-0" />
           <span className="truncate whitespace-nowrap">Snap Machine Photo (AI)</span>
-          {liveCameraMode === 'ai' && (
+          {currentMode === 'ai_camera' && (
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#00D2FF' }} className="shrink-0" />
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleSelectMode('upload')}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap ${
+            currentMode === 'upload' ? 'text-[#38BDF8]' : 'text-[#94A3B8] hover:text-[#F1F5F9]'
+          }`}
+          style={{
+            background: currentMode === 'upload'
+              ? 'linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(15, 23, 42, 0.95) 100%)'
+              : 'transparent',
+            border: currentMode === 'upload'
+              ? '1.5px solid #38BDF8'
+              : '1px solid transparent',
+            fontWeight: 700,
+            boxShadow: currentMode === 'upload' ? '0 4px 16px rgba(56, 189, 248, 0.15)' : 'none'
+          }}
+        >
+          <Upload size={14} className="shrink-0" />
+          <span className="truncate whitespace-nowrap">Upload Photo</span>
+          {currentMode === 'upload' && (
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#38BDF8' }} className="shrink-0" />
           )}
         </button>
       </div>
 
       {/* 2. Live WebRTC Camera Stream Viewport OR Upload Dropzone */}
-      {isLiveCameraOpen ? (
+      {isLiveCameraOpen && currentMode !== 'upload' ? (
         <div
           className="h-[55vh] max-h-[420px] md:h-[480px]"
           style={{
@@ -701,13 +751,13 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
           }}>
             <button
               type="button"
-              onClick={() => setLiveCameraMode('qr')}
+              onClick={() => handleSelectMode('qr')}
               style={{
-                background: liveCameraMode === 'qr' ? 'linear-gradient(135deg, #00F59B 0%, #00B36B 100%)' : 'transparent',
+                background: currentMode === 'qr' ? 'linear-gradient(135deg, #00F59B 0%, #00B36B 100%)' : 'transparent',
                 border: 'none',
                 borderRadius: '999px',
                 padding: '4px 12px',
-                color: liveCameraMode === 'qr' ? '#040810' : '#94A3B8',
+                color: currentMode === 'qr' ? '#040810' : '#94A3B8',
                 fontWeight: 700,
                 fontSize: '0.73rem',
                 cursor: 'pointer',
@@ -721,13 +771,13 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setLiveCameraMode('ai')}
+              onClick={() => handleSelectMode('ai_camera')}
               style={{
-                background: liveCameraMode === 'ai' ? 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)' : 'transparent',
+                background: currentMode === 'ai_camera' ? 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)' : 'transparent',
                 border: 'none',
                 borderRadius: '999px',
                 padding: '4px 12px',
-                color: liveCameraMode === 'ai' ? '#040810' : '#94A3B8',
+                color: currentMode === 'ai_camera' ? '#040810' : '#94A3B8',
                 fontWeight: 700,
                 fontSize: '0.73rem',
                 cursor: 'pointer',
@@ -892,87 +942,87 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
         </div>
       ) : !uploadedImage ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
-          {/* Dynamic Idle Card Content */}
-          <div
-            className="p-3 sm:p-5 md:p-8"
-            style={{
-              backgroundColor: '#07090E',
-              borderRadius: '24px',
-              border: liveCameraMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid rgba(0, 210, 255, 0.3)',
-              boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
-              textAlign: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '1.25rem',
-              animation: 'fadeIn 0.25s ease-out'
-            }}
-          >
-            <div style={{
-              width: '68px',
-              height: '68px',
-              borderRadius: '22px',
-              background: liveCameraMode === 'qr' ? 'rgba(0, 245, 155, 0.12)' : 'rgba(0, 210, 255, 0.12)',
-              border: liveCameraMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.35)' : '1px solid rgba(0, 210, 255, 0.35)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: getModeContent().accentColor,
-              boxShadow: liveCameraMode === 'qr' ? '0 0 25px rgba(0, 245, 155, 0.15)' : '0 0 25px rgba(0, 210, 255, 0.15)'
-            }}>
-              {getModeContent().icon}
-            </div>
-
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', marginBottom: '0.45rem' }}>
-                <span className={liveCameraMode === 'qr' ? 'badge badge-emerald' : 'badge badge-blue'} style={{ fontSize: '0.72rem' }}>
-                  {getModeContent().badgeText}
-                </span>
-              </div>
-              <h3 style={{ fontSize: '1.25rem', color: '#F1F5F9', marginBottom: '0.45rem', fontWeight: 700 }}>
-                {getModeContent().title}
-              </h3>
-              <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.5, margin: 0, maxWidth: '380px' }}>
-                {getModeContent().subtitle}
-              </p>
-            </div>
-
-            <div className="mb-20 md:mb-0" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', maxWidth: '320px' }}>
-              <button
-                type="button"
-                onClick={() => startLiveCamera()}
-                disabled={analyzing}
-                style={{
-                  background: getModeContent().buttonGradient,
-                  color: getModeContent().buttonTextColor,
-                  fontWeight: 700,
-                  fontSize: '0.9rem',
-                  padding: '0.8rem 1.5rem',
-                  borderRadius: '14px',
-                  border: 'none',
-                  boxShadow: getModeContent().boxShadow,
-                  cursor: analyzing ? 'not-allowed' : 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  transition: 'all 0.2s ease',
-                  width: '100%'
-                }}
-              >
-                {getModeContent().mainButton}
-              </button>
-            </div>
-          </div>
-
-          {/* When in AI mode and idle, provide Photo Upload option below */}
-          {liveCameraMode === 'ai' && (
+          {currentMode === 'upload' ? (
+            /* Upload Mode: Clean file upload / drag-and-drop dropzone without camera feed */
             <PhotoUploadTab
               onImageSelected={validateAndProcessFile}
               isScanning={analyzing}
               previewUrl={uploadedImage}
             />
+          ) : (
+            /* Camera Mode ('ai_camera' | 'qr'): Camera Idle Card */
+            <div
+              className="p-3 sm:p-5 md:p-8"
+              style={{
+                backgroundColor: '#07090E',
+                borderRadius: '24px',
+                border: currentMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid rgba(0, 210, 255, 0.3)',
+                boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '1.25rem',
+                animation: 'fadeIn 0.25s ease-out'
+              }}
+            >
+              <div style={{
+                width: '68px',
+                height: '68px',
+                borderRadius: '22px',
+                background: currentMode === 'qr' ? 'rgba(0, 245, 155, 0.12)' : 'rgba(0, 210, 255, 0.12)',
+                border: currentMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.35)' : '1px solid rgba(0, 210, 255, 0.35)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: getModeContent().accentColor,
+                boxShadow: currentMode === 'qr' ? '0 0 25px rgba(0, 245, 155, 0.15)' : '0 0 25px rgba(0, 210, 255, 0.15)'
+              }}>
+                {getModeContent().icon}
+              </div>
+
+              <div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', marginBottom: '0.45rem' }}>
+                  <span className={currentMode === 'qr' ? 'badge badge-emerald' : 'badge badge-blue'} style={{ fontSize: '0.72rem' }}>
+                    {getModeContent().badgeText}
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '1.25rem', color: '#F1F5F9', marginBottom: '0.45rem', fontWeight: 700 }}>
+                  {getModeContent().title}
+                </h3>
+                <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.5, margin: 0, maxWidth: '380px' }}>
+                  {getModeContent().subtitle}
+                </p>
+              </div>
+
+              <div className="mb-20 md:mb-0" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', maxWidth: '320px' }}>
+                <button
+                  type="button"
+                  onClick={() => startLiveCamera()}
+                  disabled={analyzing}
+                  style={{
+                    background: getModeContent().buttonGradient,
+                    color: getModeContent().buttonTextColor,
+                    fontWeight: 700,
+                    fontSize: '0.9rem',
+                    padding: '0.8rem 1.5rem',
+                    borderRadius: '14px',
+                    border: 'none',
+                    boxShadow: getModeContent().boxShadow,
+                    cursor: analyzing ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    transition: 'all 0.2s ease',
+                    width: '100%'
+                  }}
+                >
+                  {getModeContent().mainButton}
+                </button>
+              </div>
+            </div>
           )}
         </div>
       ) : null}

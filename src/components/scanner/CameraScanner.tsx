@@ -32,6 +32,8 @@ export interface CameraScannerProps {
   onSwitchToManual: () => void;
   onSwitchToPhoto?: () => void;
   initialMode?: 'qr' | 'ai-snapshot';
+  activeMode?: 'qr' | 'ai_camera' | 'upload';
+  onModeChange?: (mode: 'qr' | 'ai_camera' | 'upload') => void;
 }
 
 export type CameraPermissionState = 
@@ -47,7 +49,9 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   onMachineIdentified,
   onSwitchToManual,
   onSwitchToPhoto,
-  initialMode = 'qr'
+  initialMode = 'qr',
+  activeMode = 'qr',
+  onModeChange
 }) => {
   const { machines, getMachineByQRCode } = useGym();
   
@@ -435,21 +439,23 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
           onClick={() => {
             setScannerMode('qr');
             setScanError(null);
+            onModeChange?.('qr');
           }}
-          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap"
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap ${
+            activeMode === 'qr' ? 'text-[#00F59B]' : 'text-[#94A3B8] hover:text-[#F1F5F9]'
+          }`}
           style={{
-            background: scannerMode === 'qr'
+            background: activeMode === 'qr'
               ? 'linear-gradient(135deg, rgba(0, 245, 155, 0.22) 0%, rgba(13, 22, 28, 0.95) 100%)'
               : 'transparent',
-            border: scannerMode === 'qr' ? '1.5px solid #00F59B' : '1px solid transparent',
-            color: scannerMode === 'qr' ? '#00F59B' : '#94A3B8',
+            border: activeMode === 'qr' ? '1.5px solid #00F59B' : '1px solid transparent',
             fontWeight: 700,
-            boxShadow: scannerMode === 'qr' ? '0 4px 14px rgba(0, 245, 155, 0.18)' : 'none'
+            boxShadow: activeMode === 'qr' ? '0 4px 14px rgba(0, 245, 155, 0.18)' : 'none'
           }}
         >
           <QrCode size={14} className="shrink-0" />
           <span className="truncate whitespace-nowrap">Scan QR Badge</span>
-          {scannerMode === 'qr' && (
+          {activeMode === 'qr' && (
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#00F59B' }} className="shrink-0" />
           )}
         </button>
@@ -459,22 +465,50 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
           onClick={() => {
             setScannerMode('ai-snapshot');
             setScanError(null);
+            if (onModeChange) onModeChange('ai_camera');
+            else onSwitchToPhoto?.();
           }}
-          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap"
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap ${
+            activeMode === 'ai_camera' ? 'text-[#00D2FF]' : 'text-[#94A3B8] hover:text-[#F1F5F9]'
+          }`}
           style={{
-            background: scannerMode === 'ai-snapshot'
+            background: activeMode === 'ai_camera'
               ? 'linear-gradient(135deg, rgba(0, 210, 255, 0.22) 0%, rgba(12, 20, 34, 0.95) 100%)'
               : 'transparent',
-            border: scannerMode === 'ai-snapshot' ? '1.5px solid #00D2FF' : '1px solid transparent',
-            color: scannerMode === 'ai-snapshot' ? '#00D2FF' : '#94A3B8',
+            border: activeMode === 'ai_camera' ? '1.5px solid #00D2FF' : '1px solid transparent',
             fontWeight: 700,
-            boxShadow: scannerMode === 'ai-snapshot' ? '0 4px 14px rgba(0, 210, 255, 0.18)' : 'none'
+            boxShadow: activeMode === 'ai_camera' ? '0 4px 14px rgba(0, 210, 255, 0.18)' : 'none'
           }}
         >
           <Sparkles size={14} className="shrink-0" />
           <span className="truncate whitespace-nowrap">Snap Machine Photo (AI)</span>
-          {scannerMode === 'ai-snapshot' && (
+          {activeMode === 'ai_camera' && (
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#00D2FF' }} className="shrink-0" />
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => {
+            setScanError(null);
+            if (onModeChange) onModeChange('upload');
+          }}
+          className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap ${
+            activeMode === 'upload' ? 'text-[#38BDF8]' : 'text-[#94A3B8] hover:text-[#F1F5F9]'
+          }`}
+          style={{
+            background: activeMode === 'upload'
+              ? 'linear-gradient(135deg, rgba(56, 189, 248, 0.22) 0%, rgba(15, 23, 42, 0.95) 100%)'
+              : 'transparent',
+            border: activeMode === 'upload' ? '1.5px solid #38BDF8' : '1px solid transparent',
+            fontWeight: 700,
+            boxShadow: activeMode === 'upload' ? '0 4px 14px rgba(56, 189, 248, 0.18)' : 'none'
+          }}
+        >
+          <Upload size={14} className="shrink-0" />
+          <span className="truncate whitespace-nowrap">Upload Photo</span>
+          {activeMode === 'upload' && (
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#38BDF8' }} className="shrink-0" />
           )}
         </button>
       </div>
