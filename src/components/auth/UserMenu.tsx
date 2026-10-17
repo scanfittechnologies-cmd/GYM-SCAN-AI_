@@ -36,10 +36,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({ onNavigate }) => {
     return (
       <button
         onClick={() => openAuthModal('signin')}
-        className="btn-primary"
-        style={{ fontSize: '0.78rem', padding: '0.45rem 0.9rem', gap: '6px' }}
+        className="btn-primary text-[10px] sm:text-xs px-2 py-1 gap-1.5"
       >
-        <User size={14} /> Sign In
+        <User size={13} /> Sign In
       </button>
     );
   }
@@ -50,52 +49,48 @@ export const UserMenu: React.FC<UserMenuProps> = ({ onNavigate }) => {
     <div style={{ position: 'relative' }} ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center text-[10px] sm:text-xs px-2 py-1 gap-1.5 shrink-0"
         style={{
           background: 'rgba(255, 255, 255, 0.04)',
           border: isAdmin ? '1.5px solid rgba(255, 184, 0, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: '12px',
-          padding: '4px 10px 4px 6px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
           cursor: 'pointer',
           transition: 'all 0.15s ease'
         }}
       >
         {/* Avatar Bubble */}
-        <div style={{
-          width: '28px',
-          height: '28px',
-          borderRadius: '8px',
-          background: isAdmin 
-            ? 'linear-gradient(135deg, #FFB800 0%, #FF8800 100%)' 
-            : 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
-          color: '#05140F',
-          fontWeight: 900,
-          fontSize: '0.82rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: isAdmin ? '0 0 10px rgba(255, 184, 0, 0.3)' : '0 0 10px rgba(0, 245, 155, 0.25)'
-        }}>
+        <div 
+          className="w-5 h-5 sm:w-6 sm:h-6 text-[10px] sm:text-xs rounded-md"
+          style={{
+            background: isAdmin 
+              ? 'linear-gradient(135deg, #FFB800 0%, #FF8800 100%)' 
+              : 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
+            color: '#05140F',
+            fontWeight: 900,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: isAdmin ? '0 0 8px rgba(255, 184, 0, 0.3)' : '0 0 8px rgba(0, 245, 155, 0.25)'
+          }}
+        >
           {initial}
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#F1F5F9', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <span className="font-bold text-[#F1F5F9] max-w-[65px] sm:max-w-[100px] truncate leading-tight text-[10px] sm:text-xs">
             {user.displayName}
           </span>
-          <span style={{
-            fontSize: '0.62rem',
-            fontWeight: 800,
-            textTransform: 'uppercase',
-            color: isAdmin ? '#FFB800' : '#00F59B'
-          }}>
+          <span 
+            className="font-extrabold uppercase leading-none text-[8px] sm:text-[9px]"
+            style={{
+              color: isAdmin ? '#FFB800' : '#00F59B'
+            }}
+          >
             {isAdmin ? '🛡️ Admin' : 'Athlete'}
           </span>
         </div>
 
-        <ChevronDown size={14} color="#94A3B8" />
+        <ChevronDown size={12} color="#94A3B8" className="shrink-0" />
       </button>
 
       {/* Dropdown Menu */}

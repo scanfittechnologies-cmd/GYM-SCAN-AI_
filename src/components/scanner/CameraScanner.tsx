@@ -428,13 +428,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       
       {/* 0. Top Viewfinder Mode Switcher Toggle Pill */}
       <div
-        className="flex flex-col sm:flex-row gap-2 w-full max-w-xl mx-auto p-1.5 sm:p-2"
-        style={{
-          background: 'rgba(11, 15, 23, 0.85)',
-          borderRadius: '16px',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)'
-        }}
+        className="flex flex-row w-full gap-1.5 p-1 bg-slate-900/80 rounded-xl max-w-xl mx-auto border border-white/10"
       >
         <button
           type="button"
@@ -442,22 +436,21 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
             setScannerMode('qr');
             setScanError(null);
           }}
-          className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
+          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap"
           style={{
             background: scannerMode === 'qr'
               ? 'linear-gradient(135deg, rgba(0, 245, 155, 0.22) 0%, rgba(13, 22, 28, 0.95) 100%)'
               : 'transparent',
             border: scannerMode === 'qr' ? '1.5px solid #00F59B' : '1px solid transparent',
-            borderRadius: '12px',
             color: scannerMode === 'qr' ? '#00F59B' : '#94A3B8',
             fontWeight: 700,
             boxShadow: scannerMode === 'qr' ? '0 4px 14px rgba(0, 245, 155, 0.18)' : 'none'
           }}
         >
-          <QrCode size={16} className="shrink-0" />
-          <span>Scan QR Badge</span>
+          <QrCode size={14} className="shrink-0" />
+          <span className="truncate whitespace-nowrap">Scan QR Badge</span>
           {scannerMode === 'qr' && (
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00F59B' }} />
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#00F59B' }} className="shrink-0" />
           )}
         </button>
 
@@ -467,22 +460,21 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
             setScannerMode('ai-snapshot');
             setScanError(null);
           }}
-          className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
+          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap"
           style={{
             background: scannerMode === 'ai-snapshot'
               ? 'linear-gradient(135deg, rgba(0, 210, 255, 0.22) 0%, rgba(12, 20, 34, 0.95) 100%)'
               : 'transparent',
             border: scannerMode === 'ai-snapshot' ? '1.5px solid #00D2FF' : '1px solid transparent',
-            borderRadius: '12px',
             color: scannerMode === 'ai-snapshot' ? '#00D2FF' : '#94A3B8',
             fontWeight: 700,
             boxShadow: scannerMode === 'ai-snapshot' ? '0 4px 14px rgba(0, 210, 255, 0.18)' : 'none'
           }}
         >
-          <Sparkles size={16} className="shrink-0" />
-          <span>Snap Machine Photo (AI)</span>
+          <Sparkles size={14} className="shrink-0" />
+          <span className="truncate whitespace-nowrap">Snap Machine Photo (AI)</span>
           {scannerMode === 'ai-snapshot' && (
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00D2FF' }} />
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#00D2FF' }} className="shrink-0" />
           )}
         </button>
       </div>
@@ -890,11 +882,8 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
         ) : (
           /* Dynamic Idle Card Content (QR Mode vs AI Mode) */
           <div
-            className="pb-28 md:pb-6"
+            className="p-3 sm:p-5 md:p-8"
             style={{
-              paddingTop: '2.5rem',
-              paddingLeft: '1.5rem',
-              paddingRight: '1.5rem',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',

@@ -604,12 +604,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
 
       {/* Viewfinder Mode Switcher: QR Badge vs AI Snapshot */}
       <div
-        className="flex flex-col sm:flex-row gap-2 w-full max-w-xl mx-auto p-1.5 sm:p-2"
-        style={{
-          background: 'rgba(15, 23, 42, 0.65)',
-          borderRadius: '16px',
-          border: '1px solid rgba(255, 255, 255, 0.08)'
-        }}
+        className="flex flex-row w-full gap-1.5 p-1 bg-slate-900/80 rounded-xl max-w-xl mx-auto border border-white/10"
       >
         <button
           type="button"
@@ -617,7 +612,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             setLiveCameraMode('qr');
             setFileError(null);
           }}
-          className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
+          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap"
           style={{
             background: liveCameraMode === 'qr'
               ? 'linear-gradient(135deg, rgba(0, 245, 155, 0.2) 0%, rgba(13, 20, 28, 0.95) 100%)'
@@ -625,16 +620,15 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             border: liveCameraMode === 'qr'
               ? '1.5px solid #00F59B'
               : '1px solid transparent',
-            borderRadius: '12px',
             color: liveCameraMode === 'qr' ? '#00F59B' : '#94A3B8',
             fontWeight: 700,
             boxShadow: liveCameraMode === 'qr' ? '0 4px 16px rgba(0, 245, 155, 0.15)' : 'none'
           }}
         >
-          <QrCode size={16} className="shrink-0" />
-          <span>Scan QR Badge</span>
+          <QrCode size={14} className="shrink-0" />
+          <span className="truncate whitespace-nowrap">Scan QR Badge</span>
           {liveCameraMode === 'qr' && (
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00F59B' }} />
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#00F59B' }} className="shrink-0" />
           )}
         </button>
 
@@ -644,7 +638,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             setLiveCameraMode('ai');
             setFileError(null);
           }}
-          className="flex-1 flex items-center justify-center gap-2 py-2 px-3 text-xs sm:text-sm cursor-pointer transition-all"
+          className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] sm:text-xs cursor-pointer transition-all rounded-lg truncate whitespace-nowrap"
           style={{
             background: liveCameraMode === 'ai'
               ? 'linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(12, 19, 32, 0.95) 100%)'
@@ -652,16 +646,15 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             border: liveCameraMode === 'ai'
               ? '1.5px solid #00D2FF'
               : '1px solid transparent',
-            borderRadius: '12px',
             color: liveCameraMode === 'ai' ? '#00D2FF' : '#94A3B8',
             fontWeight: 700,
             boxShadow: liveCameraMode === 'ai' ? '0 4px 16px rgba(0, 210, 255, 0.15)' : 'none'
           }}
         >
-          <Sparkles size={16} className="shrink-0" />
-          <span>Snap Machine Photo (AI)</span>
+          <Sparkles size={14} className="shrink-0" />
+          <span className="truncate whitespace-nowrap">Snap Machine Photo (AI)</span>
           {liveCameraMode === 'ai' && (
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00D2FF' }} />
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#00D2FF' }} className="shrink-0" />
           )}
         </button>
       </div>
@@ -901,15 +894,12 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
           {/* Dynamic Idle Card Content */}
           <div
-            className="pb-28 md:pb-6"
+            className="p-3 sm:p-5 md:p-8"
             style={{
               backgroundColor: '#07090E',
               borderRadius: '24px',
               border: liveCameraMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid rgba(0, 210, 255, 0.3)',
               boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
-              paddingTop: '2.5rem',
-              paddingLeft: '1.5rem',
-              paddingRight: '1.5rem',
               textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
