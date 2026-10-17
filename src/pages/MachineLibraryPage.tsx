@@ -19,7 +19,6 @@ import {
   List,
   Info,
   RefreshCw,
-  Camera,
   AlertTriangle,
   WifiOff
 } from 'lucide-react';
@@ -315,9 +314,6 @@ const EmptyState: React.FC<EmptyStateProps> = ({ searchQuery, onClear, onNavigat
       <button onClick={onClear} className="btn-primary" style={{ fontSize: '0.85rem', padding: '0.65rem 1.3rem' }}>
         <X size={15} /> Clear Search &amp; Filters
       </button>
-      <button onClick={() => onNavigate('scan')} className="btn-secondary" style={{ fontSize: '0.85rem', padding: '0.65rem 1.15rem' }}>
-        <QrCode size={15} /> Scan Machine
-      </button>
     </div>
   </div>
 );
@@ -553,7 +549,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
         <div style={{ position: 'absolute', bottom: '-30px', left: '-30px', width: '180px', height: '180px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,210,255,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
         {/* Main header row: flex-col on mobile, flex-row on sm+ */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="flex flex-col gap-3 w-full" style={{ position: 'relative', zIndex: 1 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
               <span className="badge badge-emerald" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
@@ -571,25 +567,6 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
             <p style={{ fontSize: '0.85rem', color: '#94A3B8', margin: 0, maxWidth: '560px', lineHeight: 1.5 }}>
               Explore gym equipment, discover exercises, and learn how to use each machine.
             </p>
-          </div>
-
-          {/* Action CTAs */}
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <button
-              id="btn-header-scan"
-              onClick={() => handleNavigate('scan', 'qr')}
-              className="btn-primary flex-1 sm:flex-initial"
-              style={{ fontSize: '0.82rem', padding: '0.6rem 1rem' }}
-            >
-              <QrCode size={15} /> Scan Machine
-            </button>
-            <button
-              onClick={() => handleNavigate('scan', 'upload')}
-              className="btn-secondary flex-1 sm:flex-initial"
-              style={{ fontSize: '0.82rem', padding: '0.6rem 1rem' }}
-            >
-              <Camera size={15} /> Upload Photo
-            </button>
           </div>
         </div>
 
