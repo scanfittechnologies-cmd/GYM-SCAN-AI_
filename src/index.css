@@ -49,13 +49,23 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-main);
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
+  box-sizing: border-box;
   line-height: 1.5;
   background-image: 
     radial-gradient(circle at 15% 15%, rgba(0, 245, 155, 0.04) 0%, transparent 45%),
     radial-gradient(circle at 85% 85%, rgba(0, 210, 255, 0.04) 0%, transparent 45%),
     radial-gradient(circle at 50% 50%, rgba(17, 20, 28, 0.7) 0%, var(--bg-primary) 100%);
   background-attachment: fixed;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -491,7 +501,10 @@ button.text-emerald-400 {
 
 /* Mobile Layout Helpers */
 .app-container {
-  max-width: 1200px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
   margin: 0 auto;
   padding-left: 1rem;
   padding-right: 1rem;
@@ -591,17 +604,27 @@ select.input-modern option {
   color: #f1f5f9;
 }
 
-/* Machine Library Grid — square cards */
+/* Machine Library Grid — responsive square cards */
 .grid-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.65rem;
 }
 
-@media (max-width: 480px) {
+@media (min-width: 480px) {
   .grid-cards {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.65rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .grid-cards {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
   }
 }
 

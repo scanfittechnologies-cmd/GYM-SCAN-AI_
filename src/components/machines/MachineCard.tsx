@@ -55,17 +55,19 @@ export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, o
           onSelect(machine);
         }
       }}
-      className="glass-card"
+      className="glass-card w-full max-w-full"
       style={{
         display: 'flex',
         flexDirection: 'column',
         aspectRatio: '1 / 1',
         width: '100%',
+        maxWidth: '100%',
         overflow: 'hidden',
         cursor: 'pointer',
         position: 'relative',
         borderRadius: '20px',
         border: '1px solid rgba(255,255,255,0.1)',
+        boxSizing: 'border-box',
         transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
     >
@@ -91,10 +93,9 @@ export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, o
               style={{
                 width: '100%',
                 height: '100%',
-                objectFit: 'contain',
+                objectFit: 'cover',
                 objectPosition: 'center',
                 display: 'block',
-                padding: '8px',
               }}
             />
             {/* Scrim overlay */}

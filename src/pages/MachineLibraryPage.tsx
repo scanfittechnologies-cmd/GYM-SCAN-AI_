@@ -510,7 +510,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
 
   return (
     <div 
-      className="pt-16 sm:pt-20 md:pt-6 pb-28 md:pb-8 flex flex-col gap-5 sm:gap-6" 
+      className="w-full max-w-7xl mx-auto px-3 sm:px-6 pt-16 sm:pt-20 md:pt-6 pb-28 md:pb-8 box-border flex flex-col gap-5 sm:gap-6" 
       style={{ animation: 'fadeIn 0.3s ease-out' }}
     >
 
@@ -542,7 +542,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
 
       {/* ── 1. Page Header ── */}
       <div 
-        className="p-4 sm:p-6 md:p-7 rounded-[22px] relative overflow-hidden"
+        className="w-full max-w-full box-border p-4 sm:p-6 md:p-7 rounded-[22px] relative overflow-hidden"
         style={{
           background: 'linear-gradient(135deg, rgba(17,24,39,0.95) 0%, rgba(10,14,22,0.98) 100%)',
           border: '1px solid rgba(0,245,155,0.18)',
@@ -552,7 +552,8 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
         <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,245,155,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '-30px', left: '-30px', width: '180px', height: '180px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,210,255,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
-        <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
+        {/* Main header row: flex-col on mobile, flex-row on sm+ */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full" style={{ position: 'relative', zIndex: 1 }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
               <span className="badge badge-emerald" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
@@ -592,9 +593,9 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
           </div>
         </div>
 
-        {/* Header Stats Bar: Mobile-friendly 3-column layout */}
+        {/* Header Stats Bar: 3-column grid on mobile, flex row on sm+ */}
         <div 
-          className="grid grid-cols-3 gap-2 sm:flex sm:items-center sm:gap-6 p-3 sm:p-4 mt-4 border-t border-white/[0.06] relative z-10"
+          className="grid grid-cols-3 gap-2 w-full p-2.5 sm:p-4 mt-4 border-t border-white/[0.06] relative z-10 sm:flex sm:items-center sm:gap-6"
         >
           {[
             { label: 'Total Machines', mobileLabel: 'Total', value: machines.length, color: '#00F59B', icon: <Layers size={14} /> },
@@ -711,8 +712,10 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
           )}
         </div>
 
+        {/* Category pills: horizontal scroll on mobile, no scrollbar */}
         <div 
-          className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 w-full"
+          className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full py-1"
+          style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {allCategories.map(cat => {
             const isSelected = selectedCategory === cat.id;
