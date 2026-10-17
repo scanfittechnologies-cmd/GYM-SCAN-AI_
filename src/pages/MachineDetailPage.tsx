@@ -6,7 +6,6 @@ import {
   Star, 
   CheckCircle, 
   AlertTriangle, 
-  Play, 
   Shield, 
   Dumbbell, 
   Info, 
@@ -15,17 +14,15 @@ import {
   Sparkles, 
   ChevronRight, 
   Award, 
-  Video, 
   BookOpen, 
   Camera, 
-  RotateCcw,
-  Sliders,
-  CheckCircle2,
-  HelpCircle,
-  ExternalLink
+  RotateCcw, 
+  Sliders, 
+  CheckCircle2, 
+  HelpCircle, 
+  ExternalLink 
 } from 'lucide-react';
 import { MachineImageGallery } from '../components/machines/MachineImageGallery';
-import { MuscleAnatomyDiagram } from '../components/machines/MuscleAnatomyDiagram';
 import { InteractiveTutorialModal } from '../components/machines/InteractiveTutorialModal';
 import { ExerciseDetailModal } from '../components/machines/ExerciseDetailModal';
 import { ReportModal } from '../components/machines/ReportModal';
@@ -53,11 +50,10 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
     toggleFavorite 
   } = useGym();
 
-  const [activeTab, setActiveTab] = useState<'overview' | 'steps' | 'adjustments' | 'exercises' | 'mistakes' | 'anatomy' | 'tutorials'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'adjustments' | 'exercises' | 'mistakes'>('overview');
   const [showTutorialModal, setShowTutorialModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<MachineExercise | null>(null);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   // Missing or Incomplete Machine state
   if (!machine) {
@@ -326,8 +322,6 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
             { id: 'adjustments', label: 'Machine Adjustments' },
             { id: 'exercises', label: `Exercises (${exercises.length})` },
             { id: 'mistakes', label: 'Common Mistakes' },
-            { id: 'anatomy', label: 'Muscle Anatomy' },
-            { id: 'tutorials', label: 'Demonstration Tutorial' },
           ].map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -872,106 +866,6 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
               </div>
             );
           })()}
-
-          {/* Muscle Anatomy Diagram */}
-          {activeTab === 'anatomy' && (
-            <div style={{ animation: 'fadeIn 0.2s ease-out' }}>
-              <MuscleAnatomyDiagram
-                primaryMuscles={machine.primaryMuscles}
-                secondaryMuscles={machine.secondaryMuscles}
-                category={machine.category}
-              />
-            </div>
-          )}
-
-          {/* 9. HUMAN DEMONSTRATION TUTORIALS */}
-          {activeTab === 'tutorials' && (
-            <div className="glass-card" style={{ padding: '1.5rem', animation: 'fadeIn 0.2s ease-out' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Video size={18} color="#00D2FF" />
-                  <h3 style={{ fontSize: '1.1rem', color: '#F1F5F9', margin: 0 }}>
-                    Human Demonstration Guide
-                  </h3>
-                </div>
-                <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
-                  {machine.videoDurationSec ? `${machine.videoDurationSec}s Breakdown` : 'Demonstration'}
-                </span>
-              </div>
-
-              {/* Video Player Container / Simulation Area */}
-              <div style={{
-                position: 'relative',
-                height: '260px',
-                background: '#090D15',
-                borderRadius: '18px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                {isVideoPlaying ? (
-                  <div style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'rgba(0, 0, 0, 0.9)',
-                    padding: '1.5rem',
-                    textAlign: 'center'
-                  }}>
-                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#00F59B', animation: 'pulse 1.5s infinite', marginBottom: '8px' }} />
-                    <h4 style={{ fontSize: '1.1rem', color: '#F1F5F9', marginBottom: '4px' }}>
-                      Streaming Form Demo: {machine.name}
-                    </h4>
-                    <p style={{ fontSize: '0.8rem', color: '#94A3B8', maxWidth: '380px', margin: '0 0 1rem 0' }}>
-                      Demonstrating proper torso stabilization, grip positioning, and controlled tempo cadence.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => setIsVideoPlaying(false)}
-                      className="btn-secondary"
-                      style={{ fontSize: '0.75rem', padding: '0.4rem 0.85rem' }}
-                    >
-                      Close Video
-                    </button>
-                  </div>
-                ) : (
-                  <div style={{ textAlign: 'center', padding: '1.5rem' }}>
-                    <div 
-                      onClick={() => setIsVideoPlaying(true)}
-                      style={{
-                        width: '64px',
-                        height: '64px',
-                        borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
-                        color: '#05140F',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        margin: '0 auto 1rem auto',
-                        cursor: 'pointer',
-                        boxShadow: '0 0 25px rgba(0, 245, 155, 0.4)',
-                        transition: 'transform 0.2s ease'
-                      }}
-                      title="Play Demonstration Guide"
-                    >
-                      <Play size={28} fill="#05140F" style={{ marginLeft: '4px' }} />
-                    </div>
-                    <h4 style={{ fontSize: '1rem', color: '#F1F5F9', marginBottom: '0.25rem' }}>
-                      {machine.name} Tutorial
-                    </h4>
-                    <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
-                      Tap to watch certified setup and execution form demonstration
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
         </div>
       </div>

@@ -78,7 +78,7 @@ export interface Machine {
   commonMistakes: MachineCommonMistake[];
   safetyReminders: string[];
   tutorialSteps: TutorialStep[];
-  videoDurationSec: number;
+  videoDurationSec?: number;
   featured?: boolean;
   exercises?: MachineExercise[];
   galleryImages?: string[];
