@@ -357,73 +357,166 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
         {/* Tab Content Panels */}
         <div style={{ marginTop: '1.25rem' }}>
           
-          {/* 5. STEP-BY-STEP USAGE INSTRUCTIONS */}
+          {/* 5. STEP-BY-STEP USAGE INSTRUCTIONS — Visual Action Card Grid */}
           {activeTab === 'overview' && (
-            <div className="glass-card" style={{ padding: '1.5rem', animation: 'fadeIn 0.2s ease-out' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0 }}>
-                  Step-by-Step Usage Instructions
-                </h3>
-                <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
-                  Standard Exercise Execution
-                </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', animation: 'fadeIn 0.2s ease-out' }}>
+
+              {/* Section header */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: 6, height: 24, borderRadius: 3, background: 'linear-gradient(180deg, #00F59B, #00D2FF)' }} />
+                  <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>Step-by-Step Usage</h3>
+                </div>
+                <span style={{
+                  fontSize: '0.7rem', color: '#00F59B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
+                  background: 'rgba(0,245,155,0.1)', border: '1px solid rgba(0,245,155,0.25)',
+                  padding: '2px 10px', borderRadius: '999px'
+                }}>Standard Execution</span>
               </div>
 
               {machine.setupInstructions && machine.setupInstructions.length > 0 ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                  {machine.setupInstructions.map((instruction, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'flex-start',
-                        gap: '0.85rem',
-                        background: 'rgba(255, 255, 255, 0.02)',
-                        padding: '0.9rem 1rem',
-                        borderRadius: '14px',
-                        border: '1px solid rgba(255, 255, 255, 0.05)'
-                      }}
-                    >
-                      <div style={{
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        background: 'rgba(0, 245, 155, 0.15)',
-                        color: '#00F59B',
-                        fontWeight: 800,
-                        fontSize: '0.85rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
-                      }}>
-                        {idx + 1}
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: '0.75rem', color: '#00F59B', fontWeight: 700, textTransform: 'uppercase' }}>
-                          Step {idx + 1}
+                <>
+                  {/* ─── Visual Action Step Cards Grid ─── */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {machine.setupInstructions.map((instruction, idx) => {
+                      const stepMeta = [
+                        { emoji: '🪑', stage: 'Setup',    accent: '#00F59B', accentBg: 'rgba(0,245,155,0.1)',  border: 'rgba(0,245,155,0.25)' },
+                        { emoji: '🎯', stage: 'Adjust',   accent: '#38BDF8', accentBg: 'rgba(56,189,248,0.1)', border: 'rgba(56,189,248,0.25)' },
+                        { emoji: '🧘', stage: 'Position', accent: '#C084FC', accentBg: 'rgba(192,132,252,0.1)',border: 'rgba(192,132,252,0.25)' },
+                        { emoji: '💥', stage: 'Execute',  accent: '#FFB800', accentBg: 'rgba(255,184,0,0.1)',  border: 'rgba(255,184,0,0.25)' },
+                      ];
+                      const meta = stepMeta[idx] ?? stepMeta[stepMeta.length - 1];
+                      return (
+                        <div
+                          key={idx}
+                          style={{
+                            background: 'rgba(255,255,255,0.03)',
+                            border: `1px solid ${meta.border}`,
+                            borderRadius: '18px',
+                            padding: '1.1rem',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0.6rem',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            transition: 'transform 0.2s, box-shadow 0.2s',
+                          }}
+                        >
+                          {/* Step number watermark */}
+                          <div style={{
+                            position: 'absolute', top: '0.6rem', right: '0.8rem',
+                            fontSize: '2.2rem', fontWeight: 900, fontFamily: 'var(--font-heading)',
+                            color: meta.accentBg, lineHeight: 1, userSelect: 'none', pointerEvents: 'none'
+                          }}>{idx + 1}</div>
+
+                          {/* Icon + Stage pill */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>{meta.emoji}</span>
+                            <span style={{
+                              fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase',
+                              letterSpacing: '0.07em', color: meta.accent,
+                              background: meta.accentBg, border: `1px solid ${meta.border}`,
+                              padding: '2px 8px', borderRadius: '999px'
+                            }}>{meta.stage}</span>
+                          </div>
+
+                          {/* Step label */}
+                          <div style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                            Step {idx + 1}
+                          </div>
+
+                          {/* Instruction text */}
+                          <p style={{ margin: 0, fontSize: '0.84rem', color: '#E2E8F0', lineHeight: 1.45, fontWeight: 500 }}>
+                            {instruction}
+                          </p>
+
+                          {/* Bottom accent bar */}
+                          <div style={{ height: '3px', borderRadius: '999px', background: `linear-gradient(90deg, ${meta.accent}, transparent)`, marginTop: 'auto' }} />
                         </div>
-                        <p style={{ margin: '2px 0 0 0', fontSize: '0.88rem', color: '#E2E8F0', lineHeight: 1.45 }}>
-                          {instruction}
-                        </p>
+                      );
+                    })}
+                  </div>
+
+                  {/* ─── Movement Cue Pills ─── */}
+                  {machine.movementGuidance && machine.movementGuidance.length > 0 ? (
+                    <div style={{
+                      padding: '1rem 1.25rem',
+                      background: 'rgba(0,210,255,0.04)',
+                      border: '1px solid rgba(0,210,255,0.18)',
+                      borderRadius: '16px',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.75rem' }}>
+                        <Sparkles size={14} color="#00D2FF" />
+                        <span style={{ fontSize: '0.78rem', color: '#00D2FF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                          Movement Rhythm &amp; Breathing
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        {machine.movementGuidance.map((cue, idx) => {
+                          const cueStyles = [
+                            { dot: '#00F59B', bg: 'rgba(0,245,155,0.1)',  border: 'rgba(0,245,155,0.3)',  prefix: '🟢 Exhale:' },
+                            { dot: '#38BDF8', bg: 'rgba(56,189,248,0.1)', border: 'rgba(56,189,248,0.3)', prefix: '🔵 Inhale:' },
+                            { dot: '#FFB800', bg: 'rgba(255,184,0,0.1)',  border: 'rgba(255,184,0,0.3)',  prefix: '⚡ Tempo:' },
+                          ];
+                          const cs = cueStyles[idx % cueStyles.length];
+                          return (
+                            <span key={idx} style={{
+                              display: 'inline-flex', alignItems: 'center', gap: '6px',
+                              background: cs.bg, border: `1px solid ${cs.border}`,
+                              borderRadius: '999px', padding: '5px 12px',
+                              fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 500,
+                            }}>
+                              <strong style={{ color: cs.dot, fontWeight: 700 }}>{cs.prefix}</strong> {cue}
+                            </span>
+                          );
+                        })}
+
+                        {/* Fallback default pills if movementGuidance doesn't include tempo */}
+                        {machine.movementGuidance.length < 3 && (
+                          <span style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '6px',
+                            background: 'rgba(255,184,0,0.1)', border: '1px solid rgba(255,184,0,0.3)',
+                            borderRadius: '999px', padding: '5px 12px',
+                            fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 500,
+                          }}>
+                            <strong style={{ color: '#FFB800', fontWeight: 700 }}>⚡ Tempo:</strong> 1s Push | 1s Hold | 3s Release
+                          </span>
+                        )}
                       </div>
                     </div>
-                  ))}
-
-                  {/* Cadence & Form Cues */}
-                  {machine.movementGuidance && machine.movementGuidance.length > 0 && (
-                    <div style={{ marginTop: '0.75rem', padding: '1rem', background: 'rgba(0, 210, 255, 0.04)', borderRadius: '12px', border: '1px solid rgba(0, 210, 255, 0.15)' }}>
-                      <h4 style={{ fontSize: '0.9rem', color: '#00D2FF', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <Sparkles size={14} /> Movement Rhythm & Breathing Cues:
-                      </h4>
-                      <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.82rem', color: '#CBD5E1', lineHeight: 1.5 }}>
-                        {machine.movementGuidance.map((cue, idx) => (
-                          <li key={idx}>{cue}</li>
+                  ) : (
+                    /* Static default cue pills if no movementGuidance data */
+                    <div style={{
+                      padding: '1rem 1.25rem',
+                      background: 'rgba(0,210,255,0.04)',
+                      border: '1px solid rgba(0,210,255,0.18)',
+                      borderRadius: '16px',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '0.75rem' }}>
+                        <Sparkles size={14} color="#00D2FF" />
+                        <span style={{ fontSize: '0.78rem', color: '#00D2FF', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                          High-Contrast Movement Cues
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        {[
+                          { label: '🟢 Exhale:', value: 'On pressing forward',           dot: '#00F59B', bg: 'rgba(0,245,155,0.1)',  border: 'rgba(0,245,155,0.3)' },
+                          { label: '🔵 Inhale:', value: 'On 3-second controlled return', dot: '#38BDF8', bg: 'rgba(56,189,248,0.1)', border: 'rgba(56,189,248,0.3)' },
+                          { label: '⚡ Tempo:',  value: '1s Push | 1s Hold | 3s Release',dot: '#FFB800', bg: 'rgba(255,184,0,0.1)',  border: 'rgba(255,184,0,0.3)' },
+                        ].map(cue => (
+                          <span key={cue.label} style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '6px',
+                            background: cue.bg, border: `1px solid ${cue.border}`,
+                            borderRadius: '999px', padding: '5px 12px',
+                            fontSize: '0.8rem', color: '#E2E8F0', fontWeight: 500,
+                          }}>
+                            <strong style={{ color: cue.dot, fontWeight: 700 }}>{cue.label}</strong> {cue.value}
+                          </span>
                         ))}
-                      </ul>
+                      </div>
                     </div>
                   )}
-                </div>
+                </>
               ) : (
                 <div style={{ textAlign: 'center', padding: '2rem 1rem', color: '#94A3B8' }}>
                   <Info size={32} style={{ margin: '0 auto 8px auto', opacity: 0.6 }} />
@@ -546,40 +639,87 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
             </div>
           )}
 
-          {/* 6. COMMON MISTAKES */}
+          {/* 6. COMMON MISTAKES — Side-by-Side Do's & Don'ts Cards */}
           {activeTab === 'mistakes' && (
-            <div className="glass-card" style={{ padding: '1.5rem', animation: 'fadeIn 0.2s ease-out' }}>
-              <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#FF4757' }} />
-                Common Mistakes & Fixes
-              </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', animation: 'fadeIn 0.2s ease-out' }}>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                {machine.commonMistakes && machine.commonMistakes.length > 0 ? (
-                  machine.commonMistakes.map((item, idx) => (
+              {/* Section header */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: 6, height: 24, borderRadius: 3, background: 'linear-gradient(180deg, #FF4757, #FF6B81)' }} />
+                  <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>Common Mistakes &amp; Fixes</h3>
+                </div>
+                <span style={{
+                  fontSize: '0.7rem', color: '#FF6B81', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em',
+                  background: 'rgba(255,71,87,0.1)', border: '1px solid rgba(255,71,87,0.25)',
+                  padding: '2px 10px', borderRadius: '999px'
+                }}>Form Check</span>
+              </div>
+
+              {machine.commonMistakes && machine.commonMistakes.length > 0 ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {machine.commonMistakes.map((item, idx) => (
                     <div
                       key={idx}
-                      style={{
-                        background: 'rgba(255, 71, 87, 0.05)',
-                        border: '1px solid rgba(255, 71, 87, 0.2)',
-                        borderRadius: '14px',
-                        padding: '1rem'
-                      }}
+                      className="grid grid-cols-1 md:grid-cols-2 gap-3"
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FF6B81', fontWeight: 700, fontSize: '0.88rem' }}>
-                        <AlertTriangle size={16} /> ❌ Mistake: {item.mistake}
+                      {/* Left: ❌ Mistake */}
+                      <div style={{
+                        background: 'rgba(255,71,87,0.07)',
+                        border: '1px solid rgba(255,71,87,0.25)',
+                        borderRadius: '16px',
+                        padding: '1rem 1.1rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem',
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                          <span style={{
+                            fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em',
+                            color: '#FF6B81', background: 'rgba(255,71,87,0.15)',
+                            border: '1px solid rgba(255,71,87,0.3)', padding: '2px 8px', borderRadius: '999px'
+                          }}>❌ Mistake</span>
+                          <span style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 600 }}>#{idx + 1}</span>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '0.88rem', color: '#FCA5A5', fontWeight: 600, lineHeight: 1.4 }}>
+                          {item.mistake}
+                        </p>
+                        {/* Bottom accent */}
+                        <div style={{ height: '2px', borderRadius: '999px', background: 'linear-gradient(90deg, rgba(255,71,87,0.6), transparent)', marginTop: 'auto' }} />
                       </div>
-                      <div style={{ marginTop: '6px', paddingLeft: '1.5rem', fontSize: '0.84rem', color: '#00F59B', lineHeight: 1.4 }}>
-                        <strong>✅ Fix:</strong> {item.correction}
+
+                      {/* Right: ✅ Correct Form */}
+                      <div style={{
+                        background: 'rgba(0,245,155,0.07)',
+                        border: '1px solid rgba(0,245,155,0.25)',
+                        borderRadius: '16px',
+                        padding: '1rem 1.1rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem',
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                          <span style={{
+                            fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em',
+                            color: '#00F59B', background: 'rgba(0,245,155,0.15)',
+                            border: '1px solid rgba(0,245,155,0.3)', padding: '2px 8px', borderRadius: '999px'
+                          }}>✅ Correct Form</span>
+                        </div>
+                        <p style={{ margin: 0, fontSize: '0.88rem', color: '#6EE7B7', fontWeight: 600, lineHeight: 1.4 }}>
+                          {item.correction}
+                        </p>
+                        {/* Bottom accent */}
+                        <div style={{ height: '2px', borderRadius: '999px', background: 'linear-gradient(90deg, rgba(0,245,155,0.6), transparent)', marginTop: 'auto' }} />
                       </div>
                     </div>
-                  ))
-                ) : (
-                  <p style={{ color: '#94A3B8', fontSize: '0.85rem' }}>
-                    Information for this machine is still being reviewed.
-                  </p>
-                )}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', padding: '2rem 1rem', color: '#94A3B8' }}>
+                  <Info size={32} style={{ margin: '0 auto 8px auto', opacity: 0.6 }} />
+                  <p style={{ fontSize: '0.88rem', margin: 0 }}>Information for this machine is still being reviewed.</p>
+                </div>
+              )}
             </div>
           )}
 
