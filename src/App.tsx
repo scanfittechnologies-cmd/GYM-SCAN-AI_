@@ -19,10 +19,10 @@ import { AchievementsPage } from './pages/AchievementsPage';
 import { ProfilePage } from './pages/ProfilePage';
 
 
-const KNOWN_TABS = ['landing', 'pricing', 'home', 'scan', 'library', 'activity', 'achievements', 'profile'];
+const KNOWN_TABS = ['pricing', 'home', 'scan', 'library', 'activity', 'achievements', 'profile'];
 
 const AppContent: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState<string>('landing');
+  const [currentTab, setCurrentTab] = useState<string>('home');
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
   const [machineSource, setMachineSource] = useState<'qr' | 'photo' | 'library' | 'activity'>('library');
   const [scanInitialMode, setScanInitialMode] = useState<'qr' | 'photo' | 'ai_camera' | 'upload'>('qr');
@@ -52,18 +52,16 @@ const AppContent: React.FC = () => {
     setSelectedMachine(null);
   };
 
-  // Landing and pricing pages use full-width layout without the standard nav padding
-  const isFullWidthPage = currentTab === 'landing' || currentTab === 'pricing';
+  // Pricing page uses full-width layout without the standard nav padding
+  const isFullWidthPage = currentTab === 'pricing';
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Client Demo Status Banner */}
       <DemoBanner onOpenSettings={() => handleNavigate('profile')} />
 
-      {/* Top Sticky Header — hidden on landing for cleaner look */}
-      {currentTab !== 'landing' && (
-        <Navbar currentTab={currentTab} onTabChange={handleNavigate} />
-      )}
+      {/* Top Sticky Header */}
+      <Navbar currentTab={currentTab} onTabChange={handleNavigate} />
 
       {/* Main Responsive App Content Area */}
       <main
@@ -154,13 +152,11 @@ const AppContent: React.FC = () => {
         )}
       </main>
 
-      {/* Mobile Bottom Navigation Bar — hidden on landing page */}
-      {currentTab !== 'landing' && (
-        <BottomNav
-          currentTab={selectedMachine ? 'library' : currentTab}
-          onTabChange={handleNavigate}
-        />
-      )}
+      {/* Mobile Bottom Navigation Bar */}
+      <BottomNav
+        currentTab={selectedMachine ? 'library' : currentTab}
+        onTabChange={handleNavigate}
+      />
 
       {/* Toast Notification Container */}
       <ToastContainer />
