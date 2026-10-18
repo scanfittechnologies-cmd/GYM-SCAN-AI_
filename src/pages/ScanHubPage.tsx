@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGym } from '../context/GymContext';
 import { Machine } from '../types';
-import { QrCode, Upload, Sparkles, Shield } from 'lucide-react';
+import { Sparkles, Shield } from 'lucide-react';
 import { CameraScanner } from '../components/scanner/CameraScanner';
 import { PhotoAIAnalyzer } from '../components/scanner/PhotoAIAnalyzer';
 
@@ -61,100 +61,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
         </p>
       </div>
 
-      {/* 2. Compact Scanner Mode Selector Tabs (3 Synchronized Modes) */}
-      <div
-        className="flex w-full gap-1 p-1 bg-slate-900/80 rounded-xl text-xs max-w-xl mx-auto border border-white/10"
-      >
-        {/* Option 1: Scan QR Code */}
-        <button
-          type="button"
-          onClick={() => setActiveMode('qr')}
-          className={`flex-1 py-1.5 text-center text-[11px] sm:text-xs font-medium flex items-center justify-center gap-1.5 cursor-pointer transition-all rounded-lg whitespace-nowrap truncate ${
-            activeMode === 'qr' ? 'text-[#00F59B]' : 'text-[#94A3B8] hover:text-[#F1F5F9]'
-          }`}
-          style={{
-            background: activeMode === 'qr'
-              ? 'linear-gradient(135deg, rgba(0, 245, 155, 0.2) 0%, rgba(13, 20, 28, 0.95) 100%)'
-              : 'transparent',
-            border: activeMode === 'qr'
-              ? '1.5px solid #00F59B'
-              : '1px solid transparent',
-            boxShadow: activeMode === 'qr' ? '0 4px 16px rgba(0, 245, 155, 0.15)' : 'none'
-          }}
-        >
-          <QrCode size={14} className="shrink-0" />
-          <span className="truncate whitespace-nowrap">Scan QR Code</span>
-          {activeMode === 'qr' && (
-            <span style={{
-              width: 5,
-              height: 5,
-              borderRadius: '50%',
-              background: '#00F59B',
-              marginLeft: '2px'
-            }} className="shrink-0" />
-          )}
-        </button>
 
-        {/* Option 2: Snap Machine Photo (AI) */}
-        <button
-          type="button"
-          onClick={() => setActiveMode('ai_camera')}
-          className={`flex-1 py-1.5 text-center text-[11px] sm:text-xs font-medium flex items-center justify-center gap-1.5 cursor-pointer transition-all rounded-lg whitespace-nowrap truncate ${
-            activeMode === 'ai_camera' ? 'text-[#00D2FF]' : 'text-[#94A3B8] hover:text-[#F1F5F9]'
-          }`}
-          style={{
-            background: activeMode === 'ai_camera'
-              ? 'linear-gradient(135deg, rgba(0, 210, 255, 0.2) 0%, rgba(12, 19, 32, 0.95) 100%)'
-              : 'transparent',
-            border: activeMode === 'ai_camera'
-              ? '1.5px solid #00D2FF'
-              : '1px solid transparent',
-            boxShadow: activeMode === 'ai_camera' ? '0 4px 16px rgba(0, 210, 255, 0.15)' : 'none'
-          }}
-        >
-          <Sparkles size={14} className="shrink-0" />
-          <span className="truncate whitespace-nowrap">Snap Machine Photo</span>
-          {activeMode === 'ai_camera' && (
-            <span style={{
-              width: 5,
-              height: 5,
-              borderRadius: '50%',
-              background: '#00D2FF',
-              marginLeft: '2px'
-            }} className="shrink-0" />
-          )}
-        </button>
-
-        {/* Option 3: Upload Machine Photo */}
-        <button
-          type="button"
-          onClick={() => setActiveMode('upload')}
-          className={`flex-1 py-1.5 text-center text-[11px] sm:text-xs font-medium flex items-center justify-center gap-1.5 cursor-pointer transition-all rounded-lg whitespace-nowrap truncate ${
-            activeMode === 'upload' ? 'text-[#38BDF8]' : 'text-[#94A3B8] hover:text-[#F1F5F9]'
-          }`}
-          style={{
-            background: activeMode === 'upload'
-              ? 'linear-gradient(135deg, rgba(56, 189, 248, 0.2) 0%, rgba(15, 23, 42, 0.95) 100%)'
-              : 'transparent',
-            border: activeMode === 'upload'
-              ? '1.5px solid #38BDF8'
-              : '1px solid transparent',
-            boxShadow: activeMode === 'upload' ? '0 4px 16px rgba(56, 189, 248, 0.15)' : 'none'
-          }}
-        >
-          <Upload size={14} className="shrink-0" />
-          <span className="truncate whitespace-nowrap">Upload Photo</span>
-          {activeMode === 'upload' && (
-            <span style={{
-              width: 5,
-              height: 5,
-              borderRadius: '50%',
-              background: '#38BDF8',
-              marginLeft: '2px'
-            }} className="shrink-0" />
-          )}
-        </button>
-      </div>
 
       {/* 3. Active Identification Tool View */}
       {activeMode === 'qr' ? (
