@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { useGym } from '../context/GymContext';
-import { useAuth } from '../context/AuthContext';
 import { Machine, ActivityRecord } from '../types';
 import { 
   History, 
@@ -11,7 +10,6 @@ import {
   Calendar, 
   Clock, 
   ChevronRight, 
-  Database, 
   Flame,
   ArrowRight,
   Filter,
@@ -40,8 +38,6 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
     machines, 
     getMachineById
   } = useGym();
-
-  const { isAdmin } = useAuth();
 
   const [activeFilter, setActiveFilter] = useState<ActivityFilter>('all');
 
@@ -716,30 +712,6 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
           </div>
         )}
       </div>
-
-      {/* Storage and Security Transparency Notice (Admin only) */}
-      {isAdmin && (
-        <div style={{
-          background: 'rgba(255, 255, 255, 0.02)',
-          border: '1px solid rgba(255, 255, 255, 0.07)',
-          borderRadius: '14px',
-          padding: '1rem 1.25rem',
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '0.85rem',
-          fontSize: '0.8rem',
-          color: '#94A3B8',
-          lineHeight: 1.45
-        }}>
-          <Database size={18} color="#00D2FF" style={{ flexShrink: 0, marginTop: '2px' }} />
-          <div>
-            <strong style={{ color: '#F1F5F9' }}>Data Architecture & Anti-Exploit Notice:</strong>
-            <div>
-              All scan logs, tutorial progress, and XP transactions are idempotently tracked with local caching to prevent duplicate XP claims on page refresh. In production mode, verified logs sync with secure backend endpoints.
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
