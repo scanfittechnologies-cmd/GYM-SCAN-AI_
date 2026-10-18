@@ -33,7 +33,8 @@ const AppContent: React.FC = () => {
 
   const handleNavigate = (tab: string, scanModeOrMachineId?: string) => {
     setSelectedMachine(null);
-    if (tab === 'scan') {
+    const targetTab = tab === 'xp' ? 'achievements' : tab;
+    if (targetTab === 'scan') {
       if (scanModeOrMachineId === 'upload') {
         setScanInitialMode('upload');
       } else if (scanModeOrMachineId === 'photo' || scanModeOrMachineId === 'ai_camera') {
@@ -42,7 +43,7 @@ const AppContent: React.FC = () => {
         setScanInitialMode('qr');
       }
     }
-    setCurrentTab(tab);
+    setCurrentTab(targetTab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

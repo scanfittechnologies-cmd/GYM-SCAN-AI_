@@ -164,27 +164,27 @@ export const AchievementsPage: React.FC<AchievementsPageProps> = ({ onNavigate }
         </div>
 
         {/* XP Rules Breakdown */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(135px, 1fr))',
-          gap: '0.75rem',
-          marginTop: '1.35rem',
-          paddingTop: '1.25rem',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)'
-        }}>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+        <div
+          className="flex flex-wrap items-center gap-2 sm:gap-2.5"
+          style={{
+            marginTop: '1.35rem',
+            paddingTop: '1.25rem',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)'
+          }}
+        >
+          <div className="bg-slate-800/40 px-2.5 py-1 rounded-lg border border-slate-700/50" style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
             <strong style={{ color: '#00F59B' }}>+10 XP</strong> Verified QR Scan
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+          <div className="bg-slate-800/40 px-2.5 py-1 rounded-lg border border-slate-700/50" style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
             <strong style={{ color: '#00D2FF' }}>+10 XP</strong> Photo Vision Match
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+          <div className="bg-slate-800/40 px-2.5 py-1 rounded-lg border border-slate-700/50" style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
             <strong style={{ color: '#38BDF8' }}>+10 XP</strong> Unique Discovery Bonus
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+          <div className="bg-slate-800/40 px-2.5 py-1 rounded-lg border border-slate-700/50" style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
             <strong style={{ color: '#A855F7' }}>+5 XP</strong> View Form Tutorial
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+          <div className="bg-slate-800/40 px-2.5 py-1 rounded-lg border border-slate-700/50" style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
             <strong style={{ color: '#FFB800' }}>+25–100 XP</strong> Achievement Badges
           </div>
         </div>
@@ -195,11 +195,7 @@ export const AchievementsPage: React.FC<AchievementsPageProps> = ({ onNavigate }
         <h3 style={{ fontSize: '0.98rem', color: '#F1F5F9', margin: '0 0 0.85rem 0', fontWeight: 700 }}>
           Configurable Level Tiers
         </h3>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-          gap: '0.65rem'
-        }}>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5">
           {LEVEL_CONFIG.map((tier) => {
             const isAchieved = currentLevel.level >= tier.level;
             const isCurrent = currentLevel.level === tier.level;
@@ -277,7 +273,7 @@ export const AchievementsPage: React.FC<AchievementsPageProps> = ({ onNavigate }
           </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           {filteredAchievements.map((ach) => {
             const progressPercent = Math.min(100, Math.round((ach.currentCount / ach.targetCount) * 100));
             const dateUnlockedStr = ach.unlockedAt 
