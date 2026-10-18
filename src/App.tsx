@@ -7,6 +7,7 @@ import { BottomNav } from './components/layout/BottomNav';
 import { ToastContainer } from './components/common/ToastContainer';
 import { DemoBanner } from './components/common/DemoBanner';
 import { AuthModal } from './components/auth/AuthModal';
+import { IntroSplash } from './components/common/IntroSplash';
 
 import { LandingPage } from './pages/LandingPage';
 import { PricingPage } from './pages/PricingPage';
@@ -22,6 +23,9 @@ import { ProfilePage } from './pages/ProfilePage';
 const KNOWN_TABS = ['pricing', 'home', 'scan', 'library', 'activity', 'achievements', 'profile'];
 
 const AppContent: React.FC = () => {
+  const [showSplash, setShowSplash] = useState<boolean>(() => {
+    return !sessionStorage.getItem('hasSeenIntro');
+  });
   const [currentTab, setCurrentTab] = useState<string>('home');
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
   const [machineSource, setMachineSource] = useState<'qr' | 'photo' | 'library' | 'activity'>('library');
@@ -52,11 +56,19 @@ const AppContent: React.FC = () => {
     setSelectedMachine(null);
   };
 
+  const handleIntroComplete = () => {
+    sessionStorage.setItem('hasSeenIntro', 'true');
+    setShowSplash(false);
+  };
+
   // Pricing page uses full-width layout without the standard nav padding
   const isFullWidthPage = currentTab === 'pricing';
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Intro Splash Screen */}
+      {showSplash && <IntroSplash onComplete={handleIntroComplete} />}
+
       {/* Client Demo Status Banner */}
       <DemoBanner onOpenSettings={() => handleNavigate('profile')} />
 
