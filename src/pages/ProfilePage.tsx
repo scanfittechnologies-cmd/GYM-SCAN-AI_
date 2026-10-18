@@ -4,17 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import { Machine } from '../types';
 import { 
   User, 
-  Settings, 
   Trash2, 
-  Camera, 
-  ShieldCheck, 
   AlertTriangle, 
   Check, 
-  Star,
-  Crown,
-  LogOut,
-  Mail,
-  Calendar
+  Star 
 } from 'lucide-react';
 import { MachineCard } from '../components/machines/MachineCard';
 
@@ -258,57 +251,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
             </div>
           </div>
 
-          {/* Privacy & Permissions Card */}
-          <div className="glass-card" style={{ padding: '1.25rem' }}>
-            <h3 style={{ fontSize: '1.05rem', color: '#F1F5F9', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Camera size={18} color="#00F59B" />
-              Camera & Privacy Settings
-            </h3>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0.75rem 1rem',
-                background: 'rgba(255, 255, 255, 0.02)',
-                borderRadius: '12px'
-              }}>
-                <div>
-                  <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#F1F5F9' }}>
-                    Camera Scanner Access
-                  </div>
-                  <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
-                    Camera is only accessed on-demand when you open the QR scanner viewfinder.
-                  </div>
-                </div>
-                <span className="badge badge-emerald" style={{ fontSize: '0.7rem' }}>
-                  On Demand
-                </span>
-              </div>
-
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0.75rem 1rem',
-                background: 'rgba(255, 255, 255, 0.02)',
-                borderRadius: '12px'
-              }}>
-                <div>
-                  <div style={{ fontSize: '0.88rem', fontWeight: 600, color: '#F1F5F9' }}>
-                    Data Retention & Isolation
-                  </div>
-                  <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
-                    Uploaded machine photos are analyzed ephemerally and never shared publicly.
-                  </div>
-                </div>
-                <span className="badge badge-blue" style={{ fontSize: '0.7rem' }}>
-                  Private
-                </span>
-              </div>
-            </div>
-          </div>
 
           {/* Reset Activity Danger Zone */}
           <div className="glass-card" style={{ padding: '1.25rem', border: '1px solid rgba(255, 71, 87, 0.25)' }}>
