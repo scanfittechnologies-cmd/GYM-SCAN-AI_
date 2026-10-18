@@ -16,6 +16,7 @@ interface ScanHubPageProps {
 const TABS: {
   id: ScanMode;
   label: string;
+  shortLabel: string;
   sublabel: string;
   icon: React.ReactNode;
   accent: string;
@@ -26,6 +27,7 @@ const TABS: {
   {
     id: 'qr',
     label: 'Scan QR Badge',
+    shortLabel: 'QR Badge',
     sublabel: 'Instant auto-detect',
     icon: <QrCode size={18} />,
     accent: '#00F59B',
@@ -36,6 +38,7 @@ const TABS: {
   {
     id: 'ai_camera',
     label: 'Snap Machine Photo',
+    shortLabel: 'AI Snap',
     sublabel: 'Gemini AI vision',
     icon: <Sparkles size={18} />,
     accent: '#00D2FF',
@@ -46,6 +49,7 @@ const TABS: {
   {
     id: 'upload',
     label: 'Upload Photo',
+    shortLabel: 'Upload',
     sublabel: 'From gallery',
     icon: <Upload size={18} />,
     accent: '#38BDF8',
@@ -108,19 +112,13 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
       <div
         role="tablist"
         aria-label="Scanner mode"
+        className="grid grid-cols-3 gap-1.5 sm:gap-2 w-full max-w-[680px] mx-auto p-1.5"
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '8px',
-          padding: '6px',
           background: 'rgba(7, 10, 18, 0.88)',
           backdropFilter: 'blur(16px)',
           borderRadius: '18px',
           border: '1px solid rgba(255,255,255,0.09)',
           boxShadow: '0 8px 32px rgba(0,0,0,0.38)',
-          maxWidth: '680px',
-          margin: '0 auto',
-          width: '100%',
         }}
       >
         {TABS.map((tab) => {
@@ -133,13 +131,8 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
               type="button"
               id={`scan-tab-${tab.id}`}
               onClick={() => setActiveMode(tab.id)}
+              className="flex flex-col items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 sm:py-3 sm:px-2"
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '5px',
-                padding: '13px 8px 11px',
                 borderRadius: '13px',
                 border: isActive ? `1.5px solid ${tab.borderActive}` : '1.5px solid transparent',
                 background: isActive ? tab.gradientActive : 'transparent',
@@ -156,10 +149,10 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
               {isActive && (
                 <span style={{
                   position: 'absolute',
-                  top: '8px',
-                  right: '9px',
-                  width: '6px',
-                  height: '6px',
+                  top: '6px',
+                  right: '6px',
+                  width: '5px',
+                  height: '5px',
                   borderRadius: '50%',
                   background: tab.accent,
                   boxShadow: `0 0 8px ${tab.accent}`,
@@ -177,7 +170,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
                 {tab.icon}
               </span>
 
-              {/* Primary label */}
+              {/* Primary label: full on sm+, compact on mobile */}
               <span style={{
                 fontSize: '0.73rem',
                 fontWeight: 700,
@@ -188,19 +181,23 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
                 transition: 'color 0.18s ease',
                 whiteSpace: 'nowrap',
               }}>
-                {tab.label}
+                <span className="sm:hidden">{tab.shortLabel}</span>
+                <span className="hidden sm:inline">{tab.label}</span>
               </span>
 
-              {/* Sub-label */}
-              <span style={{
-                fontSize: '0.62rem',
-                color: isActive ? tab.accent + 'AA' : '#475569',
-                fontWeight: 500,
-                lineHeight: 1,
-                textAlign: 'center',
-                transition: 'color 0.18s ease',
-                whiteSpace: 'nowrap',
-              }}>
+              {/* Sub-label: hidden on small mobile, visible on sm+ */}
+              <span
+                className="hidden sm:block"
+                style={{
+                  fontSize: '0.62rem',
+                  color: isActive ? tab.accent + 'AA' : '#475569',
+                  fontWeight: 500,
+                  lineHeight: 1,
+                  textAlign: 'center',
+                  transition: 'color 0.18s ease',
+                  whiteSpace: 'nowrap',
+                }}
+              >
                 {tab.sublabel}
               </span>
 
