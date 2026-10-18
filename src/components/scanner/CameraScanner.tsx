@@ -14,7 +14,6 @@ import {
   ArrowRight, 
   CheckCircle, 
   RotateCcw,
-  Upload,
   Loader2,
   HelpCircle,
   X,
@@ -927,20 +926,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
                 )}
               </button>
 
-              {/* Photo Upload alternative fallback */}
-              {onSwitchToPhoto && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    stopCameraStream();
-                    onSwitchToPhoto();
-                  }}
-                  className="btn-secondary"
-                  style={{ width: '100%', fontSize: '0.85rem' }}
-                >
-                  <Upload size={16} /> Upload Machine Photo File
-                </button>
-              )}
+
 
               {cameraState === 'denied' && (
                 <button
@@ -987,16 +973,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
                 <RotateCcw size={13} /> Try Camera Again
               </button>
 
-              {onSwitchToPhoto && (
-                <button
-                  type="button"
-                  onClick={onSwitchToPhoto}
-                  className="btn-secondary"
-                  style={{ padding: '0.4rem 0.8rem', fontSize: '0.75rem' }}
-                >
-                  <Upload size={13} /> Try Photo Upload
-                </button>
-              )}
+
 
               <button
                 type="button"
