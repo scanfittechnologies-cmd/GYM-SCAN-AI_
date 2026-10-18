@@ -66,9 +66,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   
   const [cameraState, setCameraState] = useState<CameraPermissionState>('unrequested');
   const [cameraFacing, setCameraFacing] = useState<'environment' | 'user'>('environment');
-  const [manualCodeInput, setManualCodeInput] = useState('');
   const [scanError, setScanError] = useState<string | null>(null);
-  const [showTestQrDrawer, setShowTestQrDrawer] = useState(false);
   const [showCameraHelpModal, setShowCameraHelpModal] = useState(false);
 
   // Result identification states
@@ -398,12 +396,6 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     }
   };
 
-  const handleManualCodeSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!manualCodeInput.trim()) return;
-    processQRCode(manualCodeInput.trim());
-  };
-
   const handleConfirmViewDetails = () => {
     const target = selectedAiMatch || detectedMachine;
     if (!target) return;
@@ -420,7 +412,6 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     setDetectedMachine(null);
     setSelectedAiMatch(null);
     setScanError(null);
-    setManualCodeInput('');
     setVisionOutput(null);
     setAiPossibleMatches([]);
     setDetectedImageUrl(null);
@@ -1101,112 +1092,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
         </div>
       )}
 
-      {/* 3. Manual Machine Code Entry Form & Sample Badges Drawer */}
-      <div className="glass-card" style={{ padding: '1.25rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <div>
-            <span style={{ fontSize: '0.88rem', fontWeight: 700, color: '#F1F5F9' }}>
-              Have an equipment badge code?
-            </span>
-            <div style={{ fontSize: '0.73rem', color: '#94A3B8' }}>
-              Enter the label printed on the equipment badge.
-            </div>
-          </div>
 
-          <button
-            type="button"
-            onClick={() => setShowTestQrDrawer(!showTestQrDrawer)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#00D2FF',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            <Sparkles size={13} />
-            {showTestQrDrawer ? 'Hide Sample Badges' : 'Show Sample Badges (Demo Mode)'}
-          </button>
-        </div>
-
-        <form onSubmit={handleManualCodeSubmit} style={{ display: 'flex', gap: '0.5rem' }}>
-          <input
-            type="text"
-            placeholder="e.g. GYM-CHEST-01, GYM-BACK-01, GYM-LEG-04"
-            value={manualCodeInput}
-            onChange={(e) => setManualCodeInput(e.target.value)}
-            className="input-modern"
-            style={{ flex: 1, fontFamily: 'var(--font-mono)', textTransform: 'uppercase' }}
-          />
-          <button 
-            type="submit" 
-            disabled={!manualCodeInput.trim() || isVerifying}
-            className="btn-primary" 
-            style={{ padding: '0.75rem 1.25rem', whiteSpace: 'nowrap' }}
-          >
-            {isVerifying ? 'Verifying...' : 'Verify Code'}
-          </button>
-        </form>
-
-        {/* Sample Badges for Demo Testing */}
-        {showTestQrDrawer && (
-          <div style={{
-            marginTop: '1rem',
-            paddingTop: '1rem',
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)'
-          }}>
-            <p style={{ fontSize: '0.78rem', color: '#94A3B8', marginBottom: '0.6rem' }}>
-              💡 Demo Mode: Click any registered badge code below to verify lookup:
-            </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              {machines.slice(0, 8).map((m) => (
-                <button
-                  key={m.id}
-                  type="button"
-                  onClick={() => processQRCode(m.qrCodeId)}
-                  style={{
-                    background: 'rgba(0, 245, 155, 0.08)',
-                    border: '1px solid rgba(0, 245, 155, 0.25)',
-                    color: '#00F59B',
-                    borderRadius: '8px',
-                    padding: '4px 9px',
-                    fontSize: '0.72rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                >
-                  <QrCode size={12} />
-                  {m.qrCodeId} ({m.name.split(' ')[0]})
-                </button>
-              ))}
-              
-              <button
-                type="button"
-                onClick={() => processQRCode('INVALID-CODE-999')}
-                style={{
-                  background: 'rgba(255, 71, 87, 0.08)',
-                  border: '1px solid rgba(255, 71, 87, 0.25)',
-                  color: '#FF6B81',
-                  borderRadius: '8px',
-                  padding: '4px 9px',
-                  fontSize: '0.72rem',
-                  fontWeight: 600,
-                  cursor: 'pointer'
-                }}
-              >
-                ⚠️ Test Unknown Code
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
 
       {/* 4. Camera Help Modal Dialog */}
       {showCameraHelpModal && (
