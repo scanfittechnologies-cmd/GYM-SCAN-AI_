@@ -17,9 +17,6 @@ import {
   Filter,
   Trophy,
   BookOpen,
-  AlertCircle,
-  RefreshCw,
-  Zap,
   Info,
   ShieldCheck
 } from 'lucide-react';
@@ -41,20 +38,12 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
     currentLevel, 
     streakInfo,
     machines, 
-    getMachineById,
-    recordMachineScan,
-    markTutorialCompleted,
-    clearAllUserData,
-    loadDemoSeedData,
-    simulateLevelUp,
-    simulatedError,
-    setSimulatedError
+    getMachineById
   } = useGym();
 
   const { isAdmin } = useAuth();
 
   const [activeFilter, setActiveFilter] = useState<ActivityFilter>('all');
-  const [showSandbox, setShowSandbox] = useState<boolean>(false);
 
   // Filtered activity list
   const filteredActivities = useMemo(() => {
@@ -242,147 +231,7 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
             Real-time chronological timeline of your verified equipment scans, tutorials mastered, XP earnings, and milestone achievements.
           </p>
         </div>
-
-        {isAdmin && (
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button
-              onClick={() => setShowSandbox(!showSandbox)}
-              style={{
-                background: showSandbox ? 'rgba(0, 245, 155, 0.15)' : 'rgba(255, 255, 255, 0.04)',
-                border: showSandbox ? '1px solid #00F59B' : '1px solid rgba(255, 255, 255, 0.1)',
-                color: showSandbox ? '#00F59B' : '#94A3B8',
-                padding: '0.5rem 0.85rem',
-                borderRadius: '10px',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'all 0.2s'
-              }}
-            >
-              <Zap size={14} /> Dev Sandbox
-            </button>
-          </div>
-        )}
       </div>
-
-      {/* Dev Sandbox Tester Controls (Admin only) */}
-      {isAdmin && showSandbox && (
-        <div className="glass-panel" style={{
-          padding: '1.25rem',
-          background: 'rgba(15, 23, 42, 0.95)',
-          border: '1px solid rgba(0, 245, 155, 0.35)',
-          borderRadius: '16px',
-          animation: 'fadeIn 0.2s ease-out'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.85rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Zap size={16} color="#00F59B" />
-              <strong style={{ fontSize: '0.9rem', color: '#F1F5F9' }}>Interactive Test Sandbox (Prompt 6 Verification)</strong>
-            </div>
-            <span style={{ fontSize: '0.72rem', color: '#94A3B8' }}>Test edge cases & verify real calculations</span>
-          </div>
-
-          <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: '0 0 1rem 0' }}>
-            Simulate realistic scanner interactions, prevent duplicate exploits, check tutorial XP limits, and verify level-ups without real camera hardware:
-          </p>
-
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
-            <button
-              onClick={() => {
-                const unScanned = machines.find(m => !discoveredMachineIds.includes(m.id)) || machines[0];
-                recordMachineScan(unScanned.id, 'qr');
-              }}
-              className="btn-outline"
-              style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-            >
-              <QrCode size={14} color="#00F59B" /> Simulate QR Scan (+20 XP)
-            </button>
-
-            <button
-              onClick={() => {
-                const unScanned = machines.find(m => !discoveredMachineIds.includes(m.id)) || machines[1];
-                recordMachineScan(unScanned.id, 'photo', undefined, 97);
-              }}
-              className="btn-outline"
-              style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-            >
-              <Upload size={14} color="#00D2FF" /> Simulate Photo Scan (+20 XP)
-            </button>
-
-            <button
-              onClick={() => {
-                if (discoveredMachineIds.length > 0) {
-                  recordMachineScan(discoveredMachineIds[0], 'qr');
-                }
-              }}
-              className="btn-outline"
-              style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-            >
-              <RefreshCw size={14} color="#FFB800" /> Test Duplicate Scan (0 XP)
-            </button>
-
-            <button
-              onClick={() => {
-                const unCompleted = machines.find(m => !completedTutorialIds.includes(m.id)) || machines[0];
-                markTutorialCompleted(unCompleted.id);
-              }}
-              className="btn-outline"
-              style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-            >
-              <BookOpen size={14} color="#A855F7" /> Complete Tutorial (+5 XP)
-            </button>
-
-            <button
-              onClick={simulateLevelUp}
-              className="btn-outline"
-              style={{ fontSize: '0.75rem', padding: '6px 12px' }}
-            >
-              <Sparkles size={14} color="#EC4899" /> Test Level Boost (+150 XP)
-            </button>
-
-            <button
-              onClick={() => setSimulatedError(simulatedError ? null : 'Simulated 500 Network Database Error')}
-              style={{
-                fontSize: '0.75rem',
-                padding: '6px 12px',
-                borderRadius: '8px',
-                background: simulatedError ? 'rgba(255, 71, 87, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                border: simulatedError ? '1px solid #FF4757' : '1px solid rgba(255, 255, 255, 0.1)',
-                color: simulatedError ? '#FF4757' : '#94A3B8',
-                cursor: 'pointer'
-              }}
-            >
-              <AlertCircle size={14} /> {simulatedError ? 'Clear Simulated Error' : 'Simulate Backend Failure'}
-            </button>
-
-            <button
-              onClick={loadDemoSeedData}
-              className="btn-outline"
-              style={{ fontSize: '0.75rem', padding: '6px 12px', color: '#38BDF8' }}
-            >
-              Restore Demo Data
-            </button>
-
-            <button
-              onClick={clearAllUserData}
-              style={{
-                fontSize: '0.75rem',
-                padding: '6px 12px',
-                borderRadius: '8px',
-                background: 'rgba(255, 71, 87, 0.1)',
-                border: '1px solid rgba(255, 71, 87, 0.3)',
-                color: '#FF4757',
-                cursor: 'pointer'
-              }}
-            >
-              Zero State Reset
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* 1. TOP STATISTIC CARDS (6 Key Metrics) */}
       <div style={{
