@@ -6,7 +6,6 @@ import {
   Star, 
   CheckCircle, 
   AlertTriangle, 
-  Shield, 
   Dumbbell, 
   Info, 
   QrCode, 
@@ -868,36 +867,6 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
           })()}
 
         </div>
-      </div>
-
-      {/* 7. SAFETY TIPS SECTION */}
-      <div style={{
-        background: 'rgba(255, 184, 0, 0.05)',
-        border: '1px solid rgba(255, 184, 0, 0.22)',
-        borderRadius: '18px',
-        padding: '1.35rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.75rem'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Shield size={20} color="#FFB800" />
-          <h3 style={{ fontSize: '1rem', color: '#FFB800', margin: 0 }}>
-            Safety Tips & Personal Trainer Guidance
-          </h3>
-        </div>
-
-        <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.84rem', color: '#CBD5E1', lineHeight: 1.55 }}>
-          {machine.safetyReminders && machine.safetyReminders.map((rem, idx) => (
-            <li key={idx} style={{ marginBottom: '4px' }}>{rem}</li>
-          ))}
-          <li>Start with a lightweight resistance to test shoulder, elbow, and knee joint mobility.</li>
-          <li>Avoid sudden jerking motions or letting weight stacks slam together during the eccentric phase.</li>
-          <li>Stop immediately if you experience sharp or unusual joint discomfort.</li>
-          <li>
-            <strong style={{ color: '#FFB800' }}>Trainer Recommendation:</strong> If you are unsure about adjusting this equipment or have pre-existing injuries, ask a certified gym fitness trainer on duty for personalized assistance.
-          </li>
-        </ul>
       </div>
 
       {/* 10. RELATED MACHINES SECTION */}
