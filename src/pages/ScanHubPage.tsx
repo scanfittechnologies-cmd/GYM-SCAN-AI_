@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGym } from '../context/GymContext';
 import { Machine } from '../types';
-import { QrCode, Sparkles, Upload, Shield } from 'lucide-react';
+import { QrCode, Sparkles, Upload } from 'lucide-react';
 import { CameraScanner } from '../components/scanner/CameraScanner';
 import { PhotoAIAnalyzer } from '../components/scanner/PhotoAIAnalyzer';
 
@@ -238,22 +238,6 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
           onSelectManual={() => onNavigate('library')}
         />
       )}
-
-      {/* 4. Safety & Educational Disclaimer */}
-      <div style={{
-        background: 'rgba(255, 184, 0, 0.05)',
-        border: '1px solid rgba(255, 184, 0, 0.2)',
-        borderRadius: '14px',
-        padding: '0.85rem 1.1rem',
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '0.75rem'
-      }}>
-        <Shield size={18} color="#FFB800" style={{ flexShrink: 0, marginTop: '2px' }} />
-        <div style={{ fontSize: '0.78rem', color: '#CBD5E1', lineHeight: 1.45 }}>
-          <strong style={{ color: '#FFB800', display: 'block', marginBottom: '2px' }}>Safety Notice:</strong> Machine information is provided for educational guidance. Confirm unfamiliar equipment with qualified gym staff or a fitness professional before use.
-        </div>
-      </div>
 
     </div>
   );
