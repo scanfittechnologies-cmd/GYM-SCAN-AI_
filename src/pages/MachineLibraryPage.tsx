@@ -17,7 +17,6 @@ import {
   Layers,
   LayoutGrid,
   List,
-  Info,
   RefreshCw,
   AlertTriangle,
   WifiOff
@@ -934,24 +933,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
         </div>
       </div>
 
-      {/* ── 5. Transparent Demo Data & Availability Notice ── */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '0.65rem',
-        padding: '0.75rem 1rem',
-        background: 'rgba(0,210,255,0.05)',
-        border: '1px solid rgba(0,210,255,0.18)',
-        borderRadius: '14px',
-      }}>
-        <Info size={16} color="#00D2FF" style={{ flexShrink: 0, marginTop: '2px' }} />
-        <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: 0, lineHeight: 1.45 }}>
-          <strong style={{ color: '#00D2FF' }}>Demo Data Notice:</strong> All machine records and exercises are sample educational representations for development. Data is not verified by a gym facility or equipment manufacturer.{' '}
-          <strong style={{ color: '#CBD5E1' }}>Availability information is not currently provided.</strong> Saved favorites persist locally in your browser storage.
-        </p>
-      </div>
-
-      {/* ── 6. Simulated Error Banner if Active ── */}
+      {/* ── 5. Simulated Error Banner if Active ── */}
       {simulatedError && (
         <div style={{
           display: 'flex',
