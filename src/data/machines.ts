@@ -475,7 +475,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "cable flyes"
     ],
     "imageSvg": "cable-station",
-    "description": "A wide dual-pulley frame that delivers constant continuous tension throughout chest adduction across high, middle, and low vectors.",
+    "description": "Builds chest definition and inner chest squeeze using adjustable cable arms.",
     "brand": "Cybex Dual Cable Station",
     "visualCharacteristics": [
       "Wide overhead bridging frame",
@@ -929,7 +929,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "chest pad row"
     ],
     "imageSvg": "seated-row",
-    "description": "An angled torso support pad eliminates momentum and lumbar fatigue, making it the safest horizontal row for isolating the mid-back and rhomboids.",
+    "description": "Builds mid-back and lat thickness while keeping your chest securely braced against the pad.",
     "brand": "Hammer Strength Plate-Loaded",
     "visualCharacteristics": [
       "Angled front chest support pad",
@@ -1027,7 +1027,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "corner row"
     ],
     "imageSvg": "seated-row",
-    "description": "A heavy pivot bar station with dual wide and narrow grip handles for loading Olympic plates to perform heavy compound back rows.",
+    "description": "Builds heavy mid-back thickness and pulling strength using a loaded lever bar.",
     "brand": "Body-Solid Leverage",
     "visualCharacteristics": [
       "Floor pivot joint with long angled tube",
@@ -1123,7 +1123,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "counterbalance pull up"
     ],
     "imageSvg": "assisted-pullup",
-    "description": "A counterbalance kneeling platform counterweights your body mass, allowing beginner to intermediate athletes to build pull-up strength safely.",
+    "description": "Helps build pull-up strength and back width by counterbalancing your body weight.",
     "brand": "Life Fitness Signature Assisted Dip/Chin",
     "visualCharacteristics": [
       "Tall vertical ladder frame with multi-grip overhead handles",
@@ -2945,7 +2945,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "triceps"
     ],
     "imageSvg": "cable-station",
-    "description": "A high pulley cable station where an athlete presses a rope or bar downward with pinned elbows to isolate the triceps.",
+    "description": "Isolates and strengthens the triceps by pushing cable resistance downward.",
     "brand": "Life Fitness Cable Column",
     "visualCharacteristics": [
       "Overhead high pulley wheel with steel cable",
