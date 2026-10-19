@@ -8,14 +8,10 @@ import {
   CheckCircle2, 
   Sparkles, 
   Calendar, 
-  Clock, 
   ChevronRight, 
   Flame,
-  ArrowRight,
-  Filter,
   Trophy,
   BookOpen,
-  Info,
   ShieldCheck
 } from 'lucide-react';
 
@@ -34,7 +30,6 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
     achievements,
     totalXP, 
     currentLevel, 
-    streakInfo,
     machines, 
     getMachineById
   } = useGym();
@@ -331,135 +326,11 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
             {unlockedAchievementsCount} <span style={{ fontSize: '0.85rem', color: '#64748B' }}>/ {achievements.length}</span>
           </div>
           <div style={{ fontSize: '0.72rem', color: '#00D2FF', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: 600 }}>
-            View Badges <ChevronRight size={12} />
+            View Badges & XP Tiers <ChevronRight size={12} />
           </div>
         </div>
       </div>
 
-      {/* 2. USER PROGRESS DASHBOARD & LEVEL PROGRESS BAR */}
-      <div className="glass-panel" style={{
-        padding: '1.5rem',
-        background: 'linear-gradient(135deg, rgba(18, 24, 38, 0.95) 0%, rgba(10, 15, 24, 0.98) 100%)',
-        border: '1px solid rgba(0, 245, 155, 0.25)',
-        borderRadius: '16px'
-      }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.25rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{
-              width: '52px',
-              height: '52px',
-              borderRadius: '14px',
-              background: 'linear-gradient(135deg, rgba(0, 245, 155, 0.2), rgba(0, 210, 255, 0.2))',
-              border: '2px solid #00F59B',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#00F59B',
-              fontSize: '1.35rem',
-              fontWeight: 900
-            }}>
-              L{currentLevel.level}
-            </div>
-
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span className="badge badge-emerald" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>
-                  Rank Status
-                </span>
-                {currentLevel.isMaxLevel && (
-                  <span style={{ fontSize: '0.68rem', background: '#FFB800', color: '#0F172A', padding: '2px 8px', borderRadius: '999px', fontWeight: 800 }}>
-                    MAX LEVEL
-                  </span>
-                )}
-              </div>
-              <h2 style={{ fontSize: '1.25rem', color: '#F1F5F9', margin: '3px 0 0 0', fontWeight: 800 }}>
-                {currentLevel.title}
-              </h2>
-            </div>
-          </div>
-
-          <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#00F59B', lineHeight: 1 }}>
-              {totalXP} <span style={{ fontSize: '0.9rem', color: '#94A3B8', fontWeight: 600 }}>XP</span>
-            </div>
-            <span style={{ fontSize: '0.78rem', color: '#94A3B8' }}>
-              {currentLevel.isMaxLevel 
-                ? 'Reached peak equipment proficiency'
-                : `${currentLevel.xpNeededForNext} XP needed for Level ${currentLevel.level + 1}`}
-            </span>
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#CBD5E1', marginBottom: '6px' }}>
-            <span>Level {currentLevel.level} Progression</span>
-            <strong style={{ color: '#00F59B' }}>{currentLevel.progressPercent}%</strong>
-          </div>
-          <div 
-            role="progressbar"
-            aria-valuenow={currentLevel.progressPercent}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            style={{
-              width: '100%',
-              height: '10px',
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              borderRadius: '999px',
-              overflow: 'hidden'
-            }}
-          >
-            <div style={{
-              width: `${currentLevel.progressPercent}%`,
-              height: '100%',
-              background: 'linear-gradient(90deg, #00F59B 0%, #00D2FF 100%)',
-              borderRadius: '999px',
-              transition: 'width 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
-            }} />
-          </div>
-        </div>
-
-        {/* Streak & Cadence Overview */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-          gap: '0.85rem',
-          marginTop: '1.25rem',
-          paddingTop: '1.25rem',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)'
-        }}>
-          <div>
-            <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginBottom: '2px' }}>Current Streak</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#F1F5F9', display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Flame size={16} color="#FFB800" /> {streakInfo.currentStreak} {streakInfo.currentStreak === 1 ? 'Day' : 'Days'}
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginBottom: '2px' }}>Active Training Days</div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#F1F5F9', display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Calendar size={16} color="#00D2FF" /> {streakInfo.activeDays} Days Total
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginBottom: '2px' }}>Last Verified Action</div>
-            <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#CBD5E1', display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Clock size={15} color="#00F59B" /> {streakInfo.lastActivityDate ? streakInfo.lastActivityDate : 'No activity yet'}
-            </div>
-          </div>
-
-          <div>
-            <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginBottom: '2px' }}>Next Milestone</div>
-            <div 
-              style={{ fontSize: '0.85rem', fontWeight: 700, color: '#00F59B', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '3px' }}
-              onClick={() => onNavigate('achievements')}
-            >
-              Check Badges <ChevronRight size={13} />
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* 3. WEEKLY ACTIVITY CADENCE */}
       <div className="glass-card" style={{ padding: '1.25rem' }}>
