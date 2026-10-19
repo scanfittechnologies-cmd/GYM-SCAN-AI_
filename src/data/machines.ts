@@ -30,7 +30,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "pecs"
     ],
     "imageSvg": "chest-press",
-    "description": "The seated chest press provides a stable, fixed range of motion to build upper body pressing strength without requiring a barbell spotter. It is the premier chest building machine for beginners.",
+    "description": "Builds chest strength and pressing power through a guided, spotter-free path of motion.",
     "brand": "Life Fitness Signature Series",
     "visualCharacteristics": [
       "Horizontal padded backrest",
@@ -157,7 +157,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "upper pecs"
     ],
     "imageSvg": "incline-press",
-    "description": "Designed with a 30 to 45-degree upward pressing angle, this machine emphasizes the clavicular head of the pectorals while maintaining shoulder safety.",
+    "description": "Builds upper chest definition using an angled pressing path.",
     "brand": "Hammer Strength MTS",
     "visualCharacteristics": [
       "Angled backrest at 35 degrees",
@@ -365,7 +365,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "pec fly"
     ],
     "imageSvg": "pec-deck",
-    "description": "The pec deck guides your arms through pure horizontal chest adduction, isolating the pectorals without taxing tricep pressing strength.",
+    "description": "Isolates and squeezes the chest muscles using a sweeping fly motion.",
     "brand": "Nautilus Inspiration",
     "visualCharacteristics": [
       "Vertical seat with narrow backrest",
@@ -691,7 +691,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "lats"
     ],
     "imageSvg": "lat-pulldown",
-    "description": "The lat pulldown uses an overhead cable and wide bar to simulate a pull-up under customizable weight resistance, providing direct latissimus dorsi hypertrophy.",
+    "description": "Builds upper back width by pulling vertical resistance down toward the chest.",
     "brand": "Life Fitness Pro2 Series",
     "visualCharacteristics": [
       "High overhead pulley and wide angled bar",
