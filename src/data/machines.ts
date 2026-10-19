@@ -813,7 +813,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "rhomboids"
     ],
     "imageSvg": "seated-row",
-    "description": "Features a low pulley and textured footrests to allow horizontal rowing against stack resistance, building mid-back thickness and upright posture.",
+    "description": "Builds mid-back thickness and posture through a controlled horizontal pulling movement.",
     "brand": "Technogym Selection",
     "visualCharacteristics": [
       "Low horizontal cable line with V-grip attachment",
@@ -1320,7 +1320,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "delts"
     ],
     "imageSvg": "shoulder-press",
-    "description": "Guides your arms upward along an ergonomic natural plane of movement, safely training overhead strength without the balance requirements of a standing barbell.",
+    "description": "Builds shoulder strength and overhead pressing power with a guided vertical path.",
     "brand": "Matrix Versa Series",
     "visualCharacteristics": [
       "Upright 85-degree backrest",
@@ -1939,7 +1939,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "glutes"
     ],
     "imageSvg": "leg-press",
-    "description": "A 45-degree angled sled with a large footplate that allows heavy lower body development while keeping the lumbar spine supported against a backrest.",
+    "description": "Builds overall lower body strength across quads and glutes while supporting your lower back.",
     "brand": "Hammer Strength Plate-Loaded Linear Leg Press",
     "visualCharacteristics": [
       "45-degree angled track with roller bearings",
@@ -2055,7 +2055,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "quads"
     ],
     "imageSvg": "leg-extension",
-    "description": "Isolates the four quadriceps muscles through seated knee extension against a rotating padded lever arm.",
+    "description": "Isolates and strengthens the quadriceps through a seated kicking motion.",
     "brand": "Precor Resolute Strength",
     "visualCharacteristics": [
       "Upright seat with horizontal backrest slider",
@@ -2652,7 +2652,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "curls"
     ],
     "imageSvg": "preacher-curl",
-    "description": "Locks upper arms against an angled padded support to completely eliminate shoulder swing, isolating the biceps.",
+    "description": "Isolates and builds bicep size with arm support that prevents swinging.",
     "brand": "Life Fitness Signature Series Arm Curl",
     "visualCharacteristics": [
       "45-degree angled arm rest cushion",
