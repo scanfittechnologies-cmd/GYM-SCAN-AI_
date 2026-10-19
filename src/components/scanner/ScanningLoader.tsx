@@ -109,7 +109,7 @@ export default function ScanningLoader({ isScanning }: ScanningLoaderProps) {
           }}
         >
           <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#00F59B', animation: 'pulse 1.2s infinite' }} />
-          Gemini 3.8 Flash Vision Active
+          Vision Scanner Active
         </div>
 
         <p
