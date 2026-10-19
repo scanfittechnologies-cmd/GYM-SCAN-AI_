@@ -156,7 +156,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       icon: <Sparkles size={34} color="#00D2FF" />,
       badgeText: 'AI Machine Photo Recognition',
       title: 'AI Machine Photo Recognition',
-      subtitle: 'Point your camera directly at any gym machine and take a photo for 3-second Gemini AI identification.',
+      subtitle: 'Point your camera directly at any gym machine and take a photo for instant ScanFit AI identification.',
       mainButton: '⚡ Open AI Camera Scanner',
       liveStatusText: 'Live AI Machine Frame Active',
       helperText: 'Align gym machine inside frame & tap Snap Photo',
@@ -502,7 +502,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
                 <span className={detectedScanType === 'qr' ? 'badge badge-emerald' : 'badge badge-blue'} style={{ fontSize: '0.72rem' }}>
                   {detectedScanType === 'qr' 
                     ? `Confirmed QR Match • ${detectedMachine.qrCodeId}` 
-                    : `Gemini AI Match • ${detectedConfidence || 92}% Confidence`}
+                    : `ScanFit AI Match • ${detectedConfidence || 92}% Confidence`}
                 </span>
                 <span className="badge badge-muted" style={{ fontSize: '0.72rem' }}>
                   {detectedMachine.category} Equipment
