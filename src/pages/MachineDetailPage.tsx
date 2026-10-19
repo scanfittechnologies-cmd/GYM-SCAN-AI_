@@ -927,15 +927,6 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button
             type="button"
-            onClick={() => onNavigate && onNavigate('scan')}
-            className="btn-secondary"
-            style={{ fontSize: '0.8rem', padding: '0.5rem 0.9rem' }}
-          >
-            <QrCode size={14} /> Scan Another Machine
-          </button>
-          
-          <button
-            type="button"
             onClick={() => onNavigate && onNavigate('library')}
             className="btn-ghost"
             style={{ fontSize: '0.8rem', color: '#38BDF8' }}
