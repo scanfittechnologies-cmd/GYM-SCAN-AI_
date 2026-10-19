@@ -5,7 +5,6 @@ import { Machine } from './types';
 import { Navbar } from './components/layout/Navbar';
 import { BottomNav } from './components/layout/BottomNav';
 import { ToastContainer } from './components/common/ToastContainer';
-import { DemoBanner } from './components/common/DemoBanner';
 import { AuthModal } from './components/auth/AuthModal';
 import { IntroSplash } from './components/common/IntroSplash';
 
@@ -70,8 +69,6 @@ const AppContent: React.FC = () => {
       {/* Intro Splash Screen */}
       {showSplash && <IntroSplash onComplete={handleIntroComplete} />}
 
-      {/* Client Demo Status Banner */}
-      <DemoBanner />
 
       {/* Top Sticky Header */}
       <Navbar currentTab={currentTab} onTabChange={handleNavigate} />
