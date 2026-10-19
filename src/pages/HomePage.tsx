@@ -6,11 +6,9 @@ import {
   QrCode, 
   Upload, 
   Sparkles, 
-  Flame, 
   ArrowRight, 
   Shield, 
-  ChevronRight,
-  Zap
+  ChevronRight
 } from 'lucide-react';
 import { MachineCard } from '../components/machines/MachineCard';
 
@@ -21,7 +19,6 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine }) => {
   const { 
-    currentLevel, 
     discoveredMachineIds, 
     machines,
     userProfile
@@ -108,27 +105,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
             marginBottom: '0.6rem',
             color: '#FFFFFF'
           }}>
-            Welcome Back, <span style={{
+            Welcome back, <span style={{
               background: 'linear-gradient(90deg, #FFFFFF 20%, #00F59B 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
-            }}>{userProfile.displayName || 'Athlete'}</span>.
+            }}>{userProfile.displayName || 'Gym Explorer'}</span>.
           </h1>
 
-          <p style={{ fontSize: '0.95rem', color: '#94A3B8', lineHeight: 1.5, marginBottom: '1.25rem' }}>
-            Never feel lost in the gym again. Point your camera at any machine to unlock instant seat adjustment guidance, form cues, and track your workout XP.
+          <p style={{ fontSize: '0.95rem', color: '#94A3B8', lineHeight: 1.5, margin: 0 }}>
+            Ready for your workout? Scan any QR code or snap a photo to instantly unlock machine guides and setup cues.
           </p>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', fontSize: '0.8rem', color: '#CBD5E1' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Zap size={15} color="#00F59B" />
-              <span>Current Rank: <strong style={{ color: '#00F59B' }}>{currentLevel.title}</strong></span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <Flame size={15} color="#FFB800" />
-              <span>XP Level: <strong style={{ color: '#FFB800' }}>Level {currentLevel.level}</strong></span>
-            </div>
-          </div>
         </div>
       </div>
 
