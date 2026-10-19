@@ -85,6 +85,7 @@ const AppContent: React.FC = () => {
               source={machineSource}
               onBack={handleBackFromDetail}
               onNavigate={handleNavigate}
+              onSelectMachine={handleSelectMachine}
             />
           </div>
         ) : (

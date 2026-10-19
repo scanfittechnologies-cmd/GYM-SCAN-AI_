@@ -33,13 +33,15 @@ interface MachineDetailPageProps {
   source?: 'qr' | 'photo' | 'library' | 'activity';
   onBack: () => void;
   onNavigate?: (tab: string) => void;
+  onSelectMachine?: (machine: Machine, source?: 'qr' | 'photo' | 'library' | 'activity') => void;
 }
 
 export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({ 
   machine, 
   source = 'library',
   onBack,
-  onNavigate
+  onNavigate,
+  onSelectMachine
 }) => {
   const { 
     machines,
@@ -878,8 +880,11 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
             gap: '0.85rem'
           }}>
             {relatedMachines.map((rel) => (
-              <div
+              <button
                 key={rel.id}
+                type="button"
+                onClick={() => onSelectMachine ? onSelectMachine(rel, source) : undefined}
+                className="hover:border-emerald-500/50 hover:bg-slate-800/80 transition-all text-left"
                 style={{
                   background: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -887,7 +892,9 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                   padding: '0.85rem',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.75rem'
+                  gap: '0.75rem',
+                  cursor: 'pointer',
+                  width: '100%',
                 }}
               >
                 <div style={{ width: '48px', height: '48px', background: '#090D15', borderRadius: '8px', padding: '4px', flexShrink: 0 }}>
@@ -901,7 +908,7 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                     {rel.category} • {rel.difficulty}
                   </div>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
