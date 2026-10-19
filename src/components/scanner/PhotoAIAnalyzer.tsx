@@ -192,10 +192,10 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     }
     return {
       icon: <Sparkles size={34} color="#00D2FF" />,
-      badgeText: 'AI Machine Photo Recognition',
-      title: 'AI Machine Photo Recognition',
-      subtitle: 'Point your camera directly at any gym machine and take a photo for instant ScanFit AI identification.',
-      mainButton: '⚡ Open AI Camera Scanner',
+      badgeText: 'Machine Photo Recognition',
+      title: 'Machine Photo Recognition',
+      subtitle: 'Point your camera directly at any gym machine and take a photo for instant 3-second machine identification.',
+      mainButton: '⚡ Open Camera',
       liveStatusText: 'Live AI Machine Frame Active',
       helperText: 'Align gym machine inside frame & tap Snap Photo',
       accentColor: '#00D2FF',
