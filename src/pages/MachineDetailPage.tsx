@@ -228,9 +228,6 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
               <span className="badge badge-purple">
                 {machine.difficulty} Level
               </span>
-              <span className="badge badge-muted" style={{ fontSize: '0.65rem' }}>
-                QR: {machine.qrCodeId}
-              </span>
             </div>
 
             {/* 1. Machine Name */}

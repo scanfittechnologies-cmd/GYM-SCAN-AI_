@@ -26,8 +26,8 @@ const TABS: {
 }[] = [
   {
     id: 'qr',
-    label: 'Scan QR Badge',
-    shortLabel: 'QR Badge',
+    label: 'Scan QR Code',
+    shortLabel: 'QR Code',
     sublabel: 'Instant auto-detect',
     icon: <QrCode size={18} />,
     accent: '#00F59B',
@@ -104,7 +104,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
           Identify Gym Machine
         </h1>
         <p style={{ fontSize: '0.9rem', color: '#94A3B8', lineHeight: 1.45, margin: 0 }}>
-          Scan a QR badge, snap a photo, or upload an image — instant machine setup guides.
+          Scan a QR code, snap a photo, or upload an image — instant machine setup guides.
         </p>
       </div>
 

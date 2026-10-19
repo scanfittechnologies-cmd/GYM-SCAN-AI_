@@ -178,12 +178,12 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     if (liveCameraMode === 'qr') {
       return {
         icon: <QrCode size={34} color="#00F59B" />,
-        badgeText: 'Equipment QR Badge Scanner',
-        title: 'Equipment QR Badge Scanner',
-        subtitle: 'Align the equipment QR sticker inside the frame for automatic instant detection.',
-        mainButton: '📷 Open QR Badge Scanner',
+        badgeText: 'Equipment QR Code Scanner',
+        title: 'Equipment QR Code Scanner',
+        subtitle: 'Align the equipment QR code inside the frame for automatic instant detection.',
+        mainButton: '📷 Open QR Code Scanner',
         liveStatusText: 'Real-Time QR Scanner Active',
-        helperText: 'Position QR badge inside green box',
+        helperText: 'Position QR code inside green box',
         accentColor: '#00F59B',
         buttonGradient: 'linear-gradient(135deg, #00F59B 0%, #00B36B 100%)',
         buttonTextColor: '#040810',

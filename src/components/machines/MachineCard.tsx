@@ -197,7 +197,7 @@ export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, o
         minHeight: '104px',
         gap: '4px',
       }}>
-        {/* Title & QR code */}
+        {/* Title */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '6px' }}>
           <h3
             className="text-sm font-bold text-white line-clamp-2"
@@ -213,18 +213,6 @@ export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, o
           >
             {machine.name}
           </h3>
-          <span style={{
-            fontSize: '0.58rem',
-            color: '#64748B',
-            fontFamily: 'var(--font-mono, monospace)',
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            padding: '1px 4px',
-            borderRadius: '4px',
-            flexShrink: 0,
-          }}>
-            {machine.qrCodeId}
-          </span>
         </div>
 
         {/* Primary Muscle Tag */}

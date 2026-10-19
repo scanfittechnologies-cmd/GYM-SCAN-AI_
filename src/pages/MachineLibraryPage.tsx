@@ -9,7 +9,6 @@ import {
   Star,
   X,
   Dumbbell,
-  QrCode,
   ChevronDown,
   AlertCircle,
   BookOpen,
@@ -105,9 +104,6 @@ const MachineListRow: React.FC<MachineListRowProps> = ({ machine, onSelect }) =>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '3px' }}>
           <h3 style={{ fontSize: '0.95rem', color: '#F1F5F9', fontWeight: 700, margin: 0 }}>{machine.name}</h3>
-          <span style={{ fontSize: '0.68rem', color: '#64748B', fontFamily: 'monospace', background: 'rgba(255,255,255,0.05)', padding: '1px 5px', borderRadius: '4px' }}>
-            {machine.qrCodeId}
-          </span>
           {discovered && (
             <span style={{ fontSize: '0.65rem', color: '#00F59B', background: 'rgba(0,245,155,0.12)', border: '1px solid rgba(0,245,155,0.3)', borderRadius: '999px', padding: '1px 6px', fontWeight: 700 }}>
               ✓ Discovered
