@@ -88,7 +88,7 @@ export const IntroSplash: React.FC<IntroSplashProps> = ({ onComplete }) => {
         {/* Brand Title & Tagline */}
         <div className="flex items-center gap-1.5 mb-1.5">
           <span className="font-extrabold tracking-wider text-xl sm:text-2xl text-white font-['Outfit']">
-            GYM SCAN <span className="text-[#00F59B]">AI</span>
+            ScanFit
           </span>
           <Sparkles size={16} className="text-[#00F59B] animate-spin" />
         </div>

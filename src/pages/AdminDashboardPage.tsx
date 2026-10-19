@@ -261,7 +261,7 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
             <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>• Staff Operations Hub</span>
           </div>
           <h1 style={{ fontSize: '1.9rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>
-            Gym Scan AI Control Center
+            ScanFit Control Center
           </h1>
           <p style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '4px' }}>
             Manage gym machine databases, publish tutorial steps, check QR code identifier collisions, and audit security logs.
@@ -805,8 +805,8 @@ export const AdminDashboardPage: React.FC<AdminDashboardPageProps> = ({ onNaviga
       {selectedQRBadgeMachine && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(5, 7, 12, 0.85)', backdropFilter: 'blur(10px)', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
           <div className="glass-panel" style={{ maxWidth: '400px', width: '100%', padding: '2rem', textAlign: 'center', borderRadius: '24px', background: '#FFFFFF', color: '#0F172A', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.8)' }}>
-            <div style={{ fontWeight: 900, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#0F172A' }}>
-              GYM SCAN <span style={{ color: '#00C875' }}>AI</span>
+            <div style={{ fontWeight: 900, fontSize: '1.2rem', letterSpacing: '-0.02em', color: '#0F172A' }}>
+              ScanFit
             </div>
             <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '1.25rem' }}>
               Smart Equipment Guide Sticker

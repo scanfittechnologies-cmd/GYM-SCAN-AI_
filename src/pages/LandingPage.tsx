@@ -963,7 +963,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onSelectMa
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Dumbbell size={14} color="#00F59B" />
-          <span style={{ fontWeight: 700, color: '#64748B' }}>Gym Scan AI</span>
+          <span style={{ fontWeight: 700, color: '#64748B' }}>ScanFit</span>
           <span>&mdash; Educational Gym Equipment Companion</span>
         </div>
         <div>Demo mode active &middot; All data stored locally in browser</div>

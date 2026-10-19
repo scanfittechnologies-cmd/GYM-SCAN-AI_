@@ -94,7 +94,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate }) => {
       name: 'Gym Plan',
       price: 'Contact Us',
       billingNote: 'Custom pricing per location',
-      description: 'For gym operators who want to deploy Gym Scan AI across their facility with branded QR codes.',
+      description: 'For gym operators who want to deploy ScanFit across their facility with branded QR codes.',
       color: '#FFB800',
       bg: 'rgba(255, 184, 0, 0.06)',
       border: 'rgba(255, 184, 0, 0.25)',

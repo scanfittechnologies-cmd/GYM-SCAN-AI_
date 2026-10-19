@@ -80,10 +80,10 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }} className="text-sm sm:text-base md:text-[1.2rem] whitespace-nowrap">
-              GYM SCAN <span style={{ color: '#00F59B', WebkitTextFillColor: '#00F59B' }}>AI</span>
+              ScanFit
             </div>
             <div className="text-[0.55rem] sm:text-[0.6rem] md:text-[0.65rem] text-[#64748B] font-semibold tracking-wider uppercase hidden sm:block">
-              Equipment Vision & Guide
+              Smart Gym Equipment Guide
             </div>
           </div>
         </div>

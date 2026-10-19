@@ -89,7 +89,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
               letterSpacing: '-0.01em',
               color: '#F1F5F9'
             }}>
-              GYM SCAN <span style={{ color: '#00F59B' }}>AI</span>
+              ScanFit
             </div>
 
             <span className="badge badge-emerald" style={{ fontSize: '0.68rem', padding: '2px 8px' }}>

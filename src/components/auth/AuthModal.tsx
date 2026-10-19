@@ -171,7 +171,7 @@ export const AuthModal: React.FC = () => {
           </div>
 
           <h2 style={{ fontSize: '1.35rem', color: '#F1F5F9', margin: '0 0 4px 0', fontWeight: 800 }}>
-            {mode === 'signin' && 'Welcome to Gym Scan AI'}
+            {mode === 'signin' && 'Welcome to ScanFit'}
             {mode === 'signup' && 'Create Your Athlete Account'}
             {mode === 'reset' && 'Reset Your Password'}
           </h2>
@@ -409,7 +409,7 @@ export const AuthModal: React.FC = () => {
                 style={{ marginTop: '3px', accentColor: '#00F59B' }}
               />
               <label htmlFor="under18Check" style={{ fontSize: '0.72rem', color: '#94A3B8', lineHeight: 1.35, cursor: 'pointer' }}>
-                I agree to the Gym Scan AI Terms. If under 18, I confirm parental guidance for gym machine safety.
+                I agree to the ScanFit Terms. If under 18, I confirm parental guidance for gym machine safety.
               </label>
             </div>
           )}
