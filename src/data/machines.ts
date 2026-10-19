@@ -1432,7 +1432,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "boulder shoulders"
     ],
     "imageSvg": "lateral-raise",
-    "description": "Isolates the middle deltoid cap through guided arm abduction without forearm strain or dumbbell swinging momentum.",
+    "description": "Isolates and builds side shoulder width with smooth lever arm resistance.",
     "brand": "Technogym Element+",
     "visualCharacteristics": [
       "Upright seat with chest/back pad",
@@ -1733,7 +1733,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "lower leg"
     ],
     "imageSvg": "calf-raise",
-    "description": "Elevated textured toe block and padded resistance bar allow full ankle range of motion to build dense lower leg strength.",
+    "description": "Isolates and strengthens calf muscles through a controlled heel-raise movement.",
     "brand": "Matrix Versa Calf",
     "visualCharacteristics": [
       "Narrow textured foot ledge for balls of feet",
@@ -1832,7 +1832,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "smith legs"
     ],
     "imageSvg": "smith-machine",
-    "description": "Utilizes the Smith machine vertical guide rails to perform squats with feet placed forward, reducing shearing forces on the lower back.",
+    "description": "Builds leg and glute strength using a fixed vertical barbell track for stability.",
     "brand": "Hammer Strength Smith",
     "visualCharacteristics": [
       "Vertical steel rails",
@@ -2166,7 +2166,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "groin machine"
     ],
     "imageSvg": "leg-press",
-    "description": "A seated machine where pads rest inside your knees, requiring you to squeeze thighs together against resistance.",
+    "description": "Strengthens and tones the inner thigh muscles by squeezing your legs together.",
     "brand": "Life Fitness Signature Series Adductor",
     "visualCharacteristics": [
       "Seated bucket chair with foot rests",
@@ -2262,7 +2262,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "hack sled"
     ],
     "imageSvg": "leg-press",
-    "description": "An inverted sled machine with padded shoulder yokes and an angled footplate that isolates the quadriceps with deep knee flexion.",
+    "description": "Builds deep quad strength with guided back-supported sliding movement.",
     "brand": "Cybex Plate-Loaded Hack Squat",
     "visualCharacteristics": [
       "Angled rails with padded shoulder pads and backrest",
@@ -2356,7 +2356,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "hamstring curl lying"
     ],
     "imageSvg": "leg-curl",
-    "description": "An angled prone bench station where you lie face down and curl the padded roller upward against the glutes.",
+    "description": "Isolates and builds hamstring muscles by curling weight toward your glutes.",
     "brand": "Matrix Ultra Series",
     "visualCharacteristics": [
       "V-angled prone bench to prevent lower back arching",
@@ -4774,7 +4774,7 @@ export const MACHINES_DATABASE: Machine[] = [
       "six pack"
     ],
     "imageSvg": "ab-crunch",
-    "description": "A seated machine with chest roller pad and overhead handles that isolates abdominal spinal flexion while stabilizing the lower back.",
+    "description": "Strengthens and defines core muscles using weighted forward trunk flexion.",
     "brand": "Matrix Versa Abdominal",
     "visualCharacteristics": [
       "Curved ergonomic backrest",
