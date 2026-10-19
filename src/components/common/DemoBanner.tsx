@@ -1,14 +1,6 @@
-import React, { useState } from 'react';
-import { Database, Sparkles, ChevronRight, X } from 'lucide-react';
+import React from 'react';
 
-interface DemoBannerProps {
-  onOpenSettings?: () => void;
-}
-
-export const DemoBanner: React.FC<DemoBannerProps> = ({ onOpenSettings }) => {
-  const [dismissed, setDismissed] = useState(false);
-
-  if (dismissed) return null;
+export const DemoBanner: React.FC = () => {
 
   return (
     <div style={{
@@ -32,43 +24,7 @@ export const DemoBanner: React.FC<DemoBannerProps> = ({ onOpenSettings }) => {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
-        {onOpenSettings && (
-          <button
-            onClick={onOpenSettings}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#00D2FF',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '2px',
-              fontSize: '0.75rem',
-              padding: '2px 4px'
-            }}
-          >
-            <Database size={12} />
-            Connect APIs <ChevronRight size={12} />
-          </button>
-        )}
-        <button
-          onClick={() => setDismissed(true)}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            color: '#64748B',
-            cursor: 'pointer',
-            padding: '2px',
-            display: 'flex',
-            alignItems: 'center'
-          }}
-          title="Dismiss banner"
-        >
-          <X size={13} />
-        </button>
-      </div>
+      {/* Right controls (removed Connect APIs and dismiss icon) */}
     </div>
   );
 };

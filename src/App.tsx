@@ -71,7 +71,7 @@ const AppContent: React.FC = () => {
       {showSplash && <IntroSplash onComplete={handleIntroComplete} />}
 
       {/* Client Demo Status Banner */}
-      <DemoBanner onOpenSettings={() => handleNavigate('profile')} />
+      <DemoBanner />
 
       {/* Top Sticky Header */}
       <Navbar currentTab={currentTab} onTabChange={handleNavigate} />
