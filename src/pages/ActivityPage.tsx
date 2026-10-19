@@ -377,8 +377,8 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
       </div>
 
       {/* 4. ACTIVITY HISTORY WITH FILTERS & REAL TIMELINE */}
-      <div className="glass-card" style={{ padding: '1.5rem' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.25rem' }}>
+      <div className="glass-card p-3 sm:p-6" style={{ width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', marginBottom: '1.25rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <History size={18} color="#00D2FF" />
             <h3 style={{ fontSize: '1.05rem', color: '#F1F5F9', margin: 0, fontWeight: 700 }}>Activity History</h3>
@@ -425,7 +425,7 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
             {/* Vertical timeline line */}
             <div style={{
               position: 'absolute',
-              left: '20px',
+              left: '18px',
               top: '12px',
               bottom: '12px',
               width: '2px',
@@ -445,17 +445,20 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
               return (
                 <div
                   key={record.id}
+                  className="px-3.5 py-3 sm:px-4 sm:py-3.5"
                   style={{
                     display: 'flex',
                     alignItems: 'flex-start',
-                    gap: '1rem',
+                    gap: '0.75rem',
                     position: 'relative',
                     zIndex: 1,
-                    padding: '0.85rem 1rem',
                     borderRadius: '14px',
                     background: 'rgba(255, 255, 255, 0.02)',
                     border: '1px solid rgba(255, 255, 255, 0.05)',
-                    transition: 'all 0.15s ease'
+                    transition: 'all 0.15s ease',
+                    boxSizing: 'border-box',
+                    width: '100%',
+                    minWidth: 0
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)';
@@ -467,12 +470,15 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
                   }}
                 >
                   {/* Timeline icon dot */}
-                  {renderActivityIcon(record)}
+                  <div style={{ flexShrink: 0 }}>
+                    {renderActivityIcon(record)}
+                  </div>
 
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '0.94rem', fontWeight: 800, color: '#F1F5F9' }}>
+                  <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', width: '100%' }}>
+                      {/* Machine Title & Tags Row */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', minWidth: 0 }}>
+                        <span style={{ fontSize: '0.94rem', fontWeight: 800, color: '#F1F5F9', wordBreak: 'break-word' }}>
                           {record.machineName}
                         </span>
                         {record.machineCategory && (
@@ -493,24 +499,29 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
                         </span>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0, flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '0.72rem', color: '#64748B', whiteSpace: 'nowrap' }}>
-                          {dateStr} at {timeStr}
-                        </span>
-                        {record.xpAwarded > 0 && (
-                          <span style={{
-                            background: 'rgba(0, 245, 155, 0.18)',
-                            color: '#00F59B',
-                            fontSize: '0.75rem',
-                            fontWeight: 800,
-                            padding: '2px 8px',
-                            borderRadius: '999px',
-                            border: '1px solid rgba(0, 245, 155, 0.3)',
-                            whiteSpace: 'nowrap'
-                          }}>
-                            +{record.xpAwarded} XP
+                      {/* Meta info & Action Buttons (Date, XP, View Details) */}
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap', width: '100%' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '0.72rem', color: '#64748B' }}>
+                            {dateStr} at {timeStr}
                           </span>
-                        )}
+                          {record.xpAwarded > 0 && (
+                            <span style={{
+                              background: 'rgba(0, 245, 155, 0.18)',
+                              color: '#00F59B',
+                              fontSize: '0.72rem',
+                              fontWeight: 800,
+                              padding: '2px 7px',
+                              borderRadius: '999px',
+                              border: '1px solid rgba(0, 245, 155, 0.3)',
+                              display: 'inline-flex',
+                              alignItems: 'center'
+                            }}>
+                              +{record.xpAwarded} XP
+                            </span>
+                          )}
+                        </div>
+
                         {machine && (
                           <button
                             onClick={() => onSelectMachine(machine, 'activity')}
@@ -519,15 +530,15 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
                               border: '1px solid rgba(0, 245, 155, 0.25)',
                               color: '#00F59B',
                               borderRadius: '8px',
-                              padding: '3px 10px',
-                              fontSize: '0.75rem',
+                              padding: '3px 9px',
+                              fontSize: '0.72rem',
                               fontWeight: 700,
                               cursor: 'pointer',
                               display: 'inline-flex',
                               alignItems: 'center',
-                              gap: '4px',
+                              gap: '3px',
                               transition: 'all 0.15s',
-                              whiteSpace: 'nowrap'
+                              flexShrink: 0
                             }}
                           >
                             View Details <ChevronRight size={13} />
