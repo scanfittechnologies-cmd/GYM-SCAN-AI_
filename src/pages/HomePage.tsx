@@ -113,7 +113,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
           </h1>
 
           <p style={{ fontSize: '0.95rem', color: '#94A3B8', lineHeight: 1.5, margin: 0 }}>
-            Ready for your workout? Scan any QR code or snap a photo to instantly unlock machine guides and setup cues.
+            Ready to train? Tap a scan mode below to instantly pull up setup guides and form cues.
           </p>
         </div>
       </div>
