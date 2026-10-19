@@ -7,7 +7,6 @@ import {
   Upload, 
   Sparkles, 
   ArrowRight, 
-  Shield, 
   ChevronRight
 } from 'lucide-react';
 import { MachineCard } from '../components/machines/MachineCard';
@@ -308,22 +307,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
               onSelect={onSelectMachine}
             />
           ))}
-        </div>
-      </div>
-
-      {/* 4. Gym Safety & Educational Guidance Notice */}
-      <div style={{
-        background: 'rgba(255, 184, 0, 0.05)',
-        border: '1px solid rgba(255, 184, 0, 0.22)',
-        borderRadius: '18px',
-        padding: '1.15rem 1.35rem',
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '0.9rem'
-      }}>
-        <Shield size={22} color="#FFB800" style={{ flexShrink: 0, marginTop: '2px' }} />
-        <div style={{ fontSize: '0.82rem', color: '#CBD5E1', lineHeight: 1.45 }}>
-          <strong style={{ color: '#FFB800' }}>Educational Orientation Only:</strong> Gym Scan AI provides orientation and general setup cues for fitness equipment. It does not replace guidance from certified fitness professionals. Always start with light weights to test seat positioning, and never hesitate to ask gym floor staff for assistance.
         </div>
       </div>
 
