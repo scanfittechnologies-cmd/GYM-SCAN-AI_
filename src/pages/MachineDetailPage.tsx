@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Machine, MachineExercise } from '../types';
 import { useGym } from '../context/GymContext';
 import { 
@@ -55,6 +55,14 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
   const [showTutorialModal, setShowTutorialModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<MachineExercise | null>(null);
+
+  // Scroll to top and reset tab whenever machine changes
+  useEffect(() => {
+    if (machine?.id) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      setActiveTab('overview');
+    }
+  }, [machine?.id]);
 
   // Missing or Incomplete Machine state
   if (!machine) {
