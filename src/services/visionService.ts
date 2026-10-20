@@ -351,8 +351,21 @@ export async function analyzeGymMachineImage(
         ? rawBackendTitleCandidate.trim()
         : null;
 
+    // Detect bench press variants (incline, decline, flat, close-grip) to preserve specific modifiers
+    const isBenchVariant = (text: string) => {
+      const lower = text.toLowerCase();
+      return (lower.includes('bench press') || lower.includes('barbell press') || lower.includes('chest press')) &&
+             (lower.includes('incline') || lower.includes('decline') || lower.includes('flat') || lower.includes('close-grip') || lower.includes('close grip'));
+    };
+
+    // If titleCandidate is a specific bench press variant, preserve it instead of flattening to a generic rack or machine
+    const hasSpecificBenchVariant = titleCandidate ? isBenchVariant(titleCandidate) : false;
+    if (hasSpecificBenchVariant) {
+      matchedMachine = undefined; // Force preservation of the specific variant as a dynamic machine
+    }
+
     const primaryName = titleCandidate || (matchedMachine ? matchedMachine.name : null);
-    const categoryName = ((backendData.category as MachineCategory) || (resJson.category as MachineCategory) || matchedMachine?.category || 'Other');
+    const categoryName = ((backendData.category as MachineCategory) || (resJson.category as MachineCategory) || matchedMachine?.category || 'Chest');
 
     // If a valid text string is found or if Gemini successfully returned a response object,
     // force isUnrecognized to false and resultStatus to 'MACHINE_IDENTIFIED'.
@@ -411,7 +424,45 @@ export async function analyzeGymMachineImage(
         ];
 
     const description = (backendData as any).description || resJson.description || `Custom strength equipment identified via Vision AI: ${resolvedName}`;
-    const primaryMuscles: string[] = (backendData as any).primaryMuscles || resJson.primaryMuscles || ['Target Muscle Group', 'Core Stabilizers'];
+
+    // Dynamically adjust targeted muscle groups based on bench press variant
+    const getVariantMuscles = (name: string): { primary: string[]; secondary: string[] } | null => {
+      const lower = name.toLowerCase();
+      if (lower.includes('incline') && (lower.includes('press') || lower.includes('bench'))) {
+        return {
+          primary: ['Upper Chest (Clavicular Head)', 'Anterior Deltoids'],
+          secondary: ['Triceps Brachii', 'Core Stabilizers']
+        };
+      }
+      if (lower.includes('decline') && (lower.includes('press') || lower.includes('bench'))) {
+        return {
+          primary: ['Lower Chest (Sternal Head)', 'Pectoralis Major'],
+          secondary: ['Triceps Brachii', 'Anterior Deltoids']
+        };
+      }
+      if ((lower.includes('close-grip') || lower.includes('close grip')) && (lower.includes('press') || lower.includes('bench'))) {
+        return {
+          primary: ['Triceps Brachii', 'Inner Pectoralis'],
+          secondary: ['Anterior Deltoids', 'Core Stabilizers']
+        };
+      }
+      if (lower.includes('flat') || lower.includes('bench press') || lower.includes('barbell press')) {
+        return {
+          primary: ['Pectoralis Major (Mid & Lower Chest)'],
+          secondary: ['Anterior Deltoids', 'Triceps Brachii', 'Core Stabilizers']
+        };
+      }
+      return null;
+    };
+
+    const variantMuscleInfo = getVariantMuscles(resolvedName);
+    const primaryMuscles: string[] = variantMuscleInfo
+      ? variantMuscleInfo.primary
+      : ((backendData as any).primaryMuscles || resJson.primaryMuscles || ['Target Muscle Group', 'Core Stabilizers']);
+
+    const secondaryMuscles: string[] = variantMuscleInfo
+      ? variantMuscleInfo.secondary
+      : ['Core Stabilizers'];
 
     // 2. Universal Dynamic Fallback Generation:
     // If not found in the static EXERCISE_LIBRARY / availableMachines, dynamically construct a valid Machine object
@@ -422,11 +473,11 @@ export async function analyzeGymMachineImage(
         id: dynamicId,
         name: resolvedName,
         alternativeNames: [resolvedName],
-        category: (categoryName as MachineCategory) || 'Other',
+        category: (categoryName as MachineCategory) || 'Chest',
         tagline: description,
         difficulty: 'Intermediate',
         primaryMuscles: primaryMuscles.length > 0 ? primaryMuscles : ['Target Muscle Group'],
-        secondaryMuscles: ['Core Stabilizers'],
+        secondaryMuscles,
         equipmentType: 'Free Motion / Other',
         qrCodeId: `AI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
         matchKeywords: [resolvedName.toLowerCase()],
