@@ -116,46 +116,68 @@ export async function recognizeMachine(imageBase64DataUrl) {
       const geminiResult = await analyzeGymMachine(imageBase64DataUrl);
       const processingTimeMs = Date.now() - startTime;
 
-      if (geminiResult && geminiResult.status === 'identified' && (geminiResult.match || geminiResult.machineName)) {
-        const recognizedName = geminiResult.machineName || geminiResult.match;
-        const machineSlug = recognizedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      if (geminiResult && geminiResult.status === 'identified' && (geminiResult.title || geminiResult.machineName || geminiResult.match)) {
+        const recognizedName = geminiResult.title || geminiResult.machineName || geminiResult.match;
+        const isNewMachine = Boolean(geminiResult.isNewMachine);
+        const matchedLibraryId = isNewMachine ? null : (geminiResult.matchedLibraryId || geminiResult.libraryId || null);
+        const machineSlug = matchedLibraryId || recognizedName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
         const modelName = geminiResult.modelUsed || 'gemini-3.5-flash-lite';
         const primaryMuscles = geminiResult.primaryMuscles || [];
-        const setupSteps = geminiResult.setupSteps || [];
+        const setupSteps = geminiResult.setupGuide || geminiResult.setupSteps || [];
+        const description = geminiResult.description || `Standard gym equipment: ${recognizedName}`;
+        const category = geminiResult.category || 'Strength Equipment';
 
         return {
           status: 'identified',
           machineId: machineSlug,
+          libraryId: matchedLibraryId,
+          matchedLibraryId,
+          isNewMachine,
           machineName: recognizedName,
-          category: 'Strength Equipment',
+          title: recognizedName,
+          description,
+          category,
           confidence: geminiResult.confidence || 92,
           reason: geminiResult.reasoning || '',
           primaryMuscles,
           setupSteps,
+          setupGuide: setupSteps,
           visualFeatures: [
             `Gemini Vision AI (${modelName})`,
+            ...(isNewMachine ? ['New Machine (outside library)'] : []),
             ...(primaryMuscles.length > 0 ? [`Muscles: ${primaryMuscles.join(', ')}`] : []),
             geminiResult.reasoning || `Detected: ${recognizedName}`
           ],
           candidates: [
             {
               machineId: machineSlug,
+              libraryId: matchedLibraryId,
+              matchedLibraryId,
+              isNewMachine,
               machineName: recognizedName,
-              category: 'Strength Equipment',
+              title: recognizedName,
+              category,
               confidence: geminiResult.confidence || 92
             }
           ],
           rawOutput: {
             machineName: recognizedName,
-            category: 'Strength Equipment',
+            title: recognizedName,
+            description,
+            category,
+            isNewMachine,
+            libraryId: matchedLibraryId,
+            matchedLibraryId,
             confidence: geminiResult.confidence || 92,
             confidenceLevel: 'high',
             exactModelIdentified: true,
             exercise: recognizedName,
             primaryMuscles,
             setupSteps,
+            setupGuide: setupSteps,
             visualFeatures: [
               `Gemini Vision AI (${modelName})`,
+              ...(isNewMachine ? ['New Machine (outside library)'] : []),
               ...(primaryMuscles.length > 0 ? [`Muscles: ${primaryMuscles.join(', ')}`] : []),
               geminiResult.reasoning || `Detected: ${recognizedName}`
             ],

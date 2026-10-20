@@ -34,10 +34,17 @@ export interface StructuredVisionOutput {
   visible_features: string[];
   primaryMuscles?: string[];
   setupSteps?: string[];
+  setupGuide?: string[];
   exercise?: string;
   uncertainty_reason?: string;
   needs_more_photos: boolean;
   result_status: VisionResultStatus;
+  // New machine / library metadata
+  isNewMachine?: boolean;
+  libraryId?: string | null;
+  matchedLibraryId?: string | null;
+  title?: string;
+  description?: string;
   // API Diagnostic details
   errorType?: string;
   errorMessage?: string;
@@ -301,19 +308,22 @@ export async function analyzeGymMachineImage(
     const confidenceScore = typeof backendData.confidence === 'number' ? backendData.confidence : 0;
     const isBelowThreshold = confidenceScore < 50;
 
+    const isNewMachineFromBackend = Boolean(resJson.isNewMachine || (backendData as any).isNewMachine);
+    const resolvedLibraryId = isNewMachineFromBackend ? null : (resJson.matchedLibraryId || resJson.libraryId || resJson.machineId || null);
+
     // Match identified machineName or machineId against local machine library
-    let matchedMachine = resJson.machineId
-      ? availableMachines.find(m => m.id.toLowerCase() === String(resJson.machineId).toLowerCase())
+    let matchedMachine = resolvedLibraryId
+      ? availableMachines.find(m => m.id.toLowerCase() === String(resolvedLibraryId).toLowerCase())
       : undefined;
 
-    if (!matchedMachine && backendData.machineName && backendData.machineName !== 'Unknown') {
+    if (!matchedMachine && !isNewMachineFromBackend && backendData.machineName && backendData.machineName !== 'Unknown') {
       matchedMachine = availableMachines.find(
         m => m.name.toLowerCase() === backendData.machineName!.toLowerCase() ||
              m.alternativeNames?.some(a => a.toLowerCase() === backendData.machineName!.toLowerCase())
       );
     }
 
-    if (!matchedMachine && backendData.machineName && backendData.machineName !== 'Unknown') {
+    if (!matchedMachine && !isNewMachineFromBackend && backendData.machineName && backendData.machineName !== 'Unknown') {
       matchedMachine = availableMachines.find(
         m => m.name.toLowerCase().includes(backendData.machineName!.toLowerCase()) ||
              backendData.machineName!.toLowerCase().includes(m.name.toLowerCase()) ||
@@ -321,8 +331,11 @@ export async function analyzeGymMachineImage(
       );
     }
 
-    const primaryName = matchedMachine ? matchedMachine.name : (backendData.machineName || null);
-    const categoryName = matchedMachine ? matchedMachine.category : ((backendData.category as MachineCategory) || 'Unknown');
+    const titleCandidate = resJson.title || (backendData as any).title || backendData.machineName || null;
+    const primaryName = matchedMachine ? matchedMachine.name : (titleCandidate && titleCandidate !== 'Unknown' ? titleCandidate : null);
+    const categoryName = matchedMachine ? matchedMachine.category : ((backendData.category as MachineCategory) || (resJson.category as MachineCategory) || 'Other');
+    const isNewMachine = Boolean(isNewMachineFromBackend || (!matchedMachine && primaryName && primaryName !== 'Unknown'));
+    const matchedLibraryId = isNewMachine ? null : (matchedMachine?.id || resolvedLibraryId);
 
     // For uncertain status: use the backend candidates array directly so the one-tap confirm UI gets properly mapped names
     const backendCandidates: Array<{ machineId?: string; machineName: string; category?: string; confidence?: number }> =
@@ -337,15 +350,15 @@ export async function analyzeGymMachineImage(
       : (Array.isArray(backendData.possibleMatches) ? backendData.possibleMatches : []);
 
     const formattedMatches: MachineCandidateMatch[] = rawPossibleMatches.map((p: any) => ({
-      name: p.machineName || p.name || 'Unknown',
+      name: p.title || p.machineName || p.name || 'Unknown',
       category: p.category,
       confidence: typeof p.confidence === 'number' ? p.confidence : Math.max(1, Math.round((confidenceScore || 85) * 0.85))
     }));
 
-    if (formattedMatches.length === 0 && matchedMachine && !isBelowThreshold && !isExplicitlyNotIdentified && !isUncertain) {
+    if (formattedMatches.length === 0 && primaryName && !isBelowThreshold && !isExplicitlyNotIdentified && !isUncertain) {
       formattedMatches.push({
-        name: matchedMachine.name,
-        category: matchedMachine.category,
+        name: primaryName,
+        category: categoryName,
         confidence: confidenceScore || 85
       });
     }
@@ -360,6 +373,9 @@ export async function analyzeGymMachineImage(
         : isBelowThreshold 
           ? `Model confidence (${confidenceScore}%) is below the required 50% threshold. The machine features weren't clear enough.`
           : "Unrecognized machine or random image. Please try another angle or search manually.");
+
+    const setupSteps = (backendData as any).setupGuide || (backendData as any).setupSteps || resJson.setupGuide || resJson.setupSteps || [];
+    const description = (backendData as any).description || resJson.description || (primaryName ? `Dynamic AI detected equipment: ${primaryName}` : '');
 
     const structuredOutput: StructuredVisionOutput = {
       equipmentVisible: !isUnrecognized,
@@ -376,8 +392,14 @@ export async function analyzeGymMachineImage(
       visualFeatures: backendData.visualFeatures || [],
       visible_features: backendData.visualFeatures || [],
       primaryMuscles: (backendData as any).primaryMuscles || resJson.primaryMuscles || [],
-      setupSteps: (backendData as any).setupSteps || resJson.setupSteps || [],
+      setupSteps,
+      setupGuide: setupSteps,
       exercise: isUnrecognized ? undefined : (backendData.exercise || primaryName || undefined),
+      isNewMachine: isUnrecognized ? false : isNewMachine,
+      libraryId: isUnrecognized ? null : matchedLibraryId,
+      matchedLibraryId: isUnrecognized ? null : matchedLibraryId,
+      title: isUnrecognized ? undefined : primaryName || undefined,
+      description: isUnrecognized ? undefined : description,
       uncertainty_reason: isUnrecognized ? fallbackMessage : undefined,
       needs_more_photos: isUnrecognized,
       result_status: resultStatus,
@@ -399,8 +421,8 @@ export async function analyzeGymMachineImage(
       machinesConsidered: availableMachines.length,
       topCandidates: matchedMachine
         ? [{ id: matchedMachine.id, name: matchedMachine.name, category: matchedMachine.category, score: backendData.confidence || 85 }]
-        : [],
-      selectedMachineId: matchedMachine?.id ?? null,
+        : (primaryName ? [{ id: matchedLibraryId || 'new-machine', name: primaryName, category: categoryName, score: confidenceScore || 85 }] : []),
+      selectedMachineId: matchedLibraryId ?? null,
       selectedMachineName: primaryName,
       confidenceScore: backendData.confidence || 85,
       reasonForIdentification: (backendData.visualFeatures || []).join(', ') || 'Backend AI Vision Analysis',

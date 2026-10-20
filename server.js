@@ -123,11 +123,18 @@ app.post('/api/scan-machine', async (req, res, next) => {
       status: 200,
       recognitionStatus: recognitionResult.status,
       machineId: recognitionResult.machineId,
+      libraryId: recognitionResult.libraryId !== undefined ? recognitionResult.libraryId : (recognitionResult.isNewMachine ? null : recognitionResult.machineId),
+      matchedLibraryId: recognitionResult.matchedLibraryId !== undefined ? recognitionResult.matchedLibraryId : (recognitionResult.isNewMachine ? null : recognitionResult.machineId),
+      isNewMachine: Boolean(recognitionResult.isNewMachine),
+      title: recognitionResult.title || recognitionResult.machineName || formattedData.machineName,
+      description: recognitionResult.description || formattedData.description || '',
+      category: recognitionResult.category || formattedData.category || 'Other',
       modelUsed: recognitionResult.model,
       processingTimeMs: recognitionResult.processingTimeMs,
       candidates: recognitionResult.candidates || [],
       primaryMuscles: recognitionResult.primaryMuscles || formattedData.primaryMuscles || [],
       setupSteps: recognitionResult.setupSteps || formattedData.setupSteps || [],
+      setupGuide: recognitionResult.setupGuide || recognitionResult.setupSteps || formattedData.setupSteps || [],
       data: formattedData
     });
   } catch (err) {
@@ -154,12 +161,19 @@ app.post('/api/scan', upload.single('image'), async (req, res) => {
     // Format the payload returned to the frontend
     return res.json({
       source: 'Google Gemini Vision',
-      match: geminiResult.machineName || geminiResult.match,
-      machineName: geminiResult.machineName || geminiResult.match,
+      match: geminiResult.title || geminiResult.machineName || geminiResult.match,
+      machineName: geminiResult.title || geminiResult.machineName || geminiResult.match,
+      title: geminiResult.title || geminiResult.machineName || geminiResult.match,
+      description: geminiResult.description || '',
+      category: geminiResult.category || 'Other',
+      isNewMachine: Boolean(geminiResult.isNewMachine),
+      libraryId: geminiResult.libraryId ?? null,
+      matchedLibraryId: geminiResult.matchedLibraryId ?? null,
       status: geminiResult.status,
       confidence: geminiResult.confidence,
       primaryMuscles: geminiResult.primaryMuscles || [],
-      setupSteps: geminiResult.setupSteps || [],
+      setupSteps: geminiResult.setupSteps || geminiResult.setupGuide || [],
+      setupGuide: geminiResult.setupGuide || geminiResult.setupSteps || [],
       reasoning: geminiResult.reasoning,
       modelUsed: geminiResult.modelUsed
     });
