@@ -47,25 +47,31 @@ export async function analyzeGymMachine(imageBuffer, mimeType = 'image/jpeg', li
   const prompt = `You are an expert gym equipment recognition AI.
 Analyze this photo and identify ANY gym equipment, machine, or free-weight shown.
 
-Current machine library list:
+Current machine library list (for reference and ID matching):
 ${libraryNamesWithId}
 
-GUIDELINES & CLASSIFICATION LOGIC:
-1. Identify ANY gym equipment or machine shown in the photo, even if it is NOT present in our current machine library list.
-2. If the identified machine matches an entry in our provided library list:
-   - Set status to "identified"
-   - Set "libraryId" to its exact libraryId from the list
-   - Set "matchedLibraryId" to its exact libraryId from the list
-   - Set "isNewMachine" to false
-   - Set "title" to the recognized name
-3. If the identified machine is NEW or not in our library:
-   - Set status to "identified"
-   - Set "libraryId" to null
-   - Set "matchedLibraryId" to null
-   - Set "isNewMachine" to true
-   - Provide a generated "title", "description", "primaryMuscles", and "setupGuide" directly from your general knowledge.
-4. Only if the photo does NOT contain any gym equipment, fitness gear, or weights (e.g. food, animals, landscapes, cars, household furniture):
-   - Set status to "not_identified", "isNewMachine" to false, "libraryId" to null, "matchedLibraryId" to null, "title" to null.
+CRITICAL RECOGNITION RULES & GUIDELINES:
+1. SCREEN / PHOTO PREVIEW RELAXATION:
+   - Do NOT reject an image or mark it as "not_identified" simply because it appears on a laptop screen, computer monitor, mobile device, TV screen, or photo preview.
+   - If gym equipment or a fitness machine is visible in the photo—even when photographed from a screen or digital display—ALWAYS identify the machine depicted.
+2. NO STRICT ALLOWED-LIST FILTER:
+   - Identify ANY gym machine or equipment (e.g., Hip Abductor/Adductor, Leg Press, Smith Machine, Cable Machine, Lat Pulldown, Chest Press, Preacher Bench, Dumbbells, Barbells, etc.).
+   - Never reject valid gym equipment because it is missing from the library list.
+3. MATCHING LOGIC:
+   - If the identified machine matches an entry in our provided library list:
+     * Set status to "identified"
+     * Set "libraryId" to its exact libraryId from the list
+     * Set "matchedLibraryId" to its exact libraryId from the list
+     * Set "isNewMachine" to false
+     * Set "title" to the recognized name
+   - If the identified machine is NEW or not in our library:
+     * Set status to "identified"
+     * Set "libraryId" to null
+     * Set "matchedLibraryId" to null
+     * Set "isNewMachine" to true
+     * Provide a generated "title", "description", "primaryMuscles", and "setupGuide" directly from your general knowledge.
+4. ONLY REJECT TRUE NON-FITNESS CONTENT:
+   - Only set status to "not_identified" if the photo genuinely contains NO gym equipment, weights, or fitness apparatus whatsoever (e.g. food, animals, outdoor landscapes with no fitness equipment, cars, or regular household furniture).
 
 Keep response strictly in valid JSON format ONLY:
 {
