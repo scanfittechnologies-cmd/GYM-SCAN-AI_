@@ -582,15 +582,14 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
           );
 
           // Dynamic Machine generation for new machines outside library
-          if (!primary && (output.isNewMachine || !output.libraryId)) {
-            const dynamicId = `new-machine-${Date.now()}`;
+          if (!primary && (output.dynamicMachine || output.isNewMachine || !output.libraryId)) {
             const dynamicCategory = (output.equipment_category !== 'Unknown' ? output.equipment_category : 'Other') as MachineCategory;
             const dynamicSetup = output.setupGuide && output.setupGuide.length > 0 
               ? output.setupGuide 
               : (output.setupSteps && output.setupSteps.length > 0 ? output.setupSteps : ['Set appropriate resistance or pin weight.', 'Position yourself comfortably with proper posture.', 'Perform the movement in a controlled cadence.']);
-            
-            primary = {
-              id: dynamicId,
+
+            primary = output.dynamicMachine || {
+              id: `new-machine-${Date.now()}`,
               name: output.title || candidateName,
               alternativeNames: [candidateName],
               category: dynamicCategory,
@@ -1388,7 +1387,10 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
       )}
 
       {/* 7. STATE: MACHINE_NOT_IDENTIFIED (Image OK, but AI could not identify machine or low confidence) */}
-      {analysisCompleted && visionOutput && (visionOutput.result_status === 'MACHINE_NOT_IDENTIFIED' || visionOutput.result_status === 'uncertain' || visionOutput.result_status === 'unknown') && !Boolean(visionOutput.title || visionOutput.machineName) && (
+      {(() => {
+        const resultStatus = visionOutput?.result_status;
+        const isUnrecognized = resultStatus === 'MACHINE_NOT_IDENTIFIED' || resultStatus === 'unknown';
+        return analysisCompleted && visionOutput && (isUnrecognized || resultStatus === 'uncertain') && !visionOutput?.title && !visionOutput?.machineName && (
         <div style={{
           background: 'rgba(255, 184, 0, 0.08)',
           border: '1px solid rgba(255, 184, 0, 0.3)',
@@ -1468,7 +1470,8 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             )}
           </div>
         </div>
-      )}
+        );
+      })()}
 
       {/* 8. STATE: MACHINE_IDENTIFIED */}
       {analysisCompleted && visionOutput && (visionOutput.result_status === 'MACHINE_IDENTIFIED' || visionOutput.result_status === 'confirmed_candidate') && possibleMatches.length > 0 && selectedMatch && (

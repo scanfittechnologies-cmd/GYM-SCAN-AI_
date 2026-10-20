@@ -45,6 +45,7 @@ export interface StructuredVisionOutput {
   matchedLibraryId?: string | null;
   title?: string;
   description?: string;
+  dynamicMachine?: Machine;
   // API Diagnostic details
   errorType?: string;
   errorMessage?: string;
@@ -330,11 +331,38 @@ export async function analyzeGymMachineImage(
       );
     }
 
-    const titleCandidate = resJson.title || (backendData as any).title || backendData.machineName || null;
-    const primaryName = (titleCandidate && titleCandidate !== 'Unknown') ? titleCandidate : (matchedMachine ? matchedMachine.name : null);
+    // 1. Universal Title Extraction:
+    // Check visionOutput.title, visionOutput.machineName, or any text field returned by the backend
+    const rawBackendTitleCandidate =
+      resJson.title ||
+      resJson.machineName ||
+      resJson.match ||
+      (backendData as any).title ||
+      backendData.machineName ||
+      (backendData as any).match ||
+      resJson.exercise ||
+      backendData.exercise ||
+      (resJson.candidates && resJson.candidates[0]?.machineName) ||
+      (backendData.possibleMatches && backendData.possibleMatches[0]?.machineName) ||
+      null;
+
+    const titleCandidate =
+      rawBackendTitleCandidate && typeof rawBackendTitleCandidate === 'string' && rawBackendTitleCandidate.trim().length > 0 && rawBackendTitleCandidate !== 'Unknown'
+        ? rawBackendTitleCandidate.trim()
+        : null;
+
+    const primaryName = titleCandidate || (matchedMachine ? matchedMachine.name : null);
     const categoryName = ((backendData.category as MachineCategory) || (resJson.category as MachineCategory) || matchedMachine?.category || 'Other');
-    const isNewMachine = Boolean(isNewMachineFromBackend || (!matchedMachine && primaryName && primaryName !== 'Unknown'));
-    const matchedLibraryId = isNewMachine ? null : (matchedMachine?.id || resolvedLibraryId);
+
+    // If a valid text string is found or if Gemini successfully returned a response object,
+    // force isUnrecognized to false and resultStatus to 'MACHINE_IDENTIFIED'.
+    const hasValidText = Boolean(primaryName && primaryName !== 'Unknown' && primaryName.trim().length > 0);
+    const geminiReturnedResponse = Boolean(resJson.success !== false && (titleCandidate || resJson.isIdentified || backendData.machineName || resJson.candidates?.length));
+    const hasRecognizedEquipment = hasValidText || geminiReturnedResponse;
+    const resolvedName = primaryName || 'Strength Training Equipment';
+
+    const isNewMachine = Boolean(isNewMachineFromBackend || (!matchedMachine && hasRecognizedEquipment));
+    const matchedLibraryId = !isNewMachine && matchedMachine ? matchedMachine.id : (isNewMachine ? null : resolvedLibraryId);
 
     // For uncertain status: use the backend candidates array directly so the one-tap confirm UI gets properly mapped names
     const backendCandidates: Array<{ machineId?: string; machineName: string; category?: string; confidence?: number }> =
@@ -343,32 +371,27 @@ export async function analyzeGymMachineImage(
         : [];
 
     // Safe extraction of candidate predictions list
-    // Prefer backend candidates (already CLASS_MAPPING resolved) over rawOutput.possibleMatches
     const rawPossibleMatches = backendCandidates.length > 0
       ? backendCandidates
       : (Array.isArray(backendData.possibleMatches) ? backendData.possibleMatches : []);
 
     const formattedMatches: MachineCandidateMatch[] = rawPossibleMatches.map((p: any) => ({
-      name: p.title || p.machineName || p.name || 'Unknown',
-      category: p.category,
+      name: p.title || p.machineName || p.name || resolvedName,
+      category: p.category || categoryName,
       confidence: typeof p.confidence === 'number' ? p.confidence : Math.max(1, Math.round((confidenceScore || 85) * 0.85))
     }));
 
-    // If a valid title exists, always push it to formattedMatches regardless of backend flags
-    const hasRecognizedEquipment = Boolean(primaryName && primaryName !== 'Unknown' && primaryName.trim().length > 0);
     if (formattedMatches.length === 0 && hasRecognizedEquipment) {
       formattedMatches.push({
-        name: primaryName!,
+        name: resolvedName,
         category: categoryName,
         confidence: confidenceScore || 85
       });
     }
 
-    // CRITICAL: If a valid machine title exists, ALWAYS treat as recognized — never show unrecognized card.
-    // isUnrecognized is ONLY true when there is genuinely no resolved title/machineName at all.
+    // Force isUnrecognized to false and resultStatus to 'MACHINE_IDENTIFIED' when valid text or Gemini response exists
     const isUnrecognized = !hasRecognizedEquipment;
-    // Force isNewMachine=true for any dynamic title not matched to a library entry
-    const effectiveIsNewMachine = isNewMachine || (hasRecognizedEquipment && !matchedMachine);
+    const effectiveIsNewMachine = Boolean(isNewMachine || (hasRecognizedEquipment && !matchedMachine));
     const resultStatus: VisionResultStatus = isUnrecognized ? 'MACHINE_NOT_IDENTIFIED' : 'MACHINE_IDENTIFIED';
 
     const fallbackMessage = resJson.message || 
@@ -378,32 +401,82 @@ export async function analyzeGymMachineImage(
           ? `Model confidence (${confidenceScore}%) is below the required 50% threshold. The machine features weren't clear enough.`
           : "Unrecognized machine or random image. Please try another angle or search manually.");
 
-    const setupSteps = (backendData as any).setupGuide || (backendData as any).setupSteps || resJson.setupGuide || resJson.setupSteps || [];
-    const description = (backendData as any).description || resJson.description || (primaryName ? `Dynamic AI detected equipment: ${primaryName}` : '');
+    const rawSetupSteps = (backendData as any).setupGuide || (backendData as any).setupSteps || resJson.setupGuide || resJson.setupSteps || [];
+    const setupSteps: string[] = Array.isArray(rawSetupSteps) && rawSetupSteps.length > 0
+      ? rawSetupSteps
+      : [
+          'Adjust seat, chest pad, or positioning to ensure ergonomic alignment.',
+          'Select an appropriate resistance pin or plate weight for controlled form.',
+          'Grip handles firmly, brace your core, and execute the movement with steady cadence.'
+        ];
+
+    const description = (backendData as any).description || resJson.description || `Custom strength equipment identified via Vision AI: ${resolvedName}`;
+    const primaryMuscles: string[] = (backendData as any).primaryMuscles || resJson.primaryMuscles || ['Target Muscle Group', 'Core Stabilizers'];
+
+    // 2. Universal Dynamic Fallback Generation:
+    // If not found in the static EXERCISE_LIBRARY / availableMachines, dynamically construct a valid Machine object
+    let dynamicFallbackMachine: Machine | undefined = undefined;
+    if (!matchedMachine && hasRecognizedEquipment) {
+      const dynamicId = `dynamic-machine-${Date.now()}`;
+      dynamicFallbackMachine = {
+        id: dynamicId,
+        name: resolvedName,
+        alternativeNames: [resolvedName],
+        category: (categoryName as MachineCategory) || 'Other',
+        tagline: description,
+        difficulty: 'Intermediate',
+        primaryMuscles: primaryMuscles.length > 0 ? primaryMuscles : ['Target Muscle Group'],
+        secondaryMuscles: ['Core Stabilizers'],
+        equipmentType: 'Free Motion / Other',
+        qrCodeId: `AI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+        matchKeywords: [resolvedName.toLowerCase()],
+        imageSvg: 'chest-press',
+        description: description,
+        setupInstructions: setupSteps,
+        movementGuidance: [
+          'Maintain a neutral spine and engage your core throughout the movement.',
+          'Control both concentric and eccentric phases without momentum or swinging.'
+        ],
+        commonMistakes: [
+          {
+            mistake: 'Using excessive momentum or jerking',
+            fix: 'Lower resistance and focus on smooth, controlled tempo.'
+          }
+        ],
+        safetyReminders: ['Inspect cables, pins, and locking collars before initiating sets.'],
+        tutorialSteps: setupSteps.map((step, idx) => ({
+          stepNumber: idx + 1,
+          title: `Step ${idx + 1}`,
+          description: step
+        })),
+        verificationStatus: 'Community Sample'
+      };
+    }
 
     const structuredOutput: StructuredVisionOutput = {
       equipmentVisible: !isUnrecognized,
       equipment_detected: !isUnrecognized,
       imageQuality: 'good',
       machineIdentified: !isUnrecognized,
-      machineName: isUnrecognized ? null : primaryName,
+      machineName: isUnrecognized ? null : resolvedName,
       machineCategory: isUnrecognized ? 'Unknown' : categoryName,
       equipment_category: isUnrecognized ? 'Unknown' : (categoryName as any),
-      possible_machine_name: isUnrecognized ? null : primaryName,
-      confidence: confidenceScore,
+      possible_machine_name: isUnrecognized ? null : resolvedName,
+      confidence: confidenceScore || 85,
       possibleMatches: isUnrecognized ? [] : formattedMatches,
       alternative_matches: isUnrecognized ? [] : formattedMatches.map(m => m.name),
       visualFeatures: backendData.visualFeatures || [],
       visible_features: backendData.visualFeatures || [],
-      primaryMuscles: (backendData as any).primaryMuscles || resJson.primaryMuscles || [],
+      primaryMuscles,
       setupSteps,
       setupGuide: setupSteps,
-      exercise: isUnrecognized ? undefined : (backendData.exercise || primaryName || undefined),
+      exercise: isUnrecognized ? undefined : (backendData.exercise || resolvedName || undefined),
       isNewMachine: isUnrecognized ? false : effectiveIsNewMachine,
       libraryId: isUnrecognized ? null : matchedLibraryId,
       matchedLibraryId: isUnrecognized ? null : matchedLibraryId,
-      title: isUnrecognized ? undefined : primaryName || undefined,
+      title: isUnrecognized ? undefined : resolvedName,
       description: isUnrecognized ? undefined : description,
+      dynamicMachine: dynamicFallbackMachine,
       uncertainty_reason: isUnrecognized ? fallbackMessage : undefined,
       needs_more_photos: isUnrecognized,
       result_status: resultStatus,
