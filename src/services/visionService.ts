@@ -354,19 +354,22 @@ export async function analyzeGymMachineImage(
       confidence: typeof p.confidence === 'number' ? p.confidence : Math.max(1, Math.round((confidenceScore || 85) * 0.85))
     }));
 
-    if (formattedMatches.length === 0 && primaryName && !isBelowThreshold && !isExplicitlyNotIdentified && !isUncertain) {
+    // If a valid title exists, always push it to formattedMatches regardless of backend flags
+    const hasRecognizedEquipment = Boolean(primaryName && primaryName !== 'Unknown' && primaryName.trim().length > 0);
+    if (formattedMatches.length === 0 && hasRecognizedEquipment) {
       formattedMatches.push({
-        name: primaryName,
+        name: primaryName!,
         category: categoryName,
         confidence: confidenceScore || 85
       });
     }
 
-    // Unrecognized: explicit not_identified when no title/machine was resolved, or no machineName resolved
-    // If the machine has a valid title / primaryName or isNewMachine is true, it is ALWAYS recognized.
-    const hasRecognizedEquipment = Boolean(primaryName && primaryName !== 'Unknown' && primaryName.trim().length > 0);
-    const isUnrecognized = !hasRecognizedEquipment || (isExplicitlyNotIdentified && !isNewMachine && !hasRecognizedEquipment);
-    const resultStatus: VisionResultStatus = isUnrecognized ? 'MACHINE_NOT_IDENTIFIED' : (isUncertain ? 'uncertain' : 'MACHINE_IDENTIFIED');
+    // CRITICAL: If a valid machine title exists, ALWAYS treat as recognized — never show unrecognized card.
+    // isUnrecognized is ONLY true when there is genuinely no resolved title/machineName at all.
+    const isUnrecognized = !hasRecognizedEquipment;
+    // Force isNewMachine=true for any dynamic title not matched to a library entry
+    const effectiveIsNewMachine = isNewMachine || (hasRecognizedEquipment && !matchedMachine);
+    const resultStatus: VisionResultStatus = isUnrecognized ? 'MACHINE_NOT_IDENTIFIED' : 'MACHINE_IDENTIFIED';
 
     const fallbackMessage = resJson.message || 
       (isUncertain
@@ -396,7 +399,7 @@ export async function analyzeGymMachineImage(
       setupSteps,
       setupGuide: setupSteps,
       exercise: isUnrecognized ? undefined : (backendData.exercise || primaryName || undefined),
-      isNewMachine: isUnrecognized ? false : isNewMachine,
+      isNewMachine: isUnrecognized ? false : effectiveIsNewMachine,
       libraryId: isUnrecognized ? null : matchedLibraryId,
       matchedLibraryId: isUnrecognized ? null : matchedLibraryId,
       title: isUnrecognized ? undefined : primaryName || undefined,

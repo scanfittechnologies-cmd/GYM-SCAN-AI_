@@ -573,8 +573,9 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
       }
 
       if (output.result_status === 'MACHINE_IDENTIFIED' || output.result_status === 'confirmed_candidate') {
-        if (output.possible_machine_name || output.machineName) {
-          const candidateName = output.possible_machine_name || output.machineName || 'Identified Machine';
+        // Include output.title as a valid candidate source for dynamic Gemini-identified machines
+        if (output.possible_machine_name || output.machineName || output.title) {
+          const candidateName = output.title || output.possible_machine_name || output.machineName || 'Identified Machine';
           let primary = machines.find(m => 
             (output.libraryId && m.id.toLowerCase() === output.libraryId.toLowerCase()) ||
             m.name.toLowerCase() === candidateName.toLowerCase()
@@ -1387,7 +1388,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
       )}
 
       {/* 7. STATE: MACHINE_NOT_IDENTIFIED (Image OK, but AI could not identify machine or low confidence) */}
-      {analysisCompleted && visionOutput && (visionOutput.result_status === 'MACHINE_NOT_IDENTIFIED' || visionOutput.result_status === 'uncertain' || visionOutput.result_status === 'unknown') && (
+      {analysisCompleted && visionOutput && (visionOutput.result_status === 'MACHINE_NOT_IDENTIFIED' || visionOutput.result_status === 'uncertain' || visionOutput.result_status === 'unknown') && !Boolean(visionOutput.title || visionOutput.machineName) && (
         <div style={{
           background: 'rgba(255, 184, 0, 0.08)',
           border: '1px solid rgba(255, 184, 0, 0.3)',

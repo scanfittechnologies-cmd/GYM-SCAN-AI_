@@ -344,8 +344,9 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       setVisionOutput(output);
 
       if (output.result_status === 'MACHINE_IDENTIFIED' || output.result_status === 'confirmed_candidate') {
-        const candidateName = output.possible_machine_name || output.machineName || output.title || 'Identified Machine';
-        let primary = machines.find(m => 
+        // Include output.title as a valid candidate source for dynamic Gemini-identified machines
+        const candidateName = output.title || output.possible_machine_name || output.machineName || 'Identified Machine';
+        let primary = machines.find(m =>
           (output.libraryId && m.id.toLowerCase() === output.libraryId.toLowerCase()) ||
           m.name.toLowerCase() === candidateName.toLowerCase()
         );
@@ -420,6 +421,40 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
         }
       } else if (output.result_status === 'VISION_API_RATE_LIMITED') {
         setScanError('AI request quota temporarily reached. Please scan equipment QR code or browse library.');
+      } else if (Boolean(output.title || output.machineName)) {
+        // Gemini returned a valid title but result_status was not MACHINE_IDENTIFIED — still show success
+        const candidateName = output.title || output.machineName || 'Identified Machine';
+        const dynamicCategory = (output.equipment_category && output.equipment_category !== 'Unknown' ? output.equipment_category : 'Other') as MachineCategory;
+        const dynamicSetup = output.setupGuide && output.setupGuide.length > 0
+          ? output.setupGuide
+          : (output.setupSteps && output.setupSteps.length > 0 ? output.setupSteps : ['Adjust seating and select starter resistance.', 'Maintain proper form and posture.', 'Move with control and smooth breathing.']);
+        const dynamicMachine: Machine = {
+          id: `new-machine-${Date.now()}`,
+          name: candidateName,
+          alternativeNames: [candidateName],
+          category: dynamicCategory,
+          tagline: output.description || 'AI-discovered gym equipment with dynamic setup instructions',
+          difficulty: 'Intermediate',
+          primaryMuscles: output.primaryMuscles && output.primaryMuscles.length > 0 ? output.primaryMuscles : ['Target Muscles'],
+          secondaryMuscles: [],
+          equipmentType: 'Free Motion / Other',
+          qrCodeId: `AI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+          matchKeywords: [candidateName.toLowerCase()],
+          imageSvg: 'chest-press',
+          description: output.description || `Dynamically identified by Gemini Vision: ${candidateName}`,
+          setupInstructions: dynamicSetup,
+          movementGuidance: ['Perform repetitions under full range of motion with control.'],
+          commonMistakes: [{ mistake: 'Using momentum', fix: 'Slow down and control the movement.' }],
+          safetyReminders: ['Inspect machine and ensure pins/latches are secure.'],
+          tutorialSteps: dynamicSetup.map((step, idx) => ({ stepNumber: idx + 1, title: `Step ${idx + 1}`, description: step })),
+          verificationStatus: 'Community Sample'
+        };
+        playSuccessFeedback();
+        setAiPossibleMatches([{ machine: dynamicMachine, matchingFeatures: ['Dynamically Identified Machine', 'AI Setup Guide Generated'], notes: 'Identified by Gemini Vision outside local catalog.' }]);
+        setSelectedAiMatch(dynamicMachine);
+        setDetectedMachine(dynamicMachine);
+        setDetectedScanType('photo');
+        setDetectedConfidence(output.confidence || 85);
       } else {
         setScanError(output.uncertainty_reason || 'Could not reliably identify this machine. Please center the full frame or scan its QR code.');
       }
