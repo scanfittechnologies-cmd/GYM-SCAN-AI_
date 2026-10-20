@@ -5,7 +5,7 @@ const LOADING_STEPS = [
   "📸 Uploading image securely...",
   "🔍 Analyzing machine structure & cables...",
   "⚖️ Checking weight stacks and pads...",
-  "📋 Verifying against allowed equipment list..."
+  "📋 Identifying gym machine & equipment..."
 ];
 
 export default function ScanningLoader({ isScanning }: { isScanning: boolean }) {

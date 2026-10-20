@@ -363,8 +363,10 @@ export async function analyzeGymMachineImage(
       });
     }
 
-    // Unrecognized: explicit not_identified, confidence below 45%, or no machineName resolved
-    const isUnrecognized = isExplicitlyNotIdentified || (isBelowThreshold && !isUncertain) || !primaryName || primaryName === 'Unknown';
+    // Unrecognized: explicit not_identified when no title/machine was resolved, or no machineName resolved
+    // If the machine has a valid title / primaryName or isNewMachine is true, it is ALWAYS recognized.
+    const hasRecognizedEquipment = Boolean(primaryName && primaryName !== 'Unknown' && primaryName.trim().length > 0);
+    const isUnrecognized = !hasRecognizedEquipment || (isExplicitlyNotIdentified && !isNewMachine && !hasRecognizedEquipment);
     const resultStatus: VisionResultStatus = isUnrecognized ? 'MACHINE_NOT_IDENTIFIED' : (isUncertain ? 'uncertain' : 'MACHINE_IDENTIFIED');
 
     const fallbackMessage = resJson.message || 
