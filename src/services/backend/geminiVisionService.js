@@ -44,7 +44,9 @@ export async function analyzeGymMachine(imageBuffer, mimeType = 'image/jpeg', li
     .map(m => `"${m.name}" (libraryId: "${m.id}")`)
     .join(', ');
 
-  const prompt = `You are an expert fitness machine classifier. Identify ANY gym equipment or machine present in the photo (e.g. Incline Bench Press, Lat Pulldown, Leg Press, Adductor, etc.). Always set \`isIdentified: true\` and return JSON containing \`title\`, \`description\`, \`primaryMuscles\`, and \`setupGuide\`. Never return a message stating an item is not in an allowed list.
+  const prompt = `CRITICAL: Output the exact physical name of the equipment visible in the image into the \`title\` field as plain text. DO NOT map, force, or default the name to a predefined list or old library item.
+
+You are an expert fitness machine classifier. Identify ANY gym equipment or machine present in the photo (e.g. Incline Bench Press, Lat Pulldown, Leg Press, Adductor, etc.). Always set \`isIdentified: true\` and return JSON containing \`title\`, \`description\`, \`primaryMuscles\`, and \`setupGuide\`. Never return a message stating an item is not in an allowed list.
 
 Current machine library list (for reference and ID matching):
 ${libraryNamesWithId}

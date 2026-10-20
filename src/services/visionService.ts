@@ -326,14 +326,13 @@ export async function analyzeGymMachineImage(
     if (!matchedMachine && !isNewMachineFromBackend && backendData.machineName && backendData.machineName !== 'Unknown') {
       matchedMachine = availableMachines.find(
         m => m.name.toLowerCase().includes(backendData.machineName!.toLowerCase()) ||
-             backendData.machineName!.toLowerCase().includes(m.name.toLowerCase()) ||
-             m.category.toLowerCase() === (backendData.category || '').toLowerCase()
+             backendData.machineName!.toLowerCase().includes(m.name.toLowerCase())
       );
     }
 
     const titleCandidate = resJson.title || (backendData as any).title || backendData.machineName || null;
-    const primaryName = matchedMachine ? matchedMachine.name : (titleCandidate && titleCandidate !== 'Unknown' ? titleCandidate : null);
-    const categoryName = matchedMachine ? matchedMachine.category : ((backendData.category as MachineCategory) || (resJson.category as MachineCategory) || 'Other');
+    const primaryName = (titleCandidate && titleCandidate !== 'Unknown') ? titleCandidate : (matchedMachine ? matchedMachine.name : null);
+    const categoryName = ((backendData.category as MachineCategory) || (resJson.category as MachineCategory) || matchedMachine?.category || 'Other');
     const isNewMachine = Boolean(isNewMachineFromBackend || (!matchedMachine && primaryName && primaryName !== 'Unknown'));
     const matchedLibraryId = isNewMachine ? null : (matchedMachine?.id || resolvedLibraryId);
 
