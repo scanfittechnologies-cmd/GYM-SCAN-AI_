@@ -351,21 +351,38 @@ export async function analyzeGymMachineImage(
         ? rawBackendTitleCandidate.trim()
         : null;
 
-    // Detect bench press variants (incline, decline, flat, close-grip) to preserve specific modifiers
-    const isBenchVariant = (text: string) => {
+    // Detect if candidate title is a bench or press image (containing "bench", "press", or "barbell")
+    const isBenchOrPressImage = (text: string) => {
       const lower = text.toLowerCase();
-      return (lower.includes('bench press') || lower.includes('barbell press') || lower.includes('chest press')) &&
-             (lower.includes('incline') || lower.includes('decline') || lower.includes('flat') || lower.includes('close-grip') || lower.includes('close grip'));
+      return lower.includes('bench') || lower.includes('press') || lower.includes('barbell');
     };
 
-    // If titleCandidate is a specific bench press variant, preserve it instead of flattening to a generic rack or machine
-    const hasSpecificBenchVariant = titleCandidate ? isBenchVariant(titleCandidate) : false;
-    if (hasSpecificBenchVariant) {
-      matchedMachine = undefined; // Force preservation of the specific variant as a dynamic machine
+    // Prioritize Dynamic Machine Titles Over Generic Catalog Fallbacks:
+    // When Gemini identifies a bench or press image, do NOT auto-match it to a generic static item like "barbell-rack", "dumbbell-rack", or "barbell".
+    // Explicitly bypass static library matching if the candidate title contains "bench", "press", or "barbell"
+    // and the matched catalog item is a generic rack/barbell or not a specific bench press machine.
+    if (titleCandidate && isBenchOrPressImage(titleCandidate)) {
+      const matchedId = (matchedMachine?.id || '').toLowerCase();
+      const matchedName = (matchedMachine?.name || '').toLowerCase();
+      const isGenericItem =
+        !matchedMachine ||
+        matchedId.includes('rack') ||
+        matchedName.includes('rack') ||
+        matchedId.includes('dumbbell') ||
+        matchedId === 'barbell' ||
+        matchedId === 'olympic-barbell-bench' ||
+        !matchedName.includes('press');
+
+      if (isGenericItem) {
+        matchedMachine = undefined; // Force service to use the dynamic title extracted from Gemini
+      }
     }
 
     const primaryName = titleCandidate || (matchedMachine ? matchedMachine.name : null);
-    const categoryName = ((backendData.category as MachineCategory) || (resJson.category as MachineCategory) || matchedMachine?.category || 'Chest');
+    const isChestBench = primaryName ? isBenchOrPressImage(primaryName) : false;
+    const categoryName: MachineCategory = isChestBench
+      ? 'Chest'
+      : (((backendData.category as MachineCategory) || (resJson.category as MachineCategory) || matchedMachine?.category || 'Chest') as MachineCategory);
 
     // If a valid text string is found or if Gemini successfully returned a response object,
     // force isUnrecognized to false and resultStatus to 'MACHINE_IDENTIFIED'.
@@ -430,26 +447,26 @@ export async function analyzeGymMachineImage(
       const lower = name.toLowerCase();
       if (lower.includes('incline') && (lower.includes('press') || lower.includes('bench'))) {
         return {
-          primary: ['Upper Chest (Clavicular Head)', 'Anterior Deltoids'],
-          secondary: ['Triceps Brachii', 'Core Stabilizers']
+          primary: ['Upper Chest (Clavicular Head)', 'Pectoralis Major', 'Triceps Brachii'],
+          secondary: ['Anterior Deltoids', 'Core Stabilizers']
         };
       }
       if (lower.includes('decline') && (lower.includes('press') || lower.includes('bench'))) {
         return {
-          primary: ['Lower Chest (Sternal Head)', 'Pectoralis Major'],
-          secondary: ['Triceps Brachii', 'Anterior Deltoids']
+          primary: ['Pectoralis Major', 'Lower Chest (Sternal Head)', 'Triceps Brachii'],
+          secondary: ['Anterior Deltoids', 'Core Stabilizers']
         };
       }
       if ((lower.includes('close-grip') || lower.includes('close grip')) && (lower.includes('press') || lower.includes('bench'))) {
         return {
-          primary: ['Triceps Brachii', 'Inner Pectoralis'],
+          primary: ['Triceps Brachii', 'Pectoralis Major', 'Inner Chest'],
           secondary: ['Anterior Deltoids', 'Core Stabilizers']
         };
       }
-      if (lower.includes('flat') || lower.includes('bench press') || lower.includes('barbell press')) {
+      if (lower.includes('flat') || lower.includes('bench') || lower.includes('press') || lower.includes('barbell')) {
         return {
-          primary: ['Pectoralis Major (Mid & Lower Chest)'],
-          secondary: ['Anterior Deltoids', 'Triceps Brachii', 'Core Stabilizers']
+          primary: ['Pectoralis Major (Mid & Lower Chest)', 'Triceps Brachii'],
+          secondary: ['Anterior Deltoids', 'Core Stabilizers']
         };
       }
       return null;
