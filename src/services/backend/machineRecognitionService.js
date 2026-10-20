@@ -116,7 +116,8 @@ export async function recognizeMachine(imageBase64DataUrl) {
       const geminiResult = await analyzeGymMachine(imageBase64DataUrl);
       const processingTimeMs = Date.now() - startTime;
 
-      if (geminiResult && geminiResult.status === 'identified' && (geminiResult.title || geminiResult.machineName || geminiResult.match)) {
+      const isIdentified = (geminiResult.isIdentified === true || geminiResult.status === 'identified') && Boolean(geminiResult.title || geminiResult.machineName || geminiResult.match);
+      if (geminiResult && isIdentified) {
         const recognizedName = geminiResult.title || geminiResult.machineName || geminiResult.match;
         const isNewMachine = Boolean(geminiResult.isNewMachine);
         const matchedLibraryId = isNewMachine ? null : (geminiResult.matchedLibraryId || geminiResult.libraryId || null);

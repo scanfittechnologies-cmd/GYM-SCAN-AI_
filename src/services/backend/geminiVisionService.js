@@ -44,46 +44,50 @@ export async function analyzeGymMachine(imageBuffer, mimeType = 'image/jpeg', li
     .map(m => `"${m.name}" (libraryId: "${m.id}")`)
     .join(', ');
 
-  const prompt = `You are an expert gym equipment recognition AI.
-Analyze this photo and identify ANY gym equipment, machine, or free-weight shown.
+  const prompt = `You are an expert fitness machine classifier. Identify ANY gym equipment or machine present in the photo (e.g. Incline Bench Press, Lat Pulldown, Leg Press, Adductor, etc.). Always set \`isIdentified: true\` and return JSON containing \`title\`, \`description\`, \`primaryMuscles\`, and \`setupGuide\`. Never return a message stating an item is not in an allowed list.
 
 Current machine library list (for reference and ID matching):
 ${libraryNamesWithId}
 
 CRITICAL RECOGNITION RULES & GUIDELINES:
-1. SCREEN / PHOTO PREVIEW RELAXATION:
-   - Do NOT reject an image or mark it as "not_identified" simply because it appears on a laptop screen, computer monitor, mobile device, TV screen, or photo preview.
+1. UNIVERSAL GYM EQUIPMENT RECOGNITION:
+   - Identify ANY gym machine, equipment, apparatus, bench, rack, cable station, or free-weight shown.
+   - Never check or enforce any "allowed list", "permitted list", or reject valid gym equipment because it is not included in a list.
+   - Never return a message stating an item is not in an allowed list or permitted list.
+2. SCREEN / PHOTO PREVIEW RELAXATION:
+   - Do NOT reject an image or mark it as "not_identified" / "isIdentified: false" simply because it appears on a laptop screen, computer monitor, mobile device, TV screen, or photo preview.
    - If gym equipment or a fitness machine is visible in the photo—even when photographed from a screen or digital display—ALWAYS identify the machine depicted.
-2. NO STRICT ALLOWED-LIST FILTER:
-   - Identify ANY gym machine or equipment (e.g., Hip Abductor/Adductor, Leg Press, Smith Machine, Cable Machine, Lat Pulldown, Chest Press, Preacher Bench, Dumbbells, Barbells, etc.).
-   - Never reject valid gym equipment because it is missing from the library list.
-3. MATCHING LOGIC:
-   - If the identified machine matches an entry in our provided library list:
-     * Set status to "identified"
+3. MATCHING LOGIC & JSON CONTRACT:
+   - Always set \`isIdentified: true\` whenever gym equipment or a machine is present.
+   - If the identified machine matches an entry in our reference library list:
+     * Set "status" to "identified"
+     * Set "isIdentified" to true
      * Set "libraryId" to its exact libraryId from the list
      * Set "matchedLibraryId" to its exact libraryId from the list
      * Set "isNewMachine" to false
-     * Set "title" to the recognized name
-   - If the identified machine is NEW or not in our library:
-     * Set status to "identified"
+     * Set "title" to the recognized name (e.g. "Incline Bench Press")
+   - If the identified machine is NEW or not in our reference library:
+     * Set "status" to "identified"
+     * Set "isIdentified" to true
      * Set "libraryId" to null
      * Set "matchedLibraryId" to null
      * Set "isNewMachine" to true
-     * Provide a generated "title", "description", "primaryMuscles", and "setupGuide" directly from your general knowledge.
+     * Provide a generated "title", "description", "primaryMuscles", and "setupGuide" directly from your general fitness equipment knowledge.
 4. ONLY REJECT TRUE NON-FITNESS CONTENT:
-   - Only set status to "not_identified" if the photo genuinely contains NO gym equipment, weights, or fitness apparatus whatsoever (e.g. food, animals, outdoor landscapes with no fitness equipment, cars, or regular household furniture).
+   - Only set "isIdentified" to false and "status" to "not_identified" if the photo genuinely contains NO gym equipment, weights, or fitness apparatus whatsoever (e.g. food, animals, outdoor landscapes with no fitness equipment, cars, or regular household furniture).
 
 Keep response strictly in valid JSON format ONLY:
 {
-  "status": "identified" or "not_identified",
-  "isNewMachine": true or false,
+  "isIdentified": true,
+  "status": "identified",
+  "isNewMachine": false,
   "libraryId": "matching-library-id or null",
   "matchedLibraryId": "matching-library-id or null",
-  "title": "Machine or Equipment Name",
+  "title": "Incline Bench Press",
   "description": "Concise 1-2 sentence description of what this machine is and does.",
   "category": "Chest" | "Back" | "Shoulders" | "Arms" | "Legs" | "Cable Equipment" | "Cardio" | "Core" | "Other",
-  "confidence": number between 0 and 100,
-  "primaryMuscles": ["Primary Muscle 1", "Primary Muscle 2"],
+  "confidence": 95,
+  "primaryMuscles": ["Pectorals", "Front Deltoids", "Triceps"],
   "setupGuide": [
     "Step 1: Brief seat, pin, or pad adjustment cue",
     "Step 2: Brief grip, posture, and positioning cue",
@@ -158,7 +162,7 @@ Keep response strictly in valid JSON format ONLY:
       }
 
       const resolvedTitle = parsed.title || parsed.machineName || parsed.match || null;
-      const isIdentified = parsed.status === 'identified' && Boolean(resolvedTitle);
+      const isIdentified = (parsed.isIdentified === true || parsed.status === 'identified') && Boolean(resolvedTitle);
       const isNewMachine = Boolean(parsed.isNewMachine || (!parsed.libraryId && !parsed.matchedLibraryId && isIdentified));
       const matchedLibraryId = isNewMachine ? null : (parsed.matchedLibraryId || parsed.libraryId || null);
       const setupGuide = Array.isArray(parsed.setupGuide) && parsed.setupGuide.length > 0
@@ -167,6 +171,7 @@ Keep response strictly in valid JSON format ONLY:
 
       return {
         status: isIdentified ? 'identified' : 'not_identified',
+        isIdentified,
         match: resolvedTitle,
         machineName: resolvedTitle,
         title: resolvedTitle,
@@ -195,6 +200,7 @@ Keep response strictly in valid JSON format ONLY:
   console.error('[Gemini Vision] All models failed:', lastError);
   return {
     status: 'not_identified',
+    isIdentified: false,
     match: null,
     machineName: null,
     title: null,

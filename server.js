@@ -159,8 +159,11 @@ app.post('/api/scan', upload.single('image'), async (req, res) => {
     const geminiResult = await analyzeGymMachine(req.file.buffer, req.file.mimetype);
 
     // Format the payload returned to the frontend
+    const isIdentified = geminiResult.isIdentified !== undefined ? geminiResult.isIdentified : geminiResult.status === 'identified';
     return res.json({
       source: 'Google Gemini Vision',
+      isIdentified,
+      status: geminiResult.status,
       match: geminiResult.title || geminiResult.machineName || geminiResult.match,
       machineName: geminiResult.title || geminiResult.machineName || geminiResult.match,
       title: geminiResult.title || geminiResult.machineName || geminiResult.match,
@@ -169,7 +172,6 @@ app.post('/api/scan', upload.single('image'), async (req, res) => {
       isNewMachine: Boolean(geminiResult.isNewMachine),
       libraryId: geminiResult.libraryId ?? null,
       matchedLibraryId: geminiResult.matchedLibraryId ?? null,
-      status: geminiResult.status,
       confidence: geminiResult.confidence,
       primaryMuscles: geminiResult.primaryMuscles || [],
       setupSteps: geminiResult.setupSteps || geminiResult.setupGuide || [],

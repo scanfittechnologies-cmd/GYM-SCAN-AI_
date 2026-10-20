@@ -494,10 +494,19 @@ export async function analyzeGymMachineImage(
 
 export interface ScanApiResponse {
   source: string;
+  isIdentified?: boolean;
   match: string | null;
+  machineName?: string | null;
+  title?: string | null;
+  description?: string;
+  category?: string;
   status: 'identified' | 'not_identified';
   confidence: number;
+  primaryMuscles?: string[];
+  setupGuide?: string[];
+  setupSteps?: string[];
   reasoning: string;
+  modelUsed?: string;
 }
 
 /**
