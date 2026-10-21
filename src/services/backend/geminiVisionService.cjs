@@ -35,14 +35,25 @@ Current machine library list (for reference and ID matching):
 ${libraryNamesWithId}
 
 CRITICAL RECOGNITION RULES & GUIDELINES:
-1. UNIVERSAL GYM EQUIPMENT RECOGNITION:
+1. DESCRIPTIVE FULL EQUIPMENT TITLES (MANDATORY):
+   - You are EXPLICITLY FORBIDDEN from returning short, generic single-word titles like "Barbell", "Bench", "Weights", or "Rack".
+   - ALWAYS return specific, descriptive compound equipment names that describe the full setup or machine type:
+     * Flat bench with barbell -> "Barbell Bench Press"
+     * Slanted/angled bench with barbell -> "Incline Barbell Press" or "Decline Barbell Press"
+     * Selectorized pin-loaded chest press -> "Chest Press Machine"
+     * Flat or adjustable bench with dumbbells -> "Dumbbell Bench Press"
+     * Standing bar apparatus / squat station -> "Squat Rack" or "Power Cage"
+     * Guided vertical barbell station -> "Smith Machine"
+   - Never output "Barbell", "Bench", "Weights", or "Rack" as standalone titles.
+
+2. UNIVERSAL GYM EQUIPMENT RECOGNITION:
    - Identify ANY gym machine, equipment, apparatus, bench, rack, cable station, or free-weight shown.
    - Never check or enforce any "allowed list", "permitted list", or reject valid gym equipment because it is not included in a list.
    - Never return a message stating an item is not in an allowed list or permitted list.
-2. SCREEN / PHOTO PREVIEW RELAXATION:
+3. SCREEN / PHOTO PREVIEW RELAXATION:
    - Do NOT reject an image or mark it as "not_identified" / "isIdentified: false" simply because it appears on a laptop screen, computer monitor, mobile device, TV screen, or photo preview.
    - If gym equipment or a fitness machine is visible in the photo—even when photographed from a screen or digital display—ALWAYS identify the machine depicted.
-3. MATCHING LOGIC & JSON CONTRACT:
+4. MATCHING LOGIC & JSON CONTRACT:
    - Always set \`isIdentified: true\` whenever gym equipment or a machine is present.
    - If the identified machine matches an entry in our reference library list:
      * Set "status" to "identified"

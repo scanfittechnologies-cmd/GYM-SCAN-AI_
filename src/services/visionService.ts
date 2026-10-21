@@ -378,7 +378,28 @@ export async function analyzeGymMachineImage(
       }
     }
 
-    const primaryName = titleCandidate || (matchedMachine ? matchedMachine.name : null);
+    // Cleanse & enforce descriptive compound titles: forbid short generic single words like "Barbell", "Bench", "Weights", or "Rack"
+    const normalizeEquipmentTitle = (name: string | null): string | null => {
+      if (!name) return null;
+      const trimmed = name.trim();
+      const lower = trimmed.toLowerCase();
+      if (lower === 'barbell' || lower === 'bench' || lower === 'barbell bench') {
+        return 'Barbell Bench Press';
+      }
+      if (lower === 'weights' || lower === 'weight') {
+        return 'Free Weights Station';
+      }
+      if (lower === 'rack' || lower === 'barbell rack') {
+        return 'Squat Rack';
+      }
+      if (lower === 'chest press') {
+        return 'Chest Press Machine';
+      }
+      return trimmed;
+    };
+
+    const cleanTitleCandidate = normalizeEquipmentTitle(titleCandidate);
+    const primaryName = cleanTitleCandidate || (matchedMachine ? matchedMachine.name : null);
     const isChestBench = primaryName ? isBenchOrPressImage(primaryName) : false;
     const categoryName: MachineCategory = isChestBench
       ? 'Chest'
