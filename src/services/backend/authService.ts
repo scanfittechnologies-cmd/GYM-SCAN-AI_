@@ -141,6 +141,7 @@ export const authService = {
       role: user.role,
       displayName: user.displayName,
       avatarSeed: user.avatarSeed,
+      experienceLevel: user.experienceLevel,
       createdAt: user.createdAt,
       lastSignInAt: user.lastSignInAt,
       emailVerified: true
@@ -200,6 +201,7 @@ export const authService = {
       role: newUser.role,
       displayName: newUser.displayName,
       avatarSeed: newUser.avatarSeed,
+      experienceLevel: newUser.experienceLevel,
       createdAt: newUser.createdAt,
       lastSignInAt: newUser.lastSignInAt,
       emailVerified: true

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useGym } from '../../context/GymContext';
 import { 
   X, 
   Lock, 
   Mail, 
   User, 
-  ShieldCheck, 
-  Sparkles, 
   AlertCircle, 
   CheckCircle2, 
   ArrowRight,
@@ -14,6 +13,8 @@ import {
   EyeOff,
   Dumbbell
 } from 'lucide-react';
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const AuthModal: React.FC = () => {
   const { 
@@ -28,20 +29,31 @@ export const AuthModal: React.FC = () => {
     clearAuthError 
   } = useAuth();
 
+  const { updateUserProfile, addToast } = useGym();
+
   const [mode, setMode] = useState<'signin' | 'signup' | 'reset'>(authModalMode);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [experienceLevel, setExperienceLevel] = useState<'Beginner' | 'Intermediate' | 'Advanced'>('Beginner');
-  const [isUnder18, setIsUnder18] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(null);
+
+  // Field-level inline validation errors
+  const [validationErrors, setValidationErrors] = useState<{
+    email?: string;
+    password?: string;
+    displayName?: string;
+    terms?: string;
+  }>({});
 
   // Sync mode with context
   React.useEffect(() => {
     setMode(authModalMode);
     clearAuthError();
     setResetSuccessMessage(null);
+    setValidationErrors({});
   }, [authModalMode, clearAuthError]);
 
   if (!isAuthModalOpen) return null;
@@ -65,34 +77,90 @@ export const AuthModal: React.FC = () => {
 
   const strength = getPasswordStrength();
 
+  const validateInputs = (): boolean => {
+    const errors: {
+      email?: string;
+      password?: string;
+      displayName?: string;
+      terms?: string;
+    } = {};
+
+    const cleanEmail = email.trim();
+    if (!cleanEmail) {
+      errors.email = 'Email address is required.';
+    } else if (!EMAIL_REGEX.test(cleanEmail)) {
+      errors.email = 'Please enter a valid email address (e.g. name@example.com).';
+    }
+
+    if (mode !== 'reset') {
+      if (!password) {
+        errors.password = 'Password is required.';
+      } else if (password.length < 6) {
+        errors.password = 'Password must be at least 6 characters.';
+      }
+    }
+
+    if (mode === 'signup') {
+      const cleanName = displayName.trim();
+      if (!cleanName) {
+        errors.displayName = 'Display name is required.';
+      } else if (cleanName.length < 2) {
+        errors.displayName = 'Display name must be at least 2 characters.';
+      }
+
+      if (!agreedToTerms) {
+        errors.terms = 'You must agree to the Terms & safety guidelines to create an account.';
+      }
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setResetSuccessMessage(null);
+    clearAuthError();
+
+    if (!validateInputs()) {
+      return;
+    }
 
     try {
       if (mode === 'signin') {
-        await signIn(email, password);
+        const loggedInUser = await signIn(email.trim(), password);
+        // Sync real user state to userProfile in GymContext
+        updateUserProfile({
+          displayName: loggedInUser.displayName,
+          email: loggedInUser.email,
+          role: loggedInUser.role,
+          ...(loggedInUser.experienceLevel ? { experienceLevel: loggedInUser.experienceLevel } : {})
+        });
+        addToast({
+          type: 'success',
+          title: 'Welcome Back!',
+          message: `Signed in as ${loggedInUser.displayName}`
+        });
       } else if (mode === 'signup') {
-        await signUp(email, password, displayName, experienceLevel, isUnder18);
+        const newUser = await signUp(email.trim(), password, displayName.trim(), experienceLevel, false);
+        // Sync real registered user state
+        updateUserProfile({
+          displayName: newUser.displayName,
+          email: newUser.email,
+          role: newUser.role,
+          experienceLevel: experienceLevel
+        });
+        addToast({
+          type: 'success',
+          title: 'Account Created!',
+          message: `Welcome to ScanFit, ${newUser.displayName}!`
+        });
       } else if (mode === 'reset') {
-        const res = await requestPasswordReset(email);
+        const res = await requestPasswordReset(email.trim());
         setResetSuccessMessage(res.message);
       }
     } catch {
-      // Error handled in AuthContext
-    }
-  };
-
-  // Quick Demo Account autofill
-  const handleQuickLogin = (demoType: 'admin' | 'athlete') => {
-    if (demoType === 'admin') {
-      setEmail('admin@gymscan.ai');
-      setPassword('admin123');
-      signIn('admin@gymscan.ai', 'admin123');
-    } else {
-      setEmail('athlete@gymscan.ai');
-      setPassword('athlete123');
-      signIn('athlete@gymscan.ai', 'athlete123');
+      // Error is caught and set into authError by AuthContext
     }
   };
 
@@ -193,7 +261,7 @@ export const AuthModal: React.FC = () => {
           }}>
             <button
               type="button"
-              onClick={() => { setMode('signin'); clearAuthError(); }}
+              onClick={() => { setMode('signin'); clearAuthError(); setValidationErrors({}); }}
               style={{
                 flex: 1,
                 padding: '0.5rem',
@@ -211,7 +279,7 @@ export const AuthModal: React.FC = () => {
             </button>
             <button
               type="button"
-              onClick={() => { setMode('signup'); clearAuthError(); }}
+              onClick={() => { setMode('signup'); clearAuthError(); setValidationErrors({}); }}
               style={{
                 flex: 1,
                 padding: '0.5rem',
@@ -230,7 +298,7 @@ export const AuthModal: React.FC = () => {
           </div>
         )}
 
-        {/* Error Alert */}
+        {/* Error Alert from Server/AuthContext */}
         {authError && (
           <div style={{
             background: 'rgba(255, 71, 87, 0.15)',
@@ -269,45 +337,73 @@ export const AuthModal: React.FC = () => {
         )}
 
         {/* Main Form */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+        <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
           {/* Display Name (Sign Up only) */}
           {mode === 'signup' && (
             <div>
               <label style={{ display: 'block', fontSize: '0.75rem', color: '#CBD5E1', marginBottom: '4px', fontWeight: 600 }}>
-                Display Name
+                Display Name <span style={{ color: '#FF4757' }}>*</span>
               </label>
               <div style={{ position: 'relative' }}>
-                <User size={16} color="#64748B" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+                <User size={16} color={validationErrors.displayName ? '#FF4757' : '#64748B'} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type="text"
-                  required
                   placeholder="e.g. Alex Rivera"
                   value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
+                  onChange={(e) => {
+                    setDisplayName(e.target.value);
+                    if (validationErrors.displayName) {
+                      setValidationErrors(prev => ({ ...prev, displayName: undefined }));
+                    }
+                  }}
                   className="input-modern"
-                  style={{ width: '100%', paddingLeft: '36px', fontSize: '0.85rem' }}
+                  style={{ 
+                    width: '100%', 
+                    paddingLeft: '36px', 
+                    fontSize: '0.85rem',
+                    borderColor: validationErrors.displayName ? '#FF4757' : undefined
+                  }}
                 />
               </div>
+              {validationErrors.displayName && (
+                <span style={{ fontSize: '0.72rem', color: '#FF6B81', marginTop: '3px', display: 'block' }}>
+                  {validationErrors.displayName}
+                </span>
+              )}
             </div>
           )}
 
           {/* Email Address */}
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', color: '#CBD5E1', marginBottom: '4px', fontWeight: 600 }}>
-              Email Address
+              Email Address <span style={{ color: '#FF4757' }}>*</span>
             </label>
             <div style={{ position: 'relative' }}>
-              <Mail size={16} color="#64748B" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+              <Mail size={16} color={validationErrors.email ? '#FF4757' : '#64748B'} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
               <input
                 type="email"
-                required
                 placeholder="athlete@gymscan.ai"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (validationErrors.email) {
+                    setValidationErrors(prev => ({ ...prev, email: undefined }));
+                  }
+                }}
                 className="input-modern"
-                style={{ width: '100%', paddingLeft: '36px', fontSize: '0.85rem' }}
+                style={{ 
+                  width: '100%', 
+                  paddingLeft: '36px', 
+                  fontSize: '0.85rem',
+                  borderColor: validationErrors.email ? '#FF4757' : undefined
+                }}
               />
             </div>
+            {validationErrors.email && (
+              <span style={{ fontSize: '0.72rem', color: '#FF6B81', marginTop: '3px', display: 'block' }}>
+                {validationErrors.email}
+              </span>
+            )}
           </div>
 
           {/* Password (Sign In & Sign Up) */}
@@ -315,12 +411,12 @@ export const AuthModal: React.FC = () => {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                 <label style={{ fontSize: '0.75rem', color: '#CBD5E1', fontWeight: 600 }}>
-                  Password
+                  Password <span style={{ color: '#FF4757' }}>*</span>
                 </label>
                 {mode === 'signin' && (
                   <button
                     type="button"
-                    onClick={() => { setMode('reset'); clearAuthError(); }}
+                    onClick={() => { setMode('reset'); clearAuthError(); setValidationErrors({}); }}
                     style={{ background: 'transparent', border: 'none', color: '#00F59B', fontSize: '0.72rem', cursor: 'pointer' }}
                   >
                     Forgot Password?
@@ -328,15 +424,25 @@ export const AuthModal: React.FC = () => {
                 )}
               </div>
               <div style={{ position: 'relative' }}>
-                <Lock size={16} color="#64748B" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
+                <Lock size={16} color={validationErrors.password ? '#FF4757' : '#64748B'} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)' }} />
                 <input
                   type={showPassword ? 'text' : 'password'}
-                  required
                   placeholder="••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (validationErrors.password) {
+                      setValidationErrors(prev => ({ ...prev, password: undefined }));
+                    }
+                  }}
                   className="input-modern"
-                  style={{ width: '100%', paddingLeft: '36px', paddingRight: '36px', fontSize: '0.85rem' }}
+                  style={{ 
+                    width: '100%', 
+                    paddingLeft: '36px', 
+                    paddingRight: '36px', 
+                    fontSize: '0.85rem',
+                    borderColor: validationErrors.password ? '#FF4757' : undefined
+                  }}
                 />
                 <button
                   type="button"
@@ -351,10 +457,16 @@ export const AuthModal: React.FC = () => {
                     color: '#64748B',
                     cursor: 'pointer'
                   }}
+                  title={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
+              {validationErrors.password && (
+                <span style={{ fontSize: '0.72rem', color: '#FF6B81', marginTop: '3px', display: 'block' }}>
+                  {validationErrors.password}
+                </span>
+              )}
 
               {/* Password Strength Indicator on Sign Up */}
               {mode === 'signup' && password && (
@@ -390,27 +502,39 @@ export const AuthModal: React.FC = () => {
             </div>
           )}
 
-          {/* Under 18 Age & Privacy Disclosure (Sign Up only) */}
+          {/* Terms & Guidelines Checkbox (Sign Up only) */}
           {mode === 'signup' && (
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.02)',
-              border: '1px solid rgba(255, 255, 255, 0.06)',
-              borderRadius: '10px',
-              padding: '0.65rem 0.8rem',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '8px'
-            }}>
-              <input
-                type="checkbox"
-                id="under18Check"
-                checked={isUnder18}
-                onChange={(e) => setIsUnder18(e.target.checked)}
-                style={{ marginTop: '3px', accentColor: '#00F59B' }}
-              />
-              <label htmlFor="under18Check" style={{ fontSize: '0.72rem', color: '#94A3B8', lineHeight: 1.35, cursor: 'pointer' }}>
-                I agree to the ScanFit Terms. If under 18, I confirm parental guidance for gym machine safety.
-              </label>
+            <div>
+              <div style={{
+                background: validationErrors.terms ? 'rgba(255, 71, 87, 0.08)' : 'rgba(255, 255, 255, 0.02)',
+                border: `1px solid ${validationErrors.terms ? 'rgba(255, 71, 87, 0.4)' : 'rgba(255, 255, 255, 0.06)'}`,
+                borderRadius: '10px',
+                padding: '0.65rem 0.8rem',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '8px'
+              }}>
+                <input
+                  type="checkbox"
+                  id="agreeTermsCheck"
+                  checked={agreedToTerms}
+                  onChange={(e) => {
+                    setAgreedToTerms(e.target.checked);
+                    if (validationErrors.terms) {
+                      setValidationErrors(prev => ({ ...prev, terms: undefined }));
+                    }
+                  }}
+                  style={{ marginTop: '3px', accentColor: '#00F59B', cursor: 'pointer' }}
+                />
+                <label htmlFor="agreeTermsCheck" style={{ fontSize: '0.72rem', color: '#94A3B8', lineHeight: 1.35, cursor: 'pointer' }}>
+                  I agree to the ScanFit Terms of Service & Gym Safety Guidelines.
+                </label>
+              </div>
+              {validationErrors.terms && (
+                <span style={{ fontSize: '0.72rem', color: '#FF6B81', marginTop: '3px', display: 'block' }}>
+                  {validationErrors.terms}
+                </span>
+              )}
             </div>
           )}
 
@@ -436,69 +560,15 @@ export const AuthModal: React.FC = () => {
         {mode === 'reset' && (
           <div style={{ textAlign: 'center', marginTop: '1rem' }}>
             <button
-              onClick={() => { setMode('signin'); clearAuthError(); }}
+              onClick={() => { setMode('signin'); clearAuthError(); setValidationErrors({}); }}
               style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '0.78rem', cursor: 'pointer' }}
             >
               ← Back to Sign In
             </button>
           </div>
         )}
-
-        {/* One-Click Quick Demo Accounts (Prompt Testing Sandbox) */}
-        <div style={{
-          marginTop: '1.25rem',
-          paddingTop: '1rem',
-          borderTop: '1px solid rgba(255, 255, 255, 0.08)'
-        }}>
-          <div style={{ fontSize: '0.7rem', color: '#64748B', textTransform: 'uppercase', fontWeight: 700, textAlign: 'center', marginBottom: '0.65rem', letterSpacing: '0.05em' }}>
-            ⚡ Instant Demo Login
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('athlete')}
-              style={{
-                background: 'rgba(0, 245, 155, 0.08)',
-                border: '1px solid rgba(0, 245, 155, 0.25)',
-                color: '#00F59B',
-                borderRadius: '10px',
-                padding: '0.5rem',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '5px'
-              }}
-            >
-              <User size={13} /> Demo Athlete
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleQuickLogin('admin')}
-              style={{
-                background: 'rgba(255, 184, 0, 0.08)',
-                border: '1px solid rgba(255, 184, 0, 0.25)',
-                color: '#FFB800',
-                borderRadius: '10px',
-                padding: '0.5rem',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '5px'
-              }}
-            >
-              <ShieldCheck size={13} /> Admin Coach
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
+

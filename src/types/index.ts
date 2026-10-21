@@ -184,6 +184,7 @@ export interface AuthUser {
   role: UserRole;
   displayName: string;
   avatarSeed: string;
+  experienceLevel?: 'Beginner' | 'Intermediate' | 'Advanced';
   createdAt: string;
   lastSignInAt?: string;
   emailVerified?: boolean;
