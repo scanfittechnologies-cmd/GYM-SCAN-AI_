@@ -19,7 +19,7 @@ import {
   ShieldAlert,
   QrCode
 } from 'lucide-react';
-import { MachineSvgIllustration } from '../machines/MachineSvgIllustrations';
+
 import ScanningLoader from './ScanningLoader';
 import { PhotoUploadTab } from './PhotoUploadTab';
 import { 
@@ -1503,7 +1503,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                 </span>
               ) : null}
               <span className={`badge ${visionOutput.confidence >= 80 ? 'badge-emerald' : 'badge-amber'}`} style={{ fontSize: '0.72rem' }}>
-                {visionOutput.isNewMachine ? 'Vision AI Identified' : (visionOutput.confidence >= 80 ? 'Confirmed Match' : 'Likely Match — You can confirm this machine')}
+                {visionOutput.isNewMachine ? 'Identified' : (visionOutput.confidence >= 80 ? 'Confirmed Match' : 'Likely Match — You can confirm this machine')}
               </span>
               <span className="badge badge-blue" style={{ fontSize: '0.72rem' }}>
                 Confidence: {visionOutput.confidence}%
@@ -1539,7 +1539,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                 borderRadius: '10px'
               }}>
                 <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#00D2FF', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '4px' }}>
-                  ⚡ AI Setup Guide:
+                  ⚡ Setup Guide:
                 </span>
                 <ol style={{ margin: 0, paddingLeft: '1.1rem', fontSize: '0.75rem', color: '#CBD5E1', lineHeight: 1.45 }}>
                   {(visionOutput.setupGuide || visionOutput.setupSteps || selectedMatch.setupInstructions || []).map((step, sIdx) => (
@@ -1625,9 +1625,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                     </div>
                   </div>
 
-                  <div style={{ width: '80px', height: '50px', background: '#07090E', borderRadius: '8px', padding: '4px', flexShrink: 0 }}>
-                    <MachineSvgIllustration type={match.machine.imageSvg} />
-                  </div>
+
                 </div>
               );
             })}

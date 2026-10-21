@@ -20,7 +20,7 @@ import {
   Dumbbell,
   Zap
 } from 'lucide-react';
-import { MachineSvgIllustration } from '../machines/MachineSvgIllustrations';
+
 import ScanningLoader from './ScanningLoader';
 import { compressImageIfNeeded } from './PhotoAIAnalyzer';
 import { analyzeGymMachineImage, StructuredVisionOutput } from '../../services/visionService';
@@ -645,17 +645,6 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
               </div>
             )}
 
-            {/* SVG Illustration thumbnail */}
-            <div style={{
-              width: '160px',
-              height: '90px',
-              background: '#0D111A',
-              borderRadius: '12px',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              padding: '6px'
-            }}>
-              <MachineSvgIllustration type={detectedMachine.imageSvg} />
-            </div>
 
             {/* Alternative candidates selection if from AI snapshot */}
             {aiPossibleMatches.length > 1 && (
