@@ -351,35 +351,88 @@ export async function analyzeGymMachineImage(
         ? rawBackendTitleCandidate.trim()
         : null;
 
-    // Detect if candidate title is a bench or press image (containing "bench", "press", or "barbell")
+    // 1. Detect incline and decline indicators from Gemini's response (title, features, reasoning, description, exercise)
+    const combinedGeminiText = [
+      rawBackendTitleCandidate,
+      resJson.title,
+      resJson.machineName,
+      resJson.match,
+      resJson.exercise,
+      resJson.reasoning,
+      resJson.description,
+      backendData.machineName,
+      backendData.exercise,
+      (backendData as any).reasoning,
+      (backendData as any).description,
+      ...(Array.isArray(backendData.visualFeatures) ? backendData.visualFeatures : []),
+      ...(Array.isArray(resJson.visualFeatures) ? resJson.visualFeatures : [])
+    ]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+
+    const hasInclineIndicator =
+      combinedGeminiText.includes('incline') ||
+      combinedGeminiText.includes('tilted back') ||
+      combinedGeminiText.includes('upright incline') ||
+      combinedGeminiText.includes('angled bench');
+
+    const hasDeclineIndicator =
+      combinedGeminiText.includes('decline') ||
+      combinedGeminiText.includes('decline bench') ||
+      combinedGeminiText.includes('downward angle');
+
+    // Detect if candidate title or text is a bench or press image (containing "bench", "press", or "barbell")
     const isBenchOrPressImage = (text: string) => {
       const lower = text.toLowerCase();
       return lower.includes('bench') || lower.includes('press') || lower.includes('barbell');
     };
 
     // Prioritize Dynamic Machine Titles Over Generic Catalog Fallbacks:
-    // When Gemini identifies a bench or press image, do NOT auto-match it to a generic static item like "barbell-rack", "dumbbell-rack", or "barbell".
-    // Explicitly bypass static library matching if the candidate title contains "bench", "press", or "barbell"
-    // and the matched catalog item is a generic rack/barbell or not a specific bench press machine.
-    if (titleCandidate && isBenchOrPressImage(titleCandidate)) {
+    // When Gemini identifies an incline/decline bench or barbell press image:
+    // 1. Explicitly PREVENT matching or falling back to "Chest Press Machine", generic racks, or static selectorized items.
+    // 2. Force the title strictly to "Incline Barbell Press" (or "Decline Barbell Press").
+    if (hasInclineIndicator || hasDeclineIndicator || (titleCandidate && isBenchOrPressImage(titleCandidate))) {
       const matchedId = (matchedMachine?.id || '').toLowerCase();
       const matchedName = (matchedMachine?.name || '').toLowerCase();
-      const isGenericItem =
+      
+      const shouldBypassCatalog =
         !matchedMachine ||
+        hasInclineIndicator ||
+        hasDeclineIndicator ||
         matchedId.includes('rack') ||
         matchedName.includes('rack') ||
         matchedId.includes('dumbbell') ||
         matchedId === 'barbell' ||
         matchedId === 'olympic-barbell-bench' ||
+        matchedId === 'seated-chest-press' ||
+        matchedName === 'chest press' ||
+        matchedName === 'chest press machine' ||
         !matchedName.includes('press');
 
-      if (isGenericItem) {
+      if (shouldBypassCatalog) {
         matchedMachine = undefined; // Force service to use the dynamic title extracted from Gemini
       }
     }
 
     // Cleanse & enforce descriptive compound titles: forbid short generic single words like "Barbell", "Bench", "Weights", or "Rack"
     const normalizeEquipmentTitle = (name: string | null): string | null => {
+      if (hasInclineIndicator) {
+        const lowerName = (name || '').toLowerCase();
+        if (lowerName.includes('dumbbell')) {
+          return 'Incline Dumbbell Press';
+        }
+        return 'Incline Barbell Press';
+      }
+
+      if (hasDeclineIndicator) {
+        const lowerName = (name || '').toLowerCase();
+        if (lowerName.includes('dumbbell')) {
+          return 'Decline Dumbbell Press';
+        }
+        return 'Decline Barbell Press';
+      }
+
       if (!name) return null;
       const trimmed = name.trim();
       const lower = trimmed.toLowerCase();
@@ -400,7 +453,7 @@ export async function analyzeGymMachineImage(
 
     const cleanTitleCandidate = normalizeEquipmentTitle(titleCandidate);
     const primaryName = cleanTitleCandidate || (matchedMachine ? matchedMachine.name : null);
-    const isChestBench = primaryName ? isBenchOrPressImage(primaryName) : false;
+    const isChestBench = primaryName ? (isBenchOrPressImage(primaryName) || hasInclineIndicator || hasDeclineIndicator) : (hasInclineIndicator || hasDeclineIndicator);
     const categoryName: MachineCategory = isChestBench
       ? 'Chest'
       : (((backendData.category as MachineCategory) || (resJson.category as MachineCategory) || matchedMachine?.category || 'Chest') as MachineCategory);
