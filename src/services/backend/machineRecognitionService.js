@@ -144,7 +144,7 @@ export async function recognizeMachine(imageBase64DataUrl) {
           setupSteps,
           setupGuide: setupSteps,
           visualFeatures: [
-            `Gemini Vision AI (${modelName})`,
+            'ScanFit Vision AI Verified',
             ...(isNewMachine ? ['New Machine (outside library)'] : []),
             ...(primaryMuscles.length > 0 ? [`Muscles: ${primaryMuscles.join(', ')}`] : []),
             geminiResult.reasoning || `Detected: ${recognizedName}`
@@ -177,7 +177,7 @@ export async function recognizeMachine(imageBase64DataUrl) {
             setupSteps,
             setupGuide: setupSteps,
             visualFeatures: [
-              `Gemini Vision AI (${modelName})`,
+              'ScanFit Vision AI Verified',
               ...(isNewMachine ? ['New Machine (outside library)'] : []),
               ...(primaryMuscles.length > 0 ? [`Muscles: ${primaryMuscles.join(', ')}`] : []),
               geminiResult.reasoning || `Detected: ${recognizedName}`
@@ -195,7 +195,7 @@ export async function recognizeMachine(imageBase64DataUrl) {
           machineName: null,
           category: 'Unknown',
           confidence: geminiResult.confidence || 0,
-          reason: geminiResult.reasoning || 'Gemini Vision could not determine or match this equipment.',
+          reason: geminiResult.reasoning || 'ScanFit Vision AI could not determine or match this equipment.',
           primaryMuscles: [],
           setupSteps: [],
           visualFeatures: [geminiResult.reasoning || 'No matches found'],

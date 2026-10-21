@@ -7,7 +7,7 @@ interface IntroSplashProps {
 
 export const IntroSplash: React.FC<IntroSplashProps> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
-  const [tickerMessage, setTickerMessage] = useState('⚡ Initializing Gemini Vision AI...');
+  const [tickerMessage, setTickerMessage] = useState('⚡ Initializing ScanFit Vision AI...');
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
