@@ -351,13 +351,31 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
           m.name.toLowerCase() === candidateName.toLowerCase()
         );
 
-        if (!primary && (output.isNewMachine || !output.libraryId)) {
-          const dynamicCategory = (output.equipment_category !== 'Unknown' ? output.equipment_category : 'Other') as MachineCategory;
+        if (!primary) {
+          const dynamicCategory = (output.equipment_category !== 'Unknown' ? output.equipment_category : (output.machineCategory !== 'Unknown' ? output.machineCategory : 'Other')) as MachineCategory;
           const dynamicSetup = output.setupGuide && output.setupGuide.length > 0
             ? output.setupGuide
-            : (output.setupSteps && output.setupSteps.length > 0 ? output.setupSteps : ['Adjust seating and select starter resistance.', 'Maintain proper form and posture.', 'Move with control and smooth breathing.']);
+            : (output.setupSteps && output.setupSteps.length > 0 ? output.setupSteps : ['Adjust seating, pins, or console settings to starter position.', 'Maintain proper form and posture.', 'Move with control and smooth breathing.']);
 
-          primary = {
+          const lowerCand = candidateName.toLowerCase();
+          const lowerCat = String(dynamicCategory).toLowerCase();
+          const dynamicSvg = lowerCand.includes('treadmill') ? 'treadmill'
+            : (lowerCand.includes('bike') || lowerCand.includes('cycle')) ? 'stationary-bike'
+            : (lowerCand.includes('elliptical') || lowerCat.includes('cardio')) ? 'treadmill'
+            : lowerCand.includes('cable') ? 'cable-station'
+            : lowerCand.includes('lat') ? 'lat-pulldown'
+            : lowerCand.includes('row') ? 'seated-row'
+            : lowerCand.includes('smith') ? 'smith-machine'
+            : (lowerCand.includes('leg press') || lowerCand.includes('hack')) ? 'leg-press'
+            : lowerCand.includes('leg extension') ? 'leg-extension'
+            : lowerCand.includes('leg curl') ? 'leg-curl'
+            : lowerCand.includes('curl') ? 'preacher-curl'
+            : lowerCand.includes('shoulder') ? 'shoulder-press'
+            : (lowerCand.includes('pec deck') || lowerCand.includes('fly')) ? 'pec-deck'
+            : lowerCand.includes('incline') ? 'incline-press'
+            : 'chest-press';
+
+          primary = output.dynamicMachine || {
             id: `new-machine-${Date.now()}`,
             name: output.title || candidateName,
             alternativeNames: [candidateName],
@@ -369,12 +387,12 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
             equipmentType: 'Free Motion / Other',
             qrCodeId: `AI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
             matchKeywords: [candidateName.toLowerCase()],
-            imageSvg: 'chest-press',
+            imageSvg: dynamicSvg,
             description: output.description || `Dynamic equipment identified by Gemini Vision: ${candidateName}`,
             setupInstructions: dynamicSetup,
             movementGuidance: ['Perform repetition under control throughout full range of motion.'],
-            commonMistakes: [{ mistake: 'Swinging weight with momentum', fix: 'Slow down and control the movement cadence.' }],
-            safetyReminders: ['Inspect machine and ensure pins/latches are secure.'],
+            commonMistakes: [{ mistake: 'Swinging weight or rush cadence', fix: 'Slow down and control the movement cadence.' }],
+            safetyReminders: ['Inspect machine and ensure pins/latches/belts are secure.'],
             tutorialSteps: dynamicSetup.map((step, idx) => ({
               stepNumber: idx + 1,
               title: `Step ${idx + 1}`,

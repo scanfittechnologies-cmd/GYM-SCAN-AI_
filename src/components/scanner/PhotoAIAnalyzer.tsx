@@ -581,12 +581,30 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             m.name.toLowerCase() === candidateName.toLowerCase()
           );
 
-          // Dynamic Machine generation for new machines outside library
-          if (!primary && (output.dynamicMachine || output.isNewMachine || !output.libraryId)) {
-            const dynamicCategory = (output.equipment_category !== 'Unknown' ? output.equipment_category : 'Other') as MachineCategory;
+          // Dynamic Machine generation for ANY equipment recognized by Gemini outside library
+          if (!primary) {
+            const dynamicCategory = (output.equipment_category !== 'Unknown' ? output.equipment_category : (output.machineCategory !== 'Unknown' ? output.machineCategory : 'Other')) as MachineCategory;
             const dynamicSetup = output.setupGuide && output.setupGuide.length > 0 
               ? output.setupGuide 
-              : (output.setupSteps && output.setupSteps.length > 0 ? output.setupSteps : ['Set appropriate resistance or pin weight.', 'Position yourself comfortably with proper posture.', 'Perform the movement in a controlled cadence.']);
+              : (output.setupSteps && output.setupSteps.length > 0 ? output.setupSteps : ['Adjust seating, pins, or console settings to appropriate starter levels.', 'Ensure proper posture and align joints with the pivot or motion path.', 'Execute the exercise or workout smoothly with controlled breathing.']);
+
+            const lowerCand = candidateName.toLowerCase();
+            const lowerCat = String(dynamicCategory).toLowerCase();
+            const dynamicSvg = lowerCand.includes('treadmill') ? 'treadmill'
+              : (lowerCand.includes('bike') || lowerCand.includes('cycle')) ? 'stationary-bike'
+              : (lowerCand.includes('elliptical') || lowerCat.includes('cardio')) ? 'treadmill'
+              : lowerCand.includes('cable') ? 'cable-station'
+              : lowerCand.includes('lat') ? 'lat-pulldown'
+              : lowerCand.includes('row') ? 'seated-row'
+              : lowerCand.includes('smith') ? 'smith-machine'
+              : (lowerCand.includes('leg press') || lowerCand.includes('hack')) ? 'leg-press'
+              : lowerCand.includes('leg extension') ? 'leg-extension'
+              : lowerCand.includes('leg curl') ? 'leg-curl'
+              : lowerCand.includes('curl') ? 'preacher-curl'
+              : lowerCand.includes('shoulder') ? 'shoulder-press'
+              : (lowerCand.includes('pec deck') || lowerCand.includes('fly')) ? 'pec-deck'
+              : lowerCand.includes('incline') ? 'incline-press'
+              : 'chest-press';
 
             primary = output.dynamicMachine || {
               id: `new-machine-${Date.now()}`,
@@ -600,7 +618,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
               equipmentType: 'Free Motion / Other',
               qrCodeId: `AI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
               matchKeywords: [candidateName.toLowerCase()],
-              imageSvg: 'chest-press',
+              imageSvg: dynamicSvg,
               description: output.description || `Dynamic equipment identified by Gemini Vision: ${candidateName}`,
               setupInstructions: dynamicSetup,
               movementGuidance: [
@@ -608,9 +626,9 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                 'Control both concentric and eccentric phases without swinging.'
               ],
               commonMistakes: [
-                { mistake: 'Using excessive momentum', fix: 'Lower weight and execute full range of motion under control.' }
+                { mistake: 'Using excessive momentum', fix: 'Lower resistance or speed and execute under controlled posture.' }
               ],
-              safetyReminders: ['Check collar/pins and keep movements within comfortable range.'],
+              safetyReminders: ['Inspect safety stops, belts, pins, or locking clips before beginning.'],
               tutorialSteps: dynamicSetup.map((step, idx) => ({
                 stepNumber: idx + 1,
                 title: `Step ${idx + 1}`,

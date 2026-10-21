@@ -555,8 +555,30 @@ export async function analyzeGymMachineImage(
       ? variantMuscleInfo.secondary
       : ['Core Stabilizers'];
 
+    // Helper to determine the best SVG illustration for dynamic machines
+    const getEquipmentSvg = (name: string, cat: string): string => {
+      const lower = name.toLowerCase();
+      const lowerCat = cat.toLowerCase();
+      if (lower.includes('treadmill')) return 'treadmill';
+      if (lower.includes('bike') || lower.includes('cycle') || lower.includes('spin')) return 'stationary-bike';
+      if (lower.includes('elliptical') || lower.includes('stair') || lowerCat.includes('cardio')) return 'treadmill';
+      if (lower.includes('cable') || lower.includes('pulley') || lower.includes('functional')) return 'cable-station';
+      if (lower.includes('lat') || lower.includes('pulldown')) return 'lat-pulldown';
+      if (lower.includes('row')) return 'seated-row';
+      if (lower.includes('smith')) return 'smith-machine';
+      if (lower.includes('leg press') || lower.includes('hack')) return 'leg-press';
+      if (lower.includes('leg extension')) return 'leg-extension';
+      if (lower.includes('leg curl') || lower.includes('hamstring')) return 'leg-curl';
+      if (lower.includes('curl') || lower.includes('bicep')) return 'preacher-curl';
+      if (lower.includes('shoulder') || lower.includes('overhead')) return 'shoulder-press';
+      if (lower.includes('pec deck') || lower.includes('fly')) return 'pec-deck';
+      if (lower.includes('incline')) return 'incline-press';
+      return 'chest-press';
+    };
+
     // 2. Universal Dynamic Fallback Generation:
-    // If not found in the static EXERCISE_LIBRARY / availableMachines, dynamically construct a valid Machine object
+    // Any object recognized as gym or fitness equipment by Gemini (e.g. treadmill, bike, cable machine, bench, rack)
+    // is accepted universally and generates a valid complete Machine object with custom setup guidance.
     let dynamicFallbackMachine: Machine | undefined = undefined;
     if (!matchedMachine && hasRecognizedEquipment) {
       const dynamicId = `dynamic-machine-${Date.now()}`;
@@ -564,7 +586,7 @@ export async function analyzeGymMachineImage(
         id: dynamicId,
         name: resolvedName,
         alternativeNames: [resolvedName],
-        category: (categoryName as MachineCategory) || 'Chest',
+        category: (categoryName as MachineCategory) || 'Other',
         tagline: description,
         difficulty: 'Intermediate',
         primaryMuscles: primaryMuscles.length > 0 ? primaryMuscles : ['Target Muscle Group'],
@@ -572,7 +594,7 @@ export async function analyzeGymMachineImage(
         equipmentType: 'Free Motion / Other',
         qrCodeId: `AI-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
         matchKeywords: [resolvedName.toLowerCase()],
-        imageSvg: 'chest-press',
+        imageSvg: getEquipmentSvg(resolvedName, categoryName),
         description: description,
         setupInstructions: setupSteps,
         movementGuidance: [
