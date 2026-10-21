@@ -90,7 +90,7 @@ export default function ScanningLoader({ isScanning }: ScanningLoaderProps) {
             letterSpacing: '-0.02em'
           }}
         >
-          AI Vision Scanning
+          Vision Scanning
         </h3>
 
         <div

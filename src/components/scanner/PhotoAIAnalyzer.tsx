@@ -857,7 +857,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                 }}
               >
                 <Camera size={18} />
-                <span>📸 Snap Photo for AI Scan</span>
+                <span>📸 Snap Photo to Scan</span>
                 <Sparkles size={15} />
               </button>
             )}

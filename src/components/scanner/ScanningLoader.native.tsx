@@ -30,7 +30,7 @@ export default function ScanningLoader({ isScanning }: { isScanning: boolean }) 
     <View style={styles.overlay}>
       <View style={styles.card}>
         <ActivityIndicator size="large" color="#0066CC" />
-        <Text style={styles.title}>AI Vision Scanning</Text>
+        <Text style={styles.title}>Vision Scanning</Text>
         <Text style={styles.stepText}>{LOADING_STEPS[currentStepIndex]}</Text>
       </View>
     </View>

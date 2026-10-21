@@ -38,7 +38,7 @@ const TABS: {
   {
     id: 'ai_camera',
     label: 'Snap Machine Photo',
-    shortLabel: 'AI Snap',
+    shortLabel: 'Snap',
     sublabel: 'Vision Scanner Active',
     icon: <Sparkles size={18} />,
     accent: '#00D2FF',
