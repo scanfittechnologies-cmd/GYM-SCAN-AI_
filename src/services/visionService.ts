@@ -54,6 +54,17 @@ export interface StructuredVisionOutput {
   statusHttp?: number;
 }
 
+export function sanitizeMatchReasons(reasons: string[]): string[] {
+  if (!Array.isArray(reasons)) return [];
+  return reasons.map(reason => {
+    if (typeof reason !== 'string') return String(reason);
+    return reason
+      .replace(/Gemini Vision AI \([^)]+\)/gi, 'ScanFit Vision AI Verified')
+      .replace(/Gemini Vision AI/gi, 'ScanFit Vision AI')
+      .replace(/gemini-[a-z0-9.-]+/gi, 'ScanFit Vision AI');
+  });
+}
+
 export interface AnalysisDebugRecord {
   analysisId: string;
   timestamp: number;
@@ -617,6 +628,9 @@ export async function analyzeGymMachineImage(
       };
     }
 
+    const rawFeatures: string[] = backendData.visualFeatures || [];
+    const sanitizedVisualFeatures = sanitizeMatchReasons(rawFeatures);
+
     const structuredOutput: StructuredVisionOutput = {
       equipmentVisible: !isUnrecognized,
       equipment_detected: !isUnrecognized,
@@ -629,8 +643,8 @@ export async function analyzeGymMachineImage(
       confidence: confidenceScore || 85,
       possibleMatches: isUnrecognized ? [] : formattedMatches,
       alternative_matches: isUnrecognized ? [] : formattedMatches.map(m => m.name),
-      visualFeatures: backendData.visualFeatures || [],
-      visible_features: backendData.visualFeatures || [],
+      visualFeatures: sanitizedVisualFeatures,
+      visible_features: sanitizedVisualFeatures,
       primaryMuscles,
       setupSteps,
       setupGuide: setupSteps,
