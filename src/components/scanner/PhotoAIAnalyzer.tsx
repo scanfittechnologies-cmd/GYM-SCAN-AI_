@@ -125,7 +125,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   const stages = [
     '1. Validating image format & preparing request payload...',
     '2. Connecting to server backend /api/scan-machine route...',
-    '3. Authenticating request with Gemini Vision AI service...',
+    '3. Authenticating request with Vision Analysis service...',
     '4. Processing structured machine identification response...'
   ];
 
@@ -1162,7 +1162,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
           </div>
 
           <p style={{ fontSize: '0.88rem', color: '#CBD5E1', margin: '0 0 0.85rem 0', lineHeight: 1.5 }}>
-            The Gemini API free tier request limit (20 requests/day per model) was reached. Your image was uploaded successfully. Please wait for the cooldown window before resending.
+            The Vision Analysis daily request limit was reached. Your image was uploaded successfully. Please wait for the cooldown window before resending.
           </p>
 
           {cooldownSeconds > 0 ? (
@@ -1210,7 +1210,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
               overflowX: 'auto'
             }}>
               <div style={{ fontSize: '0.72rem', color: '#FFB800', fontWeight: 700, marginBottom: '4px' }}>
-                Gemini API Error Response Diagnostic Details:
+                Vision API Error Response Diagnostic Details:
               </div>
               <pre style={{
                 margin: 0,
@@ -1277,7 +1277,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
           </div>
 
           <p style={{ fontSize: '0.88rem', color: '#CBD5E1', margin: '0 0 0.85rem 0', lineHeight: 1.5 }}>
-            {visionOutput.errorMessage || 'Gemini Vision service is temporarily unavailable. Please try again later.'}
+            {visionOutput.errorMessage || 'Vision Analysis service is temporarily unavailable. Please try again later.'}
           </p>
 
           {visionOutput.geminiError && (
@@ -1290,7 +1290,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
               overflowX: 'auto'
             }}>
               <div style={{ fontSize: '0.72rem', color: '#FF6B81', fontWeight: 700, marginBottom: '4px' }}>
-                Gemini API Error Response Diagnostic Details:
+                Vision API Error Response Diagnostic Details:
               </div>
               <pre style={{
                 margin: 0,
@@ -1352,7 +1352,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
           </div>
 
           <p style={{ fontSize: '0.88rem', color: '#CBD5E1', margin: '0 0 0.85rem 0', lineHeight: 1.5 }}>
-            {visionOutput.errorMessage || 'Gemini request failed.'}
+            {visionOutput.errorMessage || 'Vision Analysis request failed.'}
           </p>
 
           {visionOutput.geminiError && (
@@ -1365,7 +1365,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
               overflowX: 'auto'
             }}>
               <div style={{ fontSize: '0.72rem', color: '#FF6B81', fontWeight: 700, marginBottom: '4px' }}>
-                Gemini Diagnostic Error Details:
+                Vision API Diagnostic Error Details:
               </div>
               <pre style={{
                 margin: 0,
