@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dumbbell,
   ArrowRight,
@@ -10,6 +10,7 @@ import {
   Zap,
   HelpCircle,
 } from 'lucide-react';
+import { useGym } from '../context/GymContext';
 
 interface PricingPageProps {
   onNavigate: (tab: string) => void;
@@ -36,11 +37,26 @@ interface PricingPlan {
   buttonMonthlyLabel: string;
   buttonYearlyLabel: string;
   buttonDisabled?: boolean;
+  stripeMonthlyUrl?: string;
+  stripeYearlyUrl?: string;
   features: PlanFeature[];
 }
 
 export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate }) => {
+  const { addToast } = useGym();
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment') === 'success') {
+      addToast({
+        type: 'success',
+        title: 'Payment Successful!',
+        message: 'Welcome to ScanFit Premium!',
+      });
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [addToast]);
 
   const plans: PricingPlan[] = [
     {
@@ -84,6 +100,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate }) => {
       badge: 'Most Popular',
       buttonMonthlyLabel: 'Upgrade to Plus ($1.99)',
       buttonYearlyLabel: 'Upgrade to Plus ($19.99/yr)',
+      stripeMonthlyUrl: 'https://buy.stripe.com/test_14AeV74FveCJ6VSeyb9R600',
       features: [
         { text: '75 AI Machine Scans per month', included: true },
         { text: 'Unlocks Machine Adjustments Guide (seat height, pin alignment, lever range)', included: true },
@@ -111,6 +128,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate }) => {
       badge: 'Best Value',
       buttonMonthlyLabel: 'Get Pro Access ($4.99)',
       buttonYearlyLabel: 'Get Pro Access ($39.99/yr)',
+      stripeMonthlyUrl: 'https://buy.stripe.com/test_5kQaERc7X66ddkggGj9R601',
       features: [
         { text: 'Unlimited AI Machine Scans (Fair Use ~300/mo)', included: true },
         { text: 'Unlocks Common Mistakes & Form Injury Prevention', included: true },
@@ -335,7 +353,13 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate }) => {
               <div>
                 <button
                   id={`pricing-${plan.id}-btn`}
-                  onClick={() => onNavigate(isFree ? 'scan' : 'scan')}
+                  onClick={() => {
+                    if (plan.stripeMonthlyUrl) {
+                      window.open(plan.stripeMonthlyUrl, '_blank', 'noopener,noreferrer');
+                    } else {
+                      onNavigate('scan');
+                    }
+                  }}
                   style={{
                     width: '100%',
                     fontSize: '0.9rem',

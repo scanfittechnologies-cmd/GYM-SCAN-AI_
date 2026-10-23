@@ -46,6 +46,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({
       price: billingCycle === 'monthly' ? '$1.99' : '$19.99',
       period: billingCycle === 'monthly' ? '/mo' : '/yr',
       description: 'For motivated lifters wanting complete adjustment and grip guides.',
+      stripeUrl: 'https://buy.stripe.com/test_14AeV74FveCJ6VSeyb9R600',
       features: [
         { text: '75 AI Machine Scans / month', unlocked: true },
         { text: 'Full Machine Adjustments Guide (seat, pin, lever)', unlocked: true },
@@ -66,6 +67,7 @@ export const PricingModal: React.FC<PricingModalProps> = ({
       price: billingCycle === 'monthly' ? '$4.99' : '$39.99',
       period: billingCycle === 'monthly' ? '/mo' : '/yr',
       description: 'Ultimate power lifter experience with AI routine creation and form safety.',
+      stripeUrl: 'https://buy.stripe.com/test_5kQaERc7X66ddkggGj9R601',
       features: [
         { text: 'Unlimited AI Machine Scans (Fair Use ~300/mo)', unlocked: true },
         { text: 'Common Mistakes & Form Injury Prevention', unlocked: true },
@@ -394,6 +396,8 @@ export const PricingModal: React.FC<PricingModalProps> = ({
                   onClick={() => {
                     if (onSelectPlan) {
                       onSelectPlan(tier.id);
+                    } else if (tier.stripeUrl) {
+                      window.open(tier.stripeUrl, '_blank', 'noopener,noreferrer');
                     } else if (onNavigateToPricing) {
                       onClose();
                       onNavigateToPricing();

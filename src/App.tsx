@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GymProvider, useGym } from './context/GymContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Machine } from './types';
@@ -160,6 +160,7 @@ const SoftGateScreen: React.FC<SoftGateScreenProps> = ({
 const KNOWN_TABS = ['pricing', 'home', 'scan', 'library', 'activity', 'achievements', 'profile'];
 
 const AppContent: React.FC = () => {
+  const { addToast } = useGym();
   const [showSplash, setShowSplash] = useState<boolean>(() => {
     return !sessionStorage.getItem('hasSeenIntro');
   });
@@ -167,6 +168,18 @@ const AppContent: React.FC = () => {
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
   const [machineSource, setMachineSource] = useState<'qr' | 'photo' | 'library' | 'activity'>('library');
   const [scanInitialMode, setScanInitialMode] = useState<'qr' | 'photo' | 'ai_camera' | 'upload'>('qr');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('payment') === 'success') {
+      addToast({
+        type: 'success',
+        title: 'Payment Successful!',
+        message: 'Welcome to ScanFit Premium!',
+      });
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [addToast]);
 
   const handleNavigate = (tab: string, scanModeOrMachineId?: string) => {
     setSelectedMachine(null);
