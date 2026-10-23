@@ -7,6 +7,8 @@ interface PricingModalProps {
   onSelectPlan?: (planId: string) => void;
   onNavigateToPricing?: () => void;
   highlightTier?: 'plus' | 'pro';
+  customTitle?: string;
+  customMessage?: string;
 }
 
 export const PricingModal: React.FC<PricingModalProps> = ({
@@ -15,6 +17,8 @@ export const PricingModal: React.FC<PricingModalProps> = ({
   onSelectPlan,
   onNavigateToPricing,
   highlightTier = 'plus',
+  customTitle,
+  customMessage,
 }) => {
   const [billingCycle, setBillingCycle] = React.useState<'monthly' | 'yearly'>('monthly');
 
@@ -168,11 +172,30 @@ export const PricingModal: React.FC<PricingModalProps> = ({
               marginBottom: '0.5rem',
             }}
           >
-            Supercharge Your Training
+            {customTitle || 'Supercharge Your Training'}
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '0.92rem', maxWidth: '520px', margin: '0 auto' }}>
-            Choose the tier that fits your workout consistency. Unlock unlimited scans, adjustment guides, and AI routines.
-          </p>
+          {customMessage ? (
+            <div
+              style={{
+                backgroundColor: 'rgba(255, 184, 0, 0.1)',
+                border: '1px solid rgba(255, 184, 0, 0.3)',
+                borderRadius: '12px',
+                padding: '0.65rem 1rem',
+                color: '#FFB800',
+                fontSize: '0.92rem',
+                fontWeight: 600,
+                maxWidth: '560px',
+                margin: '0.5rem auto 1rem',
+                lineHeight: 1.45,
+              }}
+            >
+              ⚠️ {customMessage}
+            </div>
+          ) : (
+            <p style={{ color: '#94a3b8', fontSize: '0.92rem', maxWidth: '520px', margin: '0 auto' }}>
+              Choose the tier that fits your workout consistency. Unlock unlimited scans, adjustment guides, and AI routines.
+            </p>
+          )}
 
           {/* Billing Toggle */}
           <div

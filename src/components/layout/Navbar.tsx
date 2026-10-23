@@ -9,7 +9,8 @@ import {
   History, 
   Trophy, 
   User, 
-  Home
+  Home,
+  Sparkles
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -32,6 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
     { id: 'home', label: 'Home', icon: Home },
     { id: 'scan', label: 'Scan Machine', icon: QrCode },
     { id: 'library', label: 'Machine Library', icon: BookOpen },
+    // { id: 'routines', label: 'AI Routines', icon: Sparkles, isPro: true },
     { id: 'activity', label: 'My Activity', icon: History },
     { id: 'achievements', label: 'XP and Achievements', icon: Trophy },
     { id: 'profile', label: 'Profile', icon: User },
@@ -157,6 +159,20 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
                     letterSpacing: '0.02em'
                   }}>
                     FREE
+                  </span>
+                )}
+                {item.isPro && (
+                  <span style={{
+                    fontSize: '0.55rem',
+                    background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(99, 102, 241, 0.25))',
+                    border: '1px solid rgba(168, 85, 247, 0.45)',
+                    borderRadius: '6px',
+                    color: '#C084FC',
+                    padding: '1px 5px',
+                    fontWeight: 800,
+                    letterSpacing: '0.04em'
+                  }}>
+                    PRO
                   </span>
                 )}
               </button>

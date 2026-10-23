@@ -49,10 +49,15 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate }) => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('payment') === 'success') {
+      const purchasedTier = params.get('tier');
+      const finalTier = (purchasedTier === 'pro') ? 'pro' : 'plus';
+      localStorage.setItem('user_tier', finalTier);
+      window.dispatchEvent(new Event('tier_change'));
+
       addToast({
         type: 'success',
         title: 'Payment Successful!',
-        message: 'Welcome to ScanFit Premium!',
+        message: `Welcome to ScanFit ${finalTier === 'pro' ? 'Pro' : 'Plus'}! Premium features unlocked.`,
       });
       window.history.replaceState({}, document.title, window.location.pathname);
     }
@@ -120,7 +125,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate }) => {
       yearlyPrice: '$39.99',
       monthlyBillingNote: '$4.99 billed monthly · Cancel anytime',
       yearlyBillingNote: '$39.99 billed annually (~$3.33/mo)',
-      description: 'The complete AI fitness companion with unlimited scans, injury prevention, and routines.',
+      description: 'The complete AI fitness companion with unlimited scans, advanced injury prevention, and form mastery.',
       color: '#A855F7',
       glowColor: 'rgba(168, 85, 247, 0.25)',
       bg: 'linear-gradient(180deg, rgba(168, 85, 247, 0.08) 0%, rgba(17, 24, 39, 0.8) 100%)',
@@ -132,7 +137,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate }) => {
       features: [
         { text: 'Unlimited AI Machine Scans (Fair Use ~300/mo)', included: true },
         { text: 'Unlocks Common Mistakes & Form Injury Prevention', included: true },
-        { text: 'Unlocks AI Workout Routine Generator (builds routines from scans)', included: true },
+        { text: 'Unlimited AI Machine Scans & Advanced Form/Injury Guidance', included: true },
         { text: 'Priority Processing Speed with Sub-Second Inference', included: true },
         { text: '2.0x XP Boost & Exclusive Premium Badges', included: true },
         { text: 'Full Machine Adjustments & Variation Guides', included: true },
@@ -179,7 +184,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate }) => {
           Elevate Your Gym Experience
         </h1>
         <p style={{ fontSize: '1.05rem', color: '#94A3B8', maxWidth: '580px', margin: '0 auto', lineHeight: 1.6 }}>
-          Explore equipment with our generous Free Starter tier, or upgrade to Plus & Pro for comprehensive adjustments, injury prevention, and AI-built workout routines.
+          Explore equipment with our generous Free Starter tier, or upgrade to Plus & Pro for comprehensive adjustments, injury prevention, and advanced form guidance.
         </p>
 
         {/* Monthly / Yearly Billing Toggle */}

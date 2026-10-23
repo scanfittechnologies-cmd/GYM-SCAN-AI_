@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useGym } from '../context/GymContext';
 import { useSoftGate } from '../hooks/useSoftGate';
+import { useUserTier } from '../hooks/useUserTier';
+import { PricingModal } from '../components/pricing/PricingModal';
 import { Machine } from '../types';
 import { QrCode, Sparkles, Upload } from 'lucide-react';
 import { CameraScanner } from '../components/scanner/CameraScanner';
@@ -72,6 +74,9 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
   };
 
   const [activeMode, setActiveMode] = useState<ScanMode>(() => resolveInitialMode(initialMode));
+  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
+
+  const { tier, scanCount, incrementScanCount, hasReachedScanLimit, remainingFreeScans } = useUserTier();
 
   useEffect(() => {
     if (initialMode) {
@@ -88,6 +93,15 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
     imageUrl?: string,
     confidence?: number
   ) => {
+    // If free user has reached 3 scans limit, block further scans and open PricingModal
+    if (hasReachedScanLimit) {
+      setShowLimitModal(true);
+      return;
+    }
+
+    // Increment scan count
+    incrementScanCount();
+
     // Soft-gate: saving scan results + earning XP requires auth
     requireAuth(
       () => recordMachineScan(machine.id, scanType, imageUrl, confidence),
@@ -227,6 +241,50 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
         })}
       </div>
 
+      {/* Free Plan Scan Limit Indicator Banner */}
+      {tier === 'free' && (
+        <div
+          style={{
+            background: hasReachedScanLimit ? 'rgba(255, 71, 87, 0.1)' : 'rgba(0, 245, 155, 0.08)',
+            border: `1px solid ${hasReachedScanLimit ? 'rgba(255, 71, 87, 0.3)' : 'rgba(0, 245, 155, 0.2)'}`,
+            borderRadius: '14px',
+            padding: '0.65rem 1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '0.75rem',
+            fontSize: '0.82rem',
+          }}
+        >
+          <div style={{ color: hasReachedScanLimit ? '#FF6B81' : '#CBD5E1', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <span style={{ fontWeight: 700 }}>
+              {hasReachedScanLimit ? '⚠️ Monthly Limit Reached:' : '⚡ Free Plan Allowance:'}
+            </span>
+            <span>
+              {hasReachedScanLimit
+                ? 'You have used all 3 free scans for this month.'
+                : `${scanCount} of 3 free monthly scans used (${remainingFreeScans} left)`}
+            </span>
+          </div>
+          <button
+            onClick={() => setShowLimitModal(true)}
+            style={{
+              background: 'linear-gradient(135deg, #00F59B, #00D2FF)',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '0.35rem 0.75rem',
+              color: '#05140F',
+              fontWeight: 800,
+              fontSize: '0.74rem',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Upgrade Plan
+          </button>
+        </div>
+      )}
+
       {/* 3. Active Scanner View — driven by activeMode */}
       {activeMode === 'qr' ? (
         <CameraScanner
@@ -245,6 +303,19 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
           onSelectManual={() => onNavigate('library')}
         />
       )}
+
+      {/* Limit Modal */}
+      <PricingModal
+        isOpen={showLimitModal}
+        onClose={() => setShowLimitModal(false)}
+        onNavigateToPricing={() => {
+          setShowLimitModal(false);
+          onNavigate('pricing');
+        }}
+        highlightTier="plus"
+        customTitle="Scan Limit Reached"
+        customMessage="You've reached your 3 free scans this month! Upgrade to Plus or Pro for more."
+      />
 
     </div>
   );

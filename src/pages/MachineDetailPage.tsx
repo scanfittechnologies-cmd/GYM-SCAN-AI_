@@ -19,7 +19,8 @@ import {
   Sliders, 
   CheckCircle2, 
   HelpCircle, 
-  ExternalLink 
+  ExternalLink,
+  Lock
 } from 'lucide-react';
 import { MachineImageGallery } from '../components/machines/MachineImageGallery';
 import { InteractiveTutorialModal } from '../components/machines/InteractiveTutorialModal';
@@ -28,6 +29,8 @@ import { ReportModal } from '../components/machines/ReportModal';
 import { MachineSvgIllustration } from '../components/machines/MachineSvgIllustrations';
 import { getExercisesForMachine } from '../data/machineExercises';
 import { useSoftGate } from '../hooks/useSoftGate';
+import { useUserTier } from '../hooks/useUserTier';
+import { PricingModal } from '../components/pricing/PricingModal';
 
 interface MachineDetailPageProps {
   machine: Machine | null;
@@ -53,10 +56,12 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
   } = useGym();
 
   const { requireAuth } = useSoftGate();
+  const { isFree } = useUserTier();
 
   const [activeTab, setActiveTab] = useState<'overview' | 'adjustments' | 'exercises' | 'mistakes'>('overview');
   const [showTutorialModal, setShowTutorialModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
+  const [showPricingModal, setShowPricingModal] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<MachineExercise | null>(null);
 
   // Scroll to top and reset tab whenever machine changes
@@ -333,7 +338,7 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
             { id: 'overview', label: 'Step-by-Step Usage' },
             { id: 'adjustments', label: 'Machine Adjustments' },
             { id: 'exercises', label: `Exercises (${exercises.length})` },
-            { id: 'mistakes', label: 'Common Mistakes' },
+            { id: 'mistakes', label: 'Common Mistakes & Injury Prevention', isLockedForFree: isFree },
           ].map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -351,10 +356,31 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                   fontWeight: 700,
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
-                  transition: 'all 0.15s'
+                  transition: 'all 0.15s',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
                 }}
               >
                 {tab.label}
+                {tab.isLockedForFree && (
+                  <span
+                    style={{
+                      background: 'rgba(255, 184, 0, 0.15)',
+                      border: '1px solid rgba(255, 184, 0, 0.35)',
+                      color: '#FFB800',
+                      fontSize: '0.66rem',
+                      padding: '1px 6px',
+                      borderRadius: '999px',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '3px',
+                      fontWeight: 800,
+                    }}
+                  >
+                    <Lock size={10} /> PRO
+                  </span>
+                )}
               </button>
             );
           })}
@@ -818,11 +844,94 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                   }}>Form Check</span>
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {isFree && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        zIndex: 10,
+                        backdropFilter: 'blur(7px)',
+                        WebkitBackdropFilter: 'blur(7px)',
+                        background: 'rgba(10, 14, 23, 0.78)',
+                        borderRadius: '16px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        padding: '2rem 1.5rem',
+                        gap: '0.85rem',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '54px',
+                          height: '54px',
+                          borderRadius: '50%',
+                          background: 'linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(255, 71, 87, 0.2))',
+                          border: '1px solid rgba(255, 184, 0, 0.4)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#FFB800',
+                          boxShadow: '0 0 20px rgba(255, 184, 0, 0.25)',
+                        }}
+                      >
+                        <Lock size={26} />
+                      </div>
+                      <h4
+                        style={{
+                          fontSize: '1.2rem',
+                          fontWeight: 800,
+                          color: '#F8FAFC',
+                          margin: 0,
+                        }}
+                      >
+                        Injury Prevention & Form Advice is Locked
+                      </h4>
+                      <p
+                        style={{
+                          fontSize: '0.86rem',
+                          color: '#94A3B8',
+                          maxWidth: '420px',
+                          margin: 0,
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        Unlock detailed common form mistakes, injury prevention guides, and posture checks with Plus or Pro.
+                      </p>
+                      <button
+                        onClick={() => setShowPricingModal(true)}
+                        style={{
+                          background: 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
+                          border: 'none',
+                          borderRadius: '12px',
+                          padding: '0.65rem 1.35rem',
+                          color: '#05140F',
+                          fontWeight: 800,
+                          fontSize: '0.86rem',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          boxShadow: '0 4px 16px rgba(0, 245, 155, 0.35)',
+                        }}
+                      >
+                        <Sparkles size={16} /> Unlock Form Advice & Injury Prevention
+                      </button>
+                    </div>
+                  )}
+
                   {mistakesList.map((item, idx) => (
                     <div
                       key={idx}
                       className="grid grid-cols-1 md:grid-cols-2 gap-3"
+                      style={{
+                        filter: isFree ? 'blur(4px)' : 'none',
+                        userSelect: isFree ? 'none' : 'auto',
+                        pointerEvents: isFree ? 'none' : 'auto',
+                      }}
                     >
                       {/* Left: ❌ Mistake */}
                       <div style={{
@@ -971,6 +1080,20 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
         <ReportModal
           machine={machine}
           onClose={() => setShowReportModal(false)}
+        />
+      )}
+
+      {showPricingModal && (
+        <PricingModal
+          isOpen={showPricingModal}
+          onClose={() => setShowPricingModal(false)}
+          onNavigateToPricing={() => {
+            setShowPricingModal(false);
+            if (onNavigate) onNavigate('pricing');
+          }}
+          highlightTier="pro"
+          customTitle="Unlock Form Injury Prevention"
+          customMessage="Unlock common mistakes, injury prevention tips, and AI form analysis by upgrading to Pro or Plus."
         />
       )}
 

@@ -18,6 +18,7 @@ import { MachineDetailPage } from './pages/MachineDetailPage';
 import { ActivityPage } from './pages/ActivityPage';
 import { AchievementsPage } from './pages/AchievementsPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { WorkoutRoutineGenerator } from './components/machines/WorkoutRoutineGenerator';
 
 import { 
   Sparkles, 
@@ -172,10 +173,15 @@ const AppContent: React.FC = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('payment') === 'success') {
+      const purchasedTier = params.get('tier');
+      const finalTier = (purchasedTier === 'pro') ? 'pro' : 'plus';
+      localStorage.setItem('user_tier', finalTier);
+      window.dispatchEvent(new Event('tier_change'));
+
       addToast({
         type: 'success',
         title: 'Payment Successful!',
-        message: 'Welcome to ScanFit Premium!',
+        message: `Welcome to ScanFit ${finalTier === 'pro' ? 'Pro' : 'Plus'}! Premium features unlocked.`,
       });
       window.history.replaceState({}, document.title, window.location.pathname);
     }
@@ -331,6 +337,13 @@ const AppContent: React.FC = () => {
                 ctaMessage: 'Create a free account to set up your athlete profile and personalize your experience!'
               })
             )}
+
+            {/* Temporarily paused: AI Workout Routine Generator */}
+            {/* {currentTab === 'routines' && (
+              <div className="app-container pt-16 sm:pt-20 md:pt-6">
+                <WorkoutRoutineGenerator onNavigate={handleNavigate} />
+              </div>
+            )} */}
 
 
 
