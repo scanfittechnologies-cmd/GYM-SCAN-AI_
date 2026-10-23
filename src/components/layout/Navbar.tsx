@@ -18,6 +18,13 @@ interface NavbarProps {
   onTabChange: (tab: string) => void;
 }
 
+interface NavItem {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  isPro?: boolean;
+}
+
 // Desktop nav tabs that require authentication
 const AUTH_GATED_NAV = ['activity', 'achievements', 'profile'];
 
@@ -29,7 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
   const displayXP = totalXP || userProfile?.totalXP || 95;
   const displayLevel = currentLevel?.level || userProfile?.currentLevel || 1;
 
-  const navItems = [
+  const navItems: NavItem[] = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'scan', label: 'Scan Machine', icon: QrCode },
     { id: 'library', label: 'Machine Library', icon: BookOpen },
