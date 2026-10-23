@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { Machine } from './types';
 import { Navbar } from './components/layout/Navbar';
 import { BottomNav } from './components/layout/BottomNav';
+import { Footer } from './components/layout/Footer';
 import { ToastContainer } from './components/common/ToastContainer';
 import { AuthModal } from './components/auth/AuthModal';
 import { IntroSplash } from './components/common/IntroSplash';
@@ -162,6 +163,9 @@ const AppContent: React.FC = () => {
           </div>
         )}
       </main>
+
+      {/* Main Navigation Footer */}
+      <Footer onNavigate={handleNavigate} />
 
       {/* Mobile Bottom Navigation Bar */}
       <BottomNav

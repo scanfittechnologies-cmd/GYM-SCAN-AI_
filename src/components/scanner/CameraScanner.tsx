@@ -322,7 +322,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     if (!ctx) return;
 
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const rawDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    let rawDataUrl = canvas.toDataURL('image/jpeg', 0.92);
 
     // 2. Pause camera stream & start scanning loader
     stopCameraStream();
@@ -332,6 +332,8 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     try {
       // 3. Compress/downscale using existing compressImageIfNeeded (<1200px / <1MB)
       const compressedDataUrl = await compressImageIfNeeded(rawDataUrl);
+      // Release raw frame reference — only retain compressed version temporarily during analysis
+      rawDataUrl = '';
       setDetectedImageUrl(compressedDataUrl);
 
       // 4. Dispatch directly to Render backend /api/scan-machine via analyzeGymMachineImage
@@ -490,11 +492,14 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   const handleConfirmViewDetails = () => {
     const target = selectedAiMatch || detectedMachine;
     if (!target) return;
+    const ephemeralImg = detectedImageUrl;
+    // Release ephemeral image from state immediately to preserve memory and privacy
+    setDetectedImageUrl(null);
     stopCameraStream();
     onMachineIdentified(
       target, 
       detectedScanType, 
-      detectedImageUrl || undefined, 
+      ephemeralImg || undefined, 
       detectedConfidence ? detectedConfidence / 100 : 1.0
     );
   };

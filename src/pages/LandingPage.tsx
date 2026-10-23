@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { MACHINES_DATABASE } from '../data/machines';
 import { getMachinePhotos } from '../data/machinePhotos';
+import { PrivacyModal } from '../components/common/PrivacyModal';
 
 interface LandingPageProps {
   onNavigate: (tab: string, mode?: string) => void;
@@ -28,6 +29,8 @@ interface LandingPageProps {
 export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onSelectMachine }) => {
   const [activeHeroTab, setActiveHeroTab] = useState<'chest' | 'lat' | 'leg' | 'cable'>('chest');
   const [heroImgError, setHeroImgError] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [privacyTab, setPrivacyTab] = useState<'privacy' | 'terms'>('privacy');
 
   // Selected featured preview machines matching user request
   const featuredMachineIds = [
@@ -987,8 +990,42 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onSelectMa
               {label}
             </button>
           ))}
+          <button
+            type="button"
+            onClick={() => { setPrivacyTab('privacy'); setShowPrivacyModal(true); }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#00F59B',
+              cursor: 'pointer',
+              fontSize: '0.78rem',
+              textDecoration: 'underline'
+            }}
+          >
+            Privacy Policy
+          </button>
+          <button
+            type="button"
+            onClick={() => { setPrivacyTab('terms'); setShowPrivacyModal(true); }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#00D2FF',
+              cursor: 'pointer',
+              fontSize: '0.78rem',
+              textDecoration: 'underline'
+            }}
+          >
+            Terms of Service
+          </button>
         </div>
       </footer>
+
+      <PrivacyModal
+        isOpen={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+        initialTab={privacyTab}
+      />
     </div>
   );
 };

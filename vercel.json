@@ -11,5 +11,22 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)\\.php",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/wp-(.*)",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/(xmlrpc|phpmyadmin|pma)(.*)",
+      "destination": "/",
+      "permanent": false
+    }
   ]
 }

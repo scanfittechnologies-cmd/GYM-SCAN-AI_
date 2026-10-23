@@ -20,6 +20,26 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json({ limit: '25mb' }));
 
+// ── Security Shield: Reject/Redirect Legacy Script & PHP Probes ──────────────
+app.use((req, res, next) => {
+  const path = req.path.toLowerCase();
+  if (
+    path.endsWith('.php') || 
+    path.startsWith('/wp-') || 
+    path.startsWith('/wordpress') || 
+    path.includes('phpmyadmin') || 
+    path.includes('xmlrpc') ||
+    path.includes('/cgi-bin/')
+  ) {
+    // Cleanly reject probing attempts without executing external processes
+    return res.status(404).json({
+      error: 'Not Found',
+      message: 'Legacy script endpoints are disabled on ScanFit services.'
+    });
+  }
+  next();
+});
+
 // ── Startup diagnostics ───────────────────────────────────────────────────
 console.log(`[GymScan Backend] Starting Vision Model Server...`);
 console.log(`[GymScan Backend] Node: ${process.version}`);

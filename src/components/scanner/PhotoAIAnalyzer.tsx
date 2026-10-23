@@ -346,7 +346,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     if (!ctx) return;
 
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const rawDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    let rawDataUrl = canvas.toDataURL('image/jpeg', 0.92);
 
     stopLiveCamera();
 
@@ -354,6 +354,8 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     setSelectedFileMeta({ name: `live-scan-${Date.now()}.jpg`, size: `${Math.round((rawDataUrl.length * 0.75) / 1024)} KB` });
 
     const compressed = await compressImageIfNeeded(rawDataUrl);
+    // Release raw frame reference — analysis uses compressed copy only
+    rawDataUrl = '';
     triggerRealVisionAnalysis(compressed);
   };
 
@@ -687,10 +689,13 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     if (activeDebugRecord) {
       markAnalysisDebugRecordConfirmed(activeDebugRecord.analysisId);
     }
+    const ephemeralImg = uploadedImage;
+    // Release ephemeral captured image immediately to clear from memory/state
+    setUploadedImage(null);
     onMachineConfirmed(
       selectedMatch, 
       'photo', 
-      uploadedImage || undefined,
+      ephemeralImg || undefined,
       (visionOutput?.confidence || 90) / 100
     );
   };

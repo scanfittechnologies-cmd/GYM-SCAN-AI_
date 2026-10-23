@@ -13,6 +13,8 @@ import {
   EyeOff,
   Dumbbell
 } from 'lucide-react';
+import { sanitizeEmail, sanitizeDisplayName } from '../../utils/sanitize';
+import { PrivacyModal } from '../common/PrivacyModal';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -39,6 +41,8 @@ export const AuthModal: React.FC = () => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(null);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [privacyTab, setPrivacyTab] = useState<'privacy' | 'terms'>('privacy');
 
   // Field-level inline validation errors
   const [validationErrors, setValidationErrors] = useState<{
@@ -85,7 +89,7 @@ export const AuthModal: React.FC = () => {
       terms?: string;
     } = {};
 
-    const cleanEmail = email.trim();
+    const cleanEmail = sanitizeEmail(email);
     if (!cleanEmail) {
       errors.email = 'Email address is required.';
     } else if (!EMAIL_REGEX.test(cleanEmail)) {
@@ -101,7 +105,7 @@ export const AuthModal: React.FC = () => {
     }
 
     if (mode === 'signup') {
-      const cleanName = displayName.trim();
+      const cleanName = sanitizeDisplayName(displayName);
       if (!cleanName) {
         errors.displayName = 'Display name is required.';
       } else if (cleanName.length < 2) {
@@ -126,9 +130,12 @@ export const AuthModal: React.FC = () => {
       return;
     }
 
+    const cleanEmail = sanitizeEmail(email);
+    const cleanDisplayName = sanitizeDisplayName(displayName);
+
     try {
       if (mode === 'signin') {
-        const loggedInUser = await signIn(email.trim(), password);
+        const loggedInUser = await signIn(cleanEmail, password);
         // Sync real user state to userProfile in GymContext
         updateUserProfile({
           displayName: loggedInUser.displayName,
@@ -142,7 +149,7 @@ export const AuthModal: React.FC = () => {
           message: `Signed in as ${loggedInUser.displayName}`
         });
       } else if (mode === 'signup') {
-        const newUser = await signUp(email.trim(), password, displayName.trim(), experienceLevel, false);
+        const newUser = await signUp(cleanEmail, password, cleanDisplayName, experienceLevel, false);
         // Sync real registered user state
         updateUserProfile({
           displayName: newUser.displayName,
@@ -156,7 +163,7 @@ export const AuthModal: React.FC = () => {
           message: `Welcome to ScanFit, ${newUser.displayName}!`
         });
       } else if (mode === 'reset') {
-        const res = await requestPasswordReset(email.trim());
+        const res = await requestPasswordReset(cleanEmail);
         setResetSuccessMessage(res.message);
       }
     } catch {
@@ -527,7 +534,22 @@ export const AuthModal: React.FC = () => {
                   style={{ marginTop: '3px', accentColor: '#00F59B', cursor: 'pointer' }}
                 />
                 <label htmlFor="agreeTermsCheck" style={{ fontSize: '0.72rem', color: '#94A3B8', lineHeight: 1.35, cursor: 'pointer' }}>
-                  I agree to the ScanFit Terms of Service & Gym Safety Guidelines.
+                  I agree to the ScanFit{' '}
+                  <button
+                    type="button"
+                    onClick={() => { setPrivacyTab('terms'); setShowPrivacyModal(true); }}
+                    style={{ background: 'none', border: 'none', padding: 0, color: '#00F59B', textDecoration: 'underline', cursor: 'pointer', fontSize: 'inherit' }}
+                  >
+                    Terms of Service
+                  </button>{' '}
+                  &{' '}
+                  <button
+                    type="button"
+                    onClick={() => { setPrivacyTab('privacy'); setShowPrivacyModal(true); }}
+                    style={{ background: 'none', border: 'none', padding: 0, color: '#00D2FF', textDecoration: 'underline', cursor: 'pointer', fontSize: 'inherit' }}
+                  >
+                    Privacy Policy
+                  </button>.
                 </label>
               </div>
               {validationErrors.terms && (
@@ -567,7 +589,41 @@ export const AuthModal: React.FC = () => {
             </button>
           </div>
         )}
+
+        {/* Footer Legal Links */}
+        <div style={{
+          marginTop: '1.25rem',
+          paddingTop: '0.85rem',
+          borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '1rem',
+          fontSize: '0.72rem',
+          color: '#64748B'
+        }}>
+          <button
+            type="button"
+            onClick={() => { setPrivacyTab('privacy'); setShowPrivacyModal(true); }}
+            style={{ background: 'none', border: 'none', color: '#64748B', cursor: 'pointer', fontSize: '0.72rem', textDecoration: 'underline' }}
+          >
+            Privacy Policy
+          </button>
+          <span>•</span>
+          <button
+            type="button"
+            onClick={() => { setPrivacyTab('terms'); setShowPrivacyModal(true); }}
+            style={{ background: 'none', border: 'none', color: '#64748B', cursor: 'pointer', fontSize: '0.72rem', textDecoration: 'underline' }}
+          >
+            Terms of Service
+          </button>
+        </div>
       </div>
+
+      <PrivacyModal
+        isOpen={showPrivacyModal}
+        onClose={() => setShowPrivacyModal(false)}
+        initialTab={privacyTab}
+      />
     </div>
   );
 };
