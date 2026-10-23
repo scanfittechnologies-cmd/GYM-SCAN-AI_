@@ -11,7 +11,8 @@ import {
   ArrowRight,
   Eye,
   EyeOff,
-  Dumbbell
+  Dumbbell,
+  Sparkles
 } from 'lucide-react';
 import { sanitizeEmail, sanitizeDisplayName } from '../../utils/sanitize';
 import { PrivacyModal } from '../common/PrivacyModal';
@@ -28,7 +29,8 @@ export const AuthModal: React.FC = () => {
     requestPasswordReset, 
     isLoading, 
     authError, 
-    clearAuthError 
+    clearAuthError,
+    softGateMessage
   } = useAuth();
 
   const { updateUserProfile, addToast } = useGym();
@@ -302,6 +304,41 @@ export const AuthModal: React.FC = () => {
             >
               Create Account
             </button>
+          </div>
+        )}
+
+        {/* Contextual Soft Gate Banner */}
+        {softGateMessage && (
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(0, 245, 155, 0.12) 0%, rgba(0, 210, 255, 0.08) 100%)',
+            border: '1px solid rgba(0, 245, 155, 0.3)',
+            borderRadius: '14px',
+            padding: '0.85rem 1rem',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '10px',
+            marginBottom: '1rem',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <div style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: '2px',
+              background: 'linear-gradient(90deg, #00F59B, #00D2FF)',
+              borderRadius: '14px 14px 0 0'
+            }} />
+            <Sparkles size={18} color="#00F59B" style={{ flexShrink: 0, marginTop: '1px' }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontSize: '0.82rem', color: '#E2E8F0', fontWeight: 700, lineHeight: 1.35 }}>
+                {softGateMessage}
+              </span>
+              <span style={{ fontSize: '0.7rem', color: '#94A3B8', lineHeight: 1.3 }}>
+                It's free and takes less than 30 seconds.
+              </span>
+            </div>
           </div>
         )}
 

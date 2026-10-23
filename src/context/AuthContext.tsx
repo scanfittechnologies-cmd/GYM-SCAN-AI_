@@ -13,6 +13,7 @@ interface AuthContextType {
   authError: string | null;
   isAuthModalOpen: boolean;
   authModalMode: 'signin' | 'signup' | 'reset';
+  softGateMessage: string | null;
   
   // Actions
   signIn: (email: string, password: string) => Promise<AuthUser>;
@@ -20,6 +21,7 @@ interface AuthContextType {
   signOut: () => void;
   requestPasswordReset: (email: string) => Promise<{ success: boolean; message: string }>;
   openAuthModal: (mode?: 'signin' | 'signup' | 'reset') => void;
+  openSoftGate: (message: string, mode?: 'signin' | 'signup') => void;
   closeAuthModal: () => void;
   setDevRole: (newRole: UserRole) => void;
   clearAuthError: () => void;
@@ -33,6 +35,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [authError, setAuthError] = useState<string | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalMode, setAuthModalMode] = useState<'signin' | 'signup' | 'reset'>('signin');
+  const [softGateMessage, setSoftGateMessage] = useState<string | null>(null);
 
   const user = session.user;
   const role: UserRole = user?.role || 'user';
@@ -49,12 +52,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const openAuthModal = useCallback((mode: 'signin' | 'signup' | 'reset' = 'signin') => {
     setAuthModalMode(mode);
     setAuthError(null);
+    setSoftGateMessage(null);
+    setIsAuthModalOpen(true);
+  }, []);
+
+  const openSoftGate = useCallback((message: string, mode: 'signin' | 'signup' = 'signup') => {
+    setSoftGateMessage(message);
+    setAuthModalMode(mode);
+    setAuthError(null);
     setIsAuthModalOpen(true);
   }, []);
 
   const closeAuthModal = useCallback(() => {
     setIsAuthModalOpen(false);
     setAuthError(null);
+    setSoftGateMessage(null);
   }, []);
 
   const clearAuthError = useCallback(() => {
@@ -104,6 +116,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const signOut = useCallback(() => {
     authService.signOut();
     setSession({ user: null, token: null, expiresAt: null });
+    setSoftGateMessage(null);
   }, []);
 
   const requestPasswordReset = useCallback(async (email: string) => {
@@ -140,11 +153,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         authError,
         isAuthModalOpen,
         authModalMode,
+        softGateMessage,
         signIn,
         signUp,
         signOut,
         requestPasswordReset,
         openAuthModal,
+        openSoftGate,
         closeAuthModal,
         setDevRole,
         clearAuthError

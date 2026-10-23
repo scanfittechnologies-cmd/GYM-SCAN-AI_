@@ -21,6 +21,7 @@ import {
   WifiOff
 } from 'lucide-react';
 import { MachineCard } from '../components/machines/MachineCard';
+import { useSoftGate } from '../hooks/useSoftGate';
 
 /* ─────────────────────────────────────────────────────────────
    Types & Configurations
@@ -62,6 +63,7 @@ interface MachineListRowProps {
 
 const MachineListRow: React.FC<MachineListRowProps> = ({ machine, onSelect }) => {
   const { isMachineDiscovered, isFavorite, toggleFavorite } = useGym();
+  const { requireAuth } = useSoftGate();
   const discovered = isMachineDiscovered(machine.id);
   const favorited = isFavorite(machine.id);
   const catColor = CATEGORY_COLORS[machine.category] ?? CATEGORY_COLORS['Other'];
@@ -132,7 +134,7 @@ const MachineListRow: React.FC<MachineListRowProps> = ({ machine, onSelect }) =>
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }} onClick={e => e.stopPropagation()}>
         <button
           aria-label={favorited ? 'Remove from favorites' : 'Save to favorites'}
-          onClick={(e) => { e.stopPropagation(); toggleFavorite(machine.id); }}
+          onClick={(e) => { e.stopPropagation(); requireAuth(() => toggleFavorite(machine.id), 'Create a free account to bookmark your favorite machines!'); }}
           style={{
             background: favorited ? 'rgba(255,184,0,0.18)' : 'transparent',
             border: favorited ? '1px solid rgba(255,184,0,0.4)' : '1px solid rgba(255,255,255,0.08)',

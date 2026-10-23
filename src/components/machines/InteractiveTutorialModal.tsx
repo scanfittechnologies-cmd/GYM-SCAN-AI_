@@ -3,6 +3,7 @@ import { Machine } from '../../types';
 import { useGym } from '../../context/GymContext';
 import { X, CheckCircle, Award, Play, AlertCircle, ChevronRight, Check } from 'lucide-react';
 import { MachineSvgIllustration } from './MachineSvgIllustrations';
+import { useSoftGate } from '../../hooks/useSoftGate';
 
 interface InteractiveTutorialModalProps {
   machine: Machine;
@@ -14,6 +15,7 @@ export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> =
   onClose,
 }) => {
   const { markTutorialCompleted, isTutorialCompleted } = useGym();
+  const { requireAuth } = useSoftGate();
   const alreadyDone = isTutorialCompleted(machine.id);
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -29,7 +31,11 @@ export const InteractiveTutorialModal: React.FC<InteractiveTutorialModalProps> =
   };
 
   const handleFinishTutorial = () => {
-    markTutorialCompleted(machine.id);
+    // Soft-gate: earning XP from tutorial completion requires auth
+    requireAuth(
+      () => markTutorialCompleted(machine.id),
+      'Create a free account to earn XP for completing form tutorials!'
+    );
     onClose();
   };
 

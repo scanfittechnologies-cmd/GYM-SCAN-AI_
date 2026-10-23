@@ -1,12 +1,18 @@
 import React from 'react';
 import { Home, QrCode, BookOpen, History, Trophy } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 interface BottomNavProps {
   currentTab: string;
   onTabChange: (tab: string) => void;
 }
 
+// Tabs that require authentication to view
+const AUTH_GATED_TABS = ['activity', 'achievements'];
+
 export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange }) => {
+  const { isAuthenticated, openSoftGate } = useAuth();
+
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'library', label: 'Library', icon: BookOpen },
@@ -14,6 +20,18 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
     { id: 'activity', label: 'Activity', icon: History },
     { id: 'achievements', label: 'XP & Badges', icon: Trophy },
   ];
+
+  const handleTabPress = (tabId: string) => {
+    if (!isAuthenticated && AUTH_GATED_TABS.includes(tabId)) {
+      const messages: Record<string, string> = {
+        activity: 'Create a free account to save your scan history and track your progress!',
+        achievements: 'Create a free account to earn XP, unlock badges, and track your streak!',
+      };
+      openSoftGate(messages[tabId] || 'Create a free account to access this feature!', 'signup');
+    }
+    // Always navigate — the page itself will show the SoftGateScreen for guests
+    onTabChange(tabId);
+  };
 
   return (
     <nav
@@ -44,6 +62,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = currentTab === tab.id;
+          const isGated = !isAuthenticated && AUTH_GATED_TABS.includes(tab.id);
 
           if (tab.isSpecial) {
             return (
@@ -62,7 +81,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
                   type="button"
                   id="mobile-nav-scan-btn"
                   aria-label="Open Scanner"
-                  onClick={() => onTabChange(tab.id)}
+                  onClick={() => handleTabPress(tab.id)}
                   style={{
                     background: isActive 
                       ? 'linear-gradient(135deg, #00FFB2 0%, #00D2FF 100%)' 
@@ -105,12 +124,12 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
               key={tab.id}
               type="button"
               id={`mobile-nav-${tab.id}-btn`}
-              aria-label={`Navigate to ${tab.label}`}
-              onClick={() => onTabChange(tab.id)}
+              aria-label={`Navigate to ${tab.label}${isGated ? ' (sign in required)' : ''}`}
+              onClick={() => handleTabPress(tab.id)}
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: isActive ? '#00F59B' : '#94A3B8',
+                color: isActive ? '#00F59B' : isGated ? '#475569' : '#94A3B8',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -123,7 +142,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
                 borderRadius: '12px',
                 transition: 'all 0.18s ease',
                 position: 'relative',
-                outline: 'none'
+                outline: 'none',
+                opacity: isGated ? 0.6 : 1
               }}
             >
               <div style={{
@@ -151,12 +171,30 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
                     boxShadow: '0 0 6px #00F59B'
                   }} />
                 )}
+                {/* Lock dot for gated tabs */}
+                {isGated && !isActive && (
+                  <span style={{
+                    position: 'absolute',
+                    top: -4,
+                    right: -4,
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: 'rgba(100, 116, 139, 0.8)',
+                    border: '1px solid rgba(10, 12, 16, 0.9)',
+                    fontSize: '5px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#94A3B8'
+                  }}>🔒</span>
+                )}
               </div>
               <span style={{
                 fontSize: '0.7rem',
                 fontWeight: isActive ? 700 : 500,
                 letterSpacing: '-0.01em',
-                color: isActive ? '#00F59B' : '#94A3B8'
+                color: isActive ? '#00F59B' : isGated ? '#475569' : '#94A3B8'
               }}>
                 {tab.label}
               </span>
@@ -175,4 +213,3 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
     </nav>
   );
 };
-

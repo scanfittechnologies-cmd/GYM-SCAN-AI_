@@ -27,6 +27,7 @@ import { ExerciseDetailModal } from '../components/machines/ExerciseDetailModal'
 import { ReportModal } from '../components/machines/ReportModal';
 import { MachineSvgIllustration } from '../components/machines/MachineSvgIllustrations';
 import { getExercisesForMachine } from '../data/machineExercises';
+import { useSoftGate } from '../hooks/useSoftGate';
 
 interface MachineDetailPageProps {
   machine: Machine | null;
@@ -50,6 +51,8 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
     isFavorite, 
     toggleFavorite 
   } = useGym();
+
+  const { requireAuth } = useSoftGate();
 
   const [activeTab, setActiveTab] = useState<'overview' | 'adjustments' | 'exercises' | 'mistakes'>('overview');
   const [showTutorialModal, setShowTutorialModal] = useState(false);
@@ -173,7 +176,10 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
           {/* Favorite Routine Toggle */}
           <button
             type="button"
-            onClick={() => toggleFavorite(machine.id)}
+            onClick={() => requireAuth(
+              () => toggleFavorite(machine.id),
+              'Create a free account to save your favorite machines and build your workout routine!'
+            )}
             style={{
               background: favorited ? 'rgba(255, 184, 0, 0.15)' : 'rgba(255, 255, 255, 0.05)',
               border: favorited ? '1px solid rgba(255, 184, 0, 0.4)' : '1px solid rgba(255, 255, 255, 0.1)',

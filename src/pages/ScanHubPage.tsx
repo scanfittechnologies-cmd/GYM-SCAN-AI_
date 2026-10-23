@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useGym } from '../context/GymContext';
+import { useSoftGate } from '../hooks/useSoftGate';
 import { Machine } from '../types';
 import { QrCode, Sparkles, Upload } from 'lucide-react';
 import { CameraScanner } from '../components/scanner/CameraScanner';
@@ -79,6 +80,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
   }, [initialMode]);
 
   const { recordMachineScan } = useGym();
+  const { requireAuth } = useSoftGate();
 
   const handleScanSuccess = (
     machine: Machine,
@@ -86,7 +88,12 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
     imageUrl?: string,
     confidence?: number
   ) => {
-    recordMachineScan(machine.id, scanType, imageUrl, confidence);
+    // Soft-gate: saving scan results + earning XP requires auth
+    requireAuth(
+      () => recordMachineScan(machine.id, scanType, imageUrl, confidence),
+      'Create a free account to save your scan history and earn discovery XP!'
+    );
+    // Machine detail navigation is always allowed (viewing is free)
     onMachineSelected(machine, scanType);
   };
 

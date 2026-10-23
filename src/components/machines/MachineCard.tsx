@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { MachineSvgIllustration } from './MachineSvgIllustrations';
 import { getMachinePhotos } from '../../data/machinePhotos';
+import { useSoftGate } from '../../hooks/useSoftGate';
 
 interface MachineCardProps {
   machine: Machine;
@@ -27,6 +28,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string
 
 export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, onSelect }) => {
   const { isMachineDiscovered, isTutorialCompleted, isFavorite, toggleFavorite } = useGym();
+  const { requireAuth } = useSoftGate();
   const [imgError, setImgError] = useState(false);
 
   const discovered  = isMachineDiscovered(rawMachine.id);
@@ -124,7 +126,10 @@ export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, o
           aria-label={favorited ? `Remove ${machine.name} from favorites` : `Save ${machine.name} to favorites`}
           onClick={(e) => {
             e.stopPropagation();
-            toggleFavorite(machine.id);
+            requireAuth(
+              () => toggleFavorite(machine.id),
+              'Create a free account to bookmark your favorite machines!'
+            );
           }}
           style={{
             position: 'absolute',

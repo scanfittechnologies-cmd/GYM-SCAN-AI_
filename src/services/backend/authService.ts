@@ -4,6 +4,23 @@ import { backendConfigInfo } from './supabaseClient';
 const AUTH_STORAGE_KEY = 'gym_scan_auth_session_v1';
 const USERS_DB_KEY = 'gym_scan_users_database_v1';
 
+// One-time migration: purge old auto-created demo sessions so returning visitors
+// start as proper guests rather than the fake auto-logged-in state from the old code.
+(function purgeLegacyDemoSession() {
+  try {
+    const raw = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (raw) {
+      const session: AuthSession = JSON.parse(raw);
+      // Old demo sessions had a token starting with 'demo-session-token-'
+      if (session?.token?.startsWith('demo-session-token-')) {
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+      }
+    }
+  } catch {
+    // ignore parse errors
+  }
+})();
+
 // SHA-256 Password Hashing via Web Crypto API (No plaintext passwords stored)
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -68,27 +85,12 @@ function saveStoredUsers(users: StoredUserAccount[]) {
 }
 
 export const authService = {
-  // Get active session from storage
+  // Get active session from storage (guests start unauthenticated)
   getCurrentSession(): AuthSession {
     const raw = localStorage.getItem(AUTH_STORAGE_KEY);
     if (!raw) {
-      // Default to demo logged-in user for seamless first visit
-      const defaultUser: AuthUser = {
-        id: 'usr-athlete-01',
-        email: 'athlete@gymscan.ai',
-        displayName: 'Gym Explorer',
-        role: 'user',
-        avatarSeed: 'lifter_01',
-        createdAt: new Date(Date.now() - 86400000 * 7).toISOString(),
-        emailVerified: true
-      };
-      const session: AuthSession = {
-        user: defaultUser,
-        token: 'demo-session-token-' + Date.now(),
-        expiresAt: Date.now() + 86400000 * 7
-      };
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
-      return session;
+      // No stored session — guest/unauthenticated state
+      return { user: null, token: null, expiresAt: null };
     }
 
     try {

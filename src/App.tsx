@@ -19,6 +19,143 @@ import { ActivityPage } from './pages/ActivityPage';
 import { AchievementsPage } from './pages/AchievementsPage';
 import { ProfilePage } from './pages/ProfilePage';
 
+import { 
+  Sparkles, 
+  Trophy, 
+  History, 
+  UserCircle, 
+  ArrowRight 
+} from 'lucide-react';
+
+/* ── Soft Gate Screen ──
+   Shown to unauthenticated guests when they navigate to auth-gated pages.
+   Provides a contextual message with a friendly CTA to sign up/in. */
+interface SoftGateScreenProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle: string;
+  ctaMessage: string;
+  onSignUp: () => void;
+  onSignIn: () => void;
+}
+
+const SoftGateScreen: React.FC<SoftGateScreenProps> = ({
+  icon, title, subtitle, ctaMessage, onSignUp, onSignIn
+}) => (
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '55vh',
+    textAlign: 'center',
+    padding: '2rem 1.5rem',
+    gap: '1.25rem',
+    maxWidth: '520px',
+    margin: '0 auto'
+  }}>
+    {/* Glowing Icon Container */}
+    <div style={{
+      width: '72px',
+      height: '72px',
+      borderRadius: '20px',
+      background: 'linear-gradient(135deg, rgba(0, 245, 155, 0.15) 0%, rgba(0, 210, 255, 0.1) 100%)',
+      border: '1px solid rgba(0, 245, 155, 0.25)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      boxShadow: '0 0 30px rgba(0, 245, 155, 0.15)',
+      animation: 'pulse 3s ease-in-out infinite'
+    }}>
+      {icon}
+    </div>
+
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <h2 style={{
+        fontSize: '1.5rem',
+        color: '#F1F5F9',
+        fontWeight: 800,
+        margin: 0,
+        letterSpacing: '-0.02em'
+      }}>
+        {title}
+      </h2>
+      <p style={{
+        fontSize: '0.88rem',
+        color: '#94A3B8',
+        margin: 0,
+        lineHeight: 1.5,
+        maxWidth: '400px'
+      }}>
+        {subtitle}
+      </p>
+    </div>
+
+    {/* CTA Banner */}
+    <div style={{
+      background: 'linear-gradient(135deg, rgba(0, 245, 155, 0.1) 0%, rgba(0, 210, 255, 0.06) 100%)',
+      border: '1px solid rgba(0, 245, 155, 0.25)',
+      borderRadius: '16px',
+      padding: '1rem 1.25rem',
+      width: '100%',
+      maxWidth: '400px',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: '2px',
+        background: 'linear-gradient(90deg, #00F59B, #00D2FF)',
+        borderRadius: '16px 16px 0 0'
+      }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '0.65rem' }}>
+        <Sparkles size={16} color="#00F59B" />
+        <span style={{ fontSize: '0.82rem', color: '#E2E8F0', fontWeight: 700 }}>
+          {ctaMessage}
+        </span>
+      </div>
+      <span style={{ fontSize: '0.72rem', color: '#94A3B8', display: 'block', marginBottom: '1rem' }}>
+        It's free, takes 30 seconds, and unlocks your full ScanFit experience.
+      </span>
+
+      <div style={{ display: 'flex', gap: '0.75rem' }}>
+        <button
+          onClick={onSignUp}
+          className="btn-primary"
+          style={{
+            flex: 1,
+            padding: '0.65rem',
+            fontSize: '0.85rem',
+            justifyContent: 'center',
+            gap: '6px'
+          }}
+        >
+          Create Free Account <ArrowRight size={14} />
+        </button>
+        <button
+          onClick={onSignIn}
+          style={{
+            flex: 'none',
+            padding: '0.65rem 1rem',
+            fontSize: '0.82rem',
+            fontWeight: 700,
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '12px',
+            color: '#CBD5E1',
+            cursor: 'pointer',
+            transition: 'all 0.15s'
+          }}
+        >
+          Sign In
+        </button>
+      </div>
+    </div>
+  </div>
+);
 
 const KNOWN_TABS = ['pricing', 'home', 'scan', 'library', 'activity', 'achievements', 'profile'];
 
@@ -64,6 +201,22 @@ const AppContent: React.FC = () => {
 
   // Pricing page uses full-width layout without the standard nav padding
   const isFullWidthPage = currentTab === 'pricing';
+
+  const { isAuthenticated, openSoftGate, openAuthModal } = useAuth();
+
+  // Helper: render SoftGateScreen for auth-required pages
+  const renderSoftGate = (config: {
+    icon: React.ReactNode;
+    title: string;
+    subtitle: string;
+    ctaMessage: string;
+  }) => (
+    <SoftGateScreen
+      {...config}
+      onSignUp={() => openSoftGate(config.ctaMessage, 'signup')}
+      onSignIn={() => openAuthModal('signin')}
+    />
+  );
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -126,22 +279,44 @@ const AppContent: React.FC = () => {
               />
             )}
 
+            {/* ── Auth-Gated Pages: Show SoftGateScreen for guests ── */}
             {currentTab === 'activity' && (
-              <ActivityPage
-                onSelectMachine={handleSelectMachine}
-                onNavigate={handleNavigate}
-              />
+              isAuthenticated ? (
+                <ActivityPage
+                  onSelectMachine={handleSelectMachine}
+                  onNavigate={handleNavigate}
+                />
+              ) : renderSoftGate({
+                icon: <History size={32} color="#00F59B" />,
+                title: 'Your Workout History',
+                subtitle: 'Track every machine scan, XP earned, and workout session in one place. Your personal training log awaits.',
+                ctaMessage: 'Create a free account to save your scan history and track your progress!'
+              })
             )}
 
             {currentTab === 'achievements' && (
-              <AchievementsPage onNavigate={handleNavigate} />
+              isAuthenticated ? (
+                <AchievementsPage onNavigate={handleNavigate} />
+              ) : renderSoftGate({
+                icon: <Trophy size={32} color="#FFB800" />,
+                title: 'XP & Achievements',
+                subtitle: 'Earn XP for discovering machines, earn badges for milestones, and climb the level ranks as you explore your gym.',
+                ctaMessage: 'Create a free account to earn XP, unlock badges, and track your streak!'
+              })
             )}
 
             {currentTab === 'profile' && (
-              <ProfilePage
-                onSelectMachine={handleSelectMachine}
-                onNavigate={handleNavigate}
-              />
+              isAuthenticated ? (
+                <ProfilePage
+                  onSelectMachine={handleSelectMachine}
+                  onNavigate={handleNavigate}
+                />
+              ) : renderSoftGate({
+                icon: <UserCircle size={32} color="#00D2FF" />,
+                title: 'Your Athlete Profile',
+                subtitle: 'Customize your profile, manage your favorite machines, adjust app settings, and view your full gym journey.',
+                ctaMessage: 'Create a free account to set up your athlete profile and personalize your experience!'
+              })
             )}
 
 
