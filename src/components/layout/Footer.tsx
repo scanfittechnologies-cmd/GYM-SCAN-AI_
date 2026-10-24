@@ -64,13 +64,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               >
                 Machine Library
               </button>
-              <button
-                type="button"
-                onClick={() => onNavigate('pricing')}
-                style={{ background: 'none', border: 'none', color: '#94A3B8', cursor: 'pointer', fontSize: '0.78rem', padding: 0 }}
-              >
-                Pricing
-              </button>
               <span style={{ color: '#334155' }}>•</span>
             </>
           )}

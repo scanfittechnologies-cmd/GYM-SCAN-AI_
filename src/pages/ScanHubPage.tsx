@@ -196,18 +196,18 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
           {tier === 'free' && (
             <span
               id="scan-counter-pill"
-              className={hasReachedScanLimit ? "badge badge-rose" : "badge badge-blue"}
+              className="badge badge-blue"
               style={{
                 fontSize: '0.7rem',
                 padding: '2px 8px',
                 fontWeight: 700,
                 letterSpacing: '0.02em',
-                background: hasReachedScanLimit ? 'rgba(255, 71, 87, 0.18)' : 'rgba(0, 210, 255, 0.15)',
-                border: hasReachedScanLimit ? '1px solid #FF4757' : '1px solid #00D2FF',
-                color: hasReachedScanLimit ? '#FF6B81' : '#00D2FF',
+                background: 'rgba(0, 210, 255, 0.15)',
+                border: '1px solid #00D2FF',
+                color: '#00D2FF',
               }}
             >
-              ⚡ Free Scans: {Math.min(scanCount, freeScanLimit)}/{freeScanLimit}
+              ⚡ Beta Mode: Unlimited Scans
             </span>
           )}
         </div>
@@ -338,50 +338,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
         })}
       </div>
 
-      {/* Free Plan Scan Limit Indicator Banner */}
-      {tier === 'free' && (
-        <div
-          style={{
-            background: hasReachedScanLimit ? 'rgba(255, 71, 87, 0.1)' : 'rgba(0, 245, 155, 0.08)',
-            border: `1px solid ${hasReachedScanLimit ? 'rgba(255, 71, 87, 0.3)' : 'rgba(0, 245, 155, 0.2)'}`,
-            borderRadius: '14px',
-            padding: '0.65rem 1rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '0.75rem',
-            fontSize: '0.82rem',
-          }}
-        >
-          <div style={{ color: hasReachedScanLimit ? '#FF6B81' : '#CBD5E1', display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-            <span style={{ fontWeight: 700 }}>
-              {hasReachedScanLimit ? '⚠️ Monthly Limit Reached:' : '⚡ Free Plan Allowance:'}
-            </span>
-            <span>
-              {hasReachedScanLimit
-                ? `${freeScanLimit} of ${freeScanLimit} free monthly scans used (0 left). Limit reached!`
-                : `${Math.min(scanCount, freeScanLimit)} of ${freeScanLimit} free monthly scans used (${remainingFreeScans} left)`}
-            </span>
-          </div>
-          <button
-            id="scan-hub-upgrade-banner-btn"
-            onClick={() => setShowLimitModal(true)}
-            style={{
-              background: 'linear-gradient(135deg, #00F59B, #00D2FF)',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '0.35rem 0.75rem',
-              color: '#05140F',
-              fontWeight: 800,
-              fontSize: '0.74rem',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            Upgrade Plan
-          </button>
-        </div>
-      )}
+
 
       {/* 3. Active Scanner View — or Paywall Overlay when limit reached */}
       {tier === 'free' && hasReachedScanLimit ? (
@@ -585,8 +542,8 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
         )}
       </div>
 
-      {/* Pricing / Limit Modal */}
-      <PricingModal
+      {/* Pricing / Limit Modal (Disabled in free Beta testing mode) */}
+      {/* <PricingModal
         isOpen={showLimitModal}
         onClose={() => setShowLimitModal(false)}
         onNavigateToPricing={() => {
@@ -596,7 +553,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
         highlightTier="plus"
         customTitle="Scan Limit Reached"
         customMessage="You've reached your 3 free scans this month! Upgrade to Plus or Pro for more."
-      />
+      /> */}
 
     </div>
   );

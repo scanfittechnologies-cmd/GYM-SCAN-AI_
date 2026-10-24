@@ -972,7 +972,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onSelectMa
         <div>Demo mode active &middot; All data stored locally in browser</div>
         <div style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '0.2rem' }}>
           {[
-            ['pricing', 'Pricing'],
             ['home', 'Dashboard'],
             ['library', 'Machine Library'],
           ].map(([tab, label]) => (

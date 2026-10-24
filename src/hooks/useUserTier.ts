@@ -106,8 +106,9 @@ export function useUserTier() {
   const isPlus = tier === 'plus';
   const isPro = tier === 'pro';
 
-  const hasReachedScanLimit = isFree && scanCount >= FREE_SCAN_LIMIT;
-  const remainingFreeScans = Math.max(0, FREE_SCAN_LIMIT - scanCount);
+  // Free Beta Testing Mode: Unlimited scans for all users without soft paywall
+  const hasReachedScanLimit = false;
+  const remainingFreeScans = Infinity;
 
   return {
     tier,

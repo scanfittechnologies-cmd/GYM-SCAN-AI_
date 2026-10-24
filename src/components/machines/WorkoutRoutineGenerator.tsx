@@ -378,8 +378,8 @@ export const WorkoutRoutineGenerator: React.FC<WorkoutRoutineGeneratorProps> = (
         </div>
       </div>
 
-      {/* Pricing Modal */}
-      <PricingModal
+      {/* Free Beta Testing Mode: PricingModal disabled */}
+      {/* <PricingModal
         isOpen={showPricingModal}
         onClose={() => setShowPricingModal(false)}
         onNavigateToPricing={() => {
@@ -389,7 +389,7 @@ export const WorkoutRoutineGenerator: React.FC<WorkoutRoutineGeneratorProps> = (
         highlightTier="pro"
         customTitle="AI Workout Routine Generator"
         customMessage="Upgrade to Pro to generate personalized gym machine routines based on equipment available at your gym facility!"
-      />
+      /> */}
     </div>
   );
 };

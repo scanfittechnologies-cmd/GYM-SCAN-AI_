@@ -1083,7 +1083,8 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
         />
       )}
 
-      {showPricingModal && (
+      {/* Free Beta Testing Mode: PricingModal disabled */}
+      {/* {showPricingModal && (
         <PricingModal
           isOpen={showPricingModal}
           onClose={() => setShowPricingModal(false)}
@@ -1095,7 +1096,7 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
           customTitle="Unlock Form Injury Prevention"
           customMessage="Unlock common mistakes, injury prevention tips, and AI form analysis by upgrading to Pro or Plus."
         />
-      )}
+      )} */}
 
     </div>
   );
