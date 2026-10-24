@@ -30,8 +30,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
   const { isAuthenticated } = useAuth();
 
   // Synced user total XP and Level across all routes
-  const displayXP = totalXP || userProfile?.totalXP || 95;
-  const displayLevel = currentLevel?.level || userProfile?.currentLevel || 1;
+  const displayXP = totalXP ?? userProfile?.totalXP ?? 0;
+  const displayLevel = currentLevel?.level ?? userProfile?.currentLevel ?? 1;
 
   const navItems: NavItem[] = [
     { id: 'home', label: 'Home', icon: Home },

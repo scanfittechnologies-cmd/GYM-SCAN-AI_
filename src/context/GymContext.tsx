@@ -74,15 +74,15 @@ const DEFAULT_PROFILE: UserProfile = {
   avatarSeed: 'lifter_01',
   role: 'user',
   experienceLevel: 'Beginner',
-  joinedDate: Date.now() - 86400000 * 4, // 4 days ago
+  joinedDate: Date.now(),
   soundEnabled: true,
   hapticEnabled: true,
   cameraPermissionGranted: false,
   privacyMode: false,
-  totalXP: 95,
+  totalXP: 0,
   currentLevel: 1,
-  uniqueMachineCount: 3,
-  achievementsUnlockedCount: 1,
+  uniqueMachineCount: 0,
+  achievementsUnlockedCount: 0,
 };
 
 // Seed demo activity records
@@ -257,33 +257,57 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [simulatedError, setSimulatedError] = useState<string | null>(null);
 
-  // Core progression state
+  // Core progression state (starts fresh for new users: 0 XP, Level 1)
   const [discoveredMachineIds, setDiscoveredMachineIds] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.DISCOVERED);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch {
-      // fallback to seed
+      // fallback
     }
-    return ['seated-chest-press', 'lat-pulldown', 'incline-chest-press'];
+    return [];
   });
 
   const [completedTutorialIds, setCompletedTutorialIds] = useState<string[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.TUTORIALS);
-    return saved ? JSON.parse(saved) : ['seated-chest-press', 'lat-pulldown'];
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.TUTORIALS);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // fallback
+    }
+    return [];
   });
 
   const [favoriteMachineIds, setFavoriteMachineIds] = useState<string[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.FAVORITES);
-    return saved ? JSON.parse(saved) : ['seated-chest-press'];
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.FAVORITES);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // fallback
+    }
+    return [];
   });
 
   const [activityLog, setActivityLog] = useState<ActivityRecord[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.ACTIVITY_LOG);
-    return saved ? JSON.parse(saved) : SEED_ACTIVITY_LOG;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.ACTIVITY_LOG);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) return parsed;
+      }
+    } catch {
+      // fallback
+    }
+    return [];
   });
 
   const [xpTransactions, setXpTransactions] = useState<XPTransaction[]>(() => {
@@ -291,12 +315,12 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       const saved = localStorage.getItem(STORAGE_KEYS.XP_TRANSACTIONS);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch {
-      // fallback to seed
+      // fallback
     }
-    return SEED_XP_TRANSACTIONS;
+    return [];
   });
 
   const [achievements, setAchievements] = useState<Achievement[]>(() => {
@@ -307,29 +331,13 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch {
-      // fallback to seed
+      // fallback
     }
-    return PROMPT_ACHIEVEMENTS.map(ach => {
-      if (ach.id === 'first-discovery') {
-        return { ...ach, currentCount: 2, unlocked: true, unlockedAt: Date.now() - 3600000 * 24 * 3 + 400000 };
-      }
-      if (ach.id === 'machine-explorer') {
-        return { ...ach, currentCount: 2 };
-      }
-      if (ach.id === 'equipment-expert') {
-        return { ...ach, currentCount: 2 };
-      }
-      if (ach.id === 'qr-scanner') {
-        return { ...ach, currentCount: 1 };
-      }
-      if (ach.id === 'tutorial-learner') {
-        return { ...ach, currentCount: 2 };
-      }
-      if (ach.id === 'gym-explorer-categories') {
-        return { ...ach, currentCount: 2 };
-      }
-      return ach;
-    });
+    return PROMPT_ACHIEVEMENTS.map(ach => ({
+      ...ach,
+      currentCount: 0,
+      unlocked: false,
+    }));
   });
 
   const [userProfile, setUserProfile] = useState<UserProfile>(() => {
@@ -644,13 +652,12 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const isFirstTime = !discoveredMachineIds.includes(machine.id);
     const newDiscovered = isFirstTime ? [...discoveredMachineIds, machine.id] : discoveredMachineIds;
     
-    // XP Calculation based on Prompt 6 rules:
-    // - Verified QR machine scan: 10 XP
-    // - Confirmed photo-based machine identification: 10 XP
-    // - Discover a new unique machine: additional 10 XP
+    // XP Calculation:
+    // - Every verified machine scan (QR or Photo): +10 XP
+    // - First-time unique machine discovery bonus: +10 XP additional
     const scanBaseXP = scanType === 'qr' ? XP_REWARDS.VERIFIED_QR_SCAN : XP_REWARDS.CONFIRMED_PHOTO_SCAN;
     const discoveryBonusXP = isFirstTime ? XP_REWARDS.UNIQUE_MACHINE_DISCOVERY_BONUS : 0;
-    const totalAwarded = isFirstTime ? scanBaseXP + discoveryBonusXP : 0; // Prevent farming already discovered machines
+    const totalAwarded = scanBaseXP + discoveryBonusXP;
 
     const newActivity: ActivityRecord = {
       id: `act-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -667,8 +674,8 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       confidence: scanType === 'photo' ? (confidence || 95) : 100,
       imageUrl,
       notes: isFirstTime 
-        ? `First discovery! Scanned via ${scanType.toUpperCase()}` 
-        : `Repeat scan via ${scanType.toUpperCase()} (no duplicate XP awarded)`
+        ? `First discovery! Scanned via ${scanType.toUpperCase()} (+${totalAwarded} XP)` 
+        : `Verified scan via ${scanType.toUpperCase()} (+${scanBaseXP} XP)`
     };
 
     const nextActivityLog = [newActivity, ...activityLog];
@@ -676,44 +683,39 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     if (isFirstTime) {
       setDiscoveredMachineIds(newDiscovered);
-
-      const txs: XPTransaction[] = [
-        {
-          id: `xp-scan-${Date.now()}`,
-          amount: scanBaseXP,
-          reason: scanType === 'qr' ? `Verified QR Scan: ${machine.name}` : `Confirmed Photo Scan: ${machine.name}`,
-          timestamp: Date.now(),
-          machineId: machine.id,
-          activityType: `${scanType}_scan`
-        },
-        {
-          id: `xp-bonus-${Date.now()}`,
-          amount: discoveryBonusXP,
-          reason: `Unique Discovery Bonus: ${machine.name}`,
-          timestamp: Date.now() + 1,
-          machineId: machine.id,
-          activityType: 'discovery'
-        }
-      ];
-
-      setXpTransactions(prev => [...txs, ...prev]);
-
-      addToast({
-        type: 'xp',
-        title: '🌟 Machine Discovered!',
-        message: `${machine.name} verified (+${totalAwarded} XP)`,
-        xpAmount: totalAwarded
-      });
-
-      evaluateAchievements(newDiscovered, completedTutorialIds, nextActivityLog);
-    } else {
-      addToast({
-        type: 'info',
-        title: 'Machine Identified',
-        message: `${machine.name} (Already in your discovery log)`,
-      });
-      evaluateAchievements(newDiscovered, completedTutorialIds, nextActivityLog);
     }
+
+    const txs: XPTransaction[] = [
+      {
+        id: `xp-scan-${Date.now()}`,
+        amount: scanBaseXP,
+        reason: scanType === 'qr' ? `Verified QR Scan: ${machine.name}` : `Confirmed Photo Scan: ${machine.name}`,
+        timestamp: Date.now(),
+        machineId: machine.id,
+        activityType: `${scanType}_scan`
+      },
+      ...(isFirstTime ? [{
+        id: `xp-bonus-${Date.now()}`,
+        amount: discoveryBonusXP,
+        reason: `Unique Discovery Bonus: ${machine.name}`,
+        timestamp: Date.now() + 1,
+        machineId: machine.id,
+        activityType: 'discovery' as const
+      }] : [])
+    ];
+
+    setXpTransactions(prev => [...txs, ...prev]);
+
+    addToast({
+      type: 'xp',
+      title: isFirstTime ? '🌟 Machine Discovered!' : '⚡ Scan Verified!',
+      message: isFirstTime 
+        ? `${machine.name} verified (+${totalAwarded} XP: scan + discovery bonus)`
+        : `${machine.name} verified (+${scanBaseXP} XP)`,
+      xpAmount: totalAwarded
+    });
+
+    evaluateAchievements(newDiscovered, completedTutorialIds, nextActivityLog);
 
     return {
       isNew: isFirstTime,

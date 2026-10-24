@@ -40,8 +40,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
   const favoriteMachines = machines.filter(m => favoriteMachineIds.includes(m.id));
   const unlockedAchievementsCount = achievements.filter(a => a.unlocked).length;
 
-  // Ensure stats are never stuck at hardcoded 0, pulling directly from global context and local storage state
-  const displayTotalXP = totalXP || userProfile?.totalXP || (() => {
+  // Ensure stats reflect real dynamic progress or clean 0 for new users
+  const displayTotalXP = totalXP ?? userProfile?.totalXP ?? (() => {
     try {
       const saved = localStorage.getItem('gym_scan_xp_transactions_v2');
       if (saved) {
@@ -53,7 +53,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
     } catch {
       // fallback
     }
-    return 95;
+    return 0;
   })();
 
   const displayDiscoveredCount = (discoveredMachineIds?.length ?? 0) || (userProfile?.uniqueMachineCount ?? 0) || (() => {
@@ -66,7 +66,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
     } catch {
       // fallback
     }
-    return 3;
+    return 0;
   })();
 
   const displayBadgesCount = unlockedAchievementsCount || (userProfile?.achievementsUnlockedCount ?? 0) || (() => {
@@ -79,7 +79,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
     } catch {
       // fallback
     }
-    return 1;
+    return 0;
   })();
 
   const handleSaveName = (e: React.FormEvent) => {
