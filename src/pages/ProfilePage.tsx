@@ -29,7 +29,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
     clearAllUserData 
   } = useGym();
 
-  const { user, isAuthenticated, role, isAdmin, signOut, openAuthModal } = useAuth();
+  const { user, isAuthenticated, role, isAdmin, signOut } = useAuth();
 
   const [displayName, setDisplayName] = useState(user?.displayName || userProfile.displayName);
   const [isEditingName, setIsEditingName] = useState(false);
@@ -104,17 +104,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
             Profile & App Preferences
           </h1>
         </div>
-
-        {/* Auth CTA if unauthenticated */}
-        {!isAuthenticated && (
-          <button
-            onClick={() => openAuthModal('signin')}
-            className="btn-primary"
-            style={{ fontSize: '0.82rem', padding: '0.5rem 1rem' }}
-          >
-            <User size={15} /> Sign In to Save Profile
-          </button>
-        )}
       </div>
 
       {/* Sub Tabs */}

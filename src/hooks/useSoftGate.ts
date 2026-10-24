@@ -17,21 +17,13 @@ export function useSoftGate() {
   const { isAuthenticated, openSoftGate } = useAuth();
 
   /**
-   * If authenticated, executes the callback immediately.
-   * If unauthenticated, opens the auth modal with a contextual soft gate message.
+   * Guest-First Mode: Executes the callback immediately without auth gating.
    */
   const requireAuth = useCallback(
-    (callback: () => void, message?: string) => {
-      if (isAuthenticated) {
-        callback();
-      } else {
-        openSoftGate(
-          message || 'Create a free account to save your progress and track your workout XP!',
-          'signup'
-        );
-      }
+    (callback: () => void, _message?: string) => {
+      callback();
     },
-    [isAuthenticated, openSoftGate]
+    []
   );
 
   return { requireAuth, isAuthenticated };
