@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGym } from '../context/GymContext';
 import { useSoftGate } from '../hooks/useSoftGate';
 import { useUserTier } from '../hooks/useUserTier';
@@ -189,10 +189,27 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
 
       {/* 1. Page Header */}
       <div style={{ textAlign: 'center', maxWidth: '580px', margin: '0 auto' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '0.35rem' }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '0.35rem', flexWrap: 'wrap', justifyContent: 'center' }}>
           <span className="badge badge-emerald" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
             <Sparkles size={11} /> Equipment Identification Hub
           </span>
+          {tier === 'free' && (
+            <span
+              id="scan-counter-pill"
+              className={hasReachedScanLimit ? "badge badge-rose" : "badge badge-blue"}
+              style={{
+                fontSize: '0.7rem',
+                padding: '2px 8px',
+                fontWeight: 700,
+                letterSpacing: '0.02em',
+                background: hasReachedScanLimit ? 'rgba(255, 71, 87, 0.18)' : 'rgba(0, 210, 255, 0.15)',
+                border: hasReachedScanLimit ? '1px solid #FF4757' : '1px solid #00D2FF',
+                color: hasReachedScanLimit ? '#FF6B81' : '#00D2FF',
+              }}
+            >
+              ⚡ Free Scans: {Math.min(scanCount, freeScanLimit)}/{freeScanLimit}
+            </span>
+          )}
         </div>
         <h1 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.2rem)', color: '#F1F5F9', marginBottom: '0.35rem', lineHeight: 1.2 }}>
           Identify Gym Machine
@@ -342,8 +359,8 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
             </span>
             <span>
               {hasReachedScanLimit
-                ? `You have used all ${freeScanLimit} free scans for this month.`
-                : `${scanCount} of ${freeScanLimit} free monthly scans used (${remainingFreeScans} left)`}
+                ? `${freeScanLimit} of ${freeScanLimit} free monthly scans used (0 left). Limit reached!`
+                : `${Math.min(scanCount, freeScanLimit)} of ${freeScanLimit} free monthly scans used (${remainingFreeScans} left)`}
             </span>
           </div>
           <button
