@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useGym } from '../context/GymContext';
 import { useSoftGate } from '../hooks/useSoftGate';
 import { useUserTier } from '../hooks/useUserTier';
@@ -75,8 +75,19 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
 
   const [activeMode, setActiveMode] = useState<ScanMode>(() => resolveInitialMode(initialMode));
   const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
+  // DEV test panel — collapsed by default
+  const [devPanelOpen, setDevPanelOpen] = useState(false);
 
-  const { tier, scanCount, incrementScanCount, hasReachedScanLimit, remainingFreeScans } = useUserTier();
+  const {
+    tier,
+    setTier,
+    scanCount,
+    incrementScanCount,
+    resetScanCount,
+    hasReachedScanLimit,
+    remainingFreeScans,
+    freeScanLimit,
+  } = useUserTier();
 
   useEffect(() => {
     if (initialMode) {
@@ -87,19 +98,32 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
   const { recordMachineScan } = useGym();
   const { requireAuth } = useSoftGate();
 
+  // ── Pre-scan paywall gate ─────────────────────────────────────────────────
+  // Intercepts tab switch: blocks camera/upload for free users at their limit.
+  const handleTabClick = (tabId: ScanMode) => {
+    if (tier === 'free' && hasReachedScanLimit) {
+      setShowLimitModal(true);
+      return;
+    }
+    setActiveMode(tabId);
+  };
+
+  // ── Post-scan completion handler ──────────────────────────────────────────
+  // Called only when a machine is confirmed after a successful scan.
+  // Increments counter, writes scanCount_YYYY-MM, dispatches change event.
   const handleScanSuccess = (
     machine: Machine,
     scanType: 'qr' | 'photo',
     imageUrl?: string,
     confidence?: number
   ) => {
-    // If free user has reached 3 scans limit, block further scans and open PricingModal
-    if (hasReachedScanLimit) {
+    // Defence-in-depth check (handles concurrent tabs / edge cases)
+    if (tier === 'free' && hasReachedScanLimit) {
       setShowLimitModal(true);
       return;
     }
 
-    // Increment scan count
+    // Increment immediately — saves to scanCount_YYYY-MM + dispatches event
     incrementScanCount();
 
     // Soft-gate: saving scan results + earning XP requires auth
@@ -110,6 +134,55 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
     // Machine detail navigation is always allowed (viewing is free)
     onMachineSelected(machine, scanType);
   };
+
+  // ── Paywall overlay shown instead of scanner when limit reached ────────────
+  const PaywallOverlay = () => (
+    <div
+      id="scan-hub-paywall-overlay"
+      style={{
+        minHeight: '280px',
+        borderRadius: '20px',
+        border: '1.5px solid rgba(255, 71, 87, 0.35)',
+        background: 'linear-gradient(135deg, rgba(255,71,87,0.08) 0%, rgba(4,10,26,0.97) 100%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '1rem',
+        padding: '2rem 1.5rem',
+        textAlign: 'center',
+      }}
+    >
+      <span style={{ fontSize: '2.5rem' }}>🔒</span>
+      <div>
+        <p style={{ fontSize: '1.05rem', fontWeight: 800, color: '#F1F5F9', marginBottom: '0.35rem' }}>
+          Monthly Scan Limit Reached
+        </p>
+        <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.5, maxWidth: '320px' }}>
+          You have used all{' '}
+          <strong style={{ color: '#FF6B81' }}>{freeScanLimit} free scans</strong>{' '}
+          for this month. Upgrade to Plus or Pro for unlimited scanning.
+        </p>
+      </div>
+      <button
+        id="scan-hub-paywall-upgrade-btn"
+        onClick={() => setShowLimitModal(true)}
+        style={{
+          background: 'linear-gradient(135deg, #00F59B, #00D2FF)',
+          border: 'none',
+          borderRadius: '10px',
+          padding: '0.65rem 1.5rem',
+          color: '#05140F',
+          fontWeight: 800,
+          fontSize: '0.88rem',
+          cursor: 'pointer',
+          boxShadow: '0 6px 20px rgba(0,245,155,0.3)',
+        }}
+      >
+        ⚡ Upgrade to Plus or Pro
+      </button>
+    </div>
+  );
 
   return (
     <div className="pb-28 md:pb-8" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', maxWidth: '800px', margin: '0 auto' }}>
@@ -129,7 +202,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
         </p>
       </div>
 
-      {/* 2. Prominent Segmented Mode Selector */}
+      {/* 2. Segmented Mode Selector */}
       <div
         role="tablist"
         aria-label="Scanner mode"
@@ -144,6 +217,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
       >
         {TABS.map((tab) => {
           const isActive = activeMode === tab.id;
+          const isBlocked = tier === 'free' && hasReachedScanLimit;
           return (
             <button
               key={tab.id}
@@ -151,7 +225,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
               aria-selected={isActive}
               type="button"
               id={`scan-tab-${tab.id}`}
-              onClick={() => setActiveMode(tab.id)}
+              onClick={() => handleTabClick(tab.id)}
               className="flex flex-col items-center justify-center gap-1 sm:gap-1.5 py-2 px-1 sm:py-3 sm:px-2"
               style={{
                 borderRadius: '13px',
@@ -160,7 +234,8 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
                 boxShadow: isActive
                   ? `0 0 22px ${tab.glow}, inset 0 1px 0 rgba(255,255,255,0.06)`
                   : 'none',
-                cursor: 'pointer',
+                cursor: isBlocked ? 'not-allowed' : 'pointer',
+                opacity: isBlocked && !isActive ? 0.5 : 1,
                 transition: 'all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1)',
                 position: 'relative',
                 outline: 'none',
@@ -180,6 +255,11 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
                 }} />
               )}
 
+              {/* Lock indicator for blocked tabs */}
+              {isBlocked && !isActive && (
+                <span style={{ position: 'absolute', top: '6px', right: '6px', fontSize: '0.6rem' }}>🔒</span>
+              )}
+
               {/* Icon */}
               <span style={{
                 color: isActive ? tab.accent : '#64748B',
@@ -191,7 +271,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
                 {tab.icon}
               </span>
 
-              {/* Primary label: full on sm+, compact on mobile */}
+              {/* Primary label */}
               <span style={{
                 fontSize: '0.73rem',
                 fontWeight: 700,
@@ -206,7 +286,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
                 <span className="hidden sm:inline">{tab.label}</span>
               </span>
 
-              {/* Sub-label: hidden on small mobile, visible on sm+ */}
+              {/* Sub-label */}
               <span
                 className="hidden sm:block"
                 style={{
@@ -256,17 +336,18 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
             fontSize: '0.82rem',
           }}
         >
-          <div style={{ color: hasReachedScanLimit ? '#FF6B81' : '#CBD5E1', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <div style={{ color: hasReachedScanLimit ? '#FF6B81' : '#CBD5E1', display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
             <span style={{ fontWeight: 700 }}>
               {hasReachedScanLimit ? '⚠️ Monthly Limit Reached:' : '⚡ Free Plan Allowance:'}
             </span>
             <span>
               {hasReachedScanLimit
-                ? 'You have used all 3 free scans for this month.'
-                : `${scanCount} of 3 free monthly scans used (${remainingFreeScans} left)`}
+                ? `You have used all ${freeScanLimit} free scans for this month.`
+                : `${scanCount} of ${freeScanLimit} free monthly scans used (${remainingFreeScans} left)`}
             </span>
           </div>
           <button
+            id="scan-hub-upgrade-banner-btn"
             onClick={() => setShowLimitModal(true)}
             style={{
               background: 'linear-gradient(135deg, #00F59B, #00D2FF)',
@@ -285,8 +366,10 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
         </div>
       )}
 
-      {/* 3. Active Scanner View — driven by activeMode */}
-      {activeMode === 'qr' ? (
+      {/* 3. Active Scanner View — or Paywall Overlay when limit reached */}
+      {tier === 'free' && hasReachedScanLimit ? (
+        <PaywallOverlay />
+      ) : activeMode === 'qr' ? (
         <CameraScanner
           activeMode={activeMode}
           onModeChange={setActiveMode}
@@ -304,7 +387,186 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
         />
       )}
 
-      {/* Limit Modal */}
+      {/* ── DEV Test Panel ─────────────────────────────────────────────────── */}
+      {/* Collapsible interface for simulating tiers and scan counts.           */}
+      <div
+        id="dev-test-panel"
+        style={{
+          marginTop: '0.5rem',
+          borderRadius: '14px',
+          border: '1px dashed rgba(148,163,184,0.2)',
+          overflow: 'hidden',
+          fontSize: '0.8rem',
+        }}
+      >
+        <button
+          id="dev-test-panel-toggle"
+          type="button"
+          onClick={() => setDevPanelOpen(o => !o)}
+          style={{
+            width: '100%',
+            background: 'rgba(15, 23, 42, 0.6)',
+            border: 'none',
+            padding: '0.55rem 1rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
+            color: '#475569',
+            fontWeight: 600,
+            fontSize: '0.72rem',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+          }}
+        >
+          <span>🛠 DEV — Scan Counter Test Interface</span>
+          <span style={{ fontSize: '0.62rem' }}>{devPanelOpen ? '▲ hide' : '▼ show'}</span>
+        </button>
+
+        {devPanelOpen && (
+          <div
+            style={{
+              background: 'rgba(7, 10, 18, 0.95)',
+              padding: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.85rem',
+            }}
+          >
+            {/* State readout */}
+            <div style={{
+              background: 'rgba(0,0,0,0.45)',
+              borderRadius: '8px',
+              padding: '0.65rem 0.9rem',
+              color: '#94A3B8',
+              fontFamily: 'monospace',
+              fontSize: '0.77rem',
+              lineHeight: 1.8,
+            }}>
+              <div>
+                <span style={{ color: '#64748B' }}>tier: </span>
+                <strong style={{ color: tier === 'free' ? '#FF6B81' : '#00F59B' }}>{tier}</strong>
+              </div>
+              <div>
+                <span style={{ color: '#64748B' }}>scanCount: </span>
+                <strong style={{ color: '#F1F5F9' }}>{scanCount}</strong>
+                <span style={{ color: '#475569' }}> / {freeScanLimit}</span>
+              </div>
+              <div>
+                <span style={{ color: '#64748B' }}>hasReachedScanLimit: </span>
+                <strong style={{ color: hasReachedScanLimit ? '#FF6B81' : '#00F59B' }}>
+                  {String(hasReachedScanLimit)}
+                </strong>
+              </div>
+              <div>
+                <span style={{ color: '#64748B' }}>remainingFreeScans: </span>
+                <strong style={{ color: '#F1F5F9' }}>{remainingFreeScans}</strong>
+              </div>
+              <div>
+                <span style={{ color: '#64748B' }}>localStorage key: </span>
+                <code style={{ color: '#93C5FD', fontSize: '0.7rem' }}>
+                  scanCount_{new Date().toISOString().slice(0, 7)}
+                </code>
+              </div>
+            </div>
+
+            {/* Tier switcher */}
+            <div>
+              <p style={{ color: '#475569', marginBottom: '0.4rem', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.66rem', letterSpacing: '0.07em' }}>
+                Simulate Tier
+              </p>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                {(['free', 'plus', 'pro'] as const).map(t => (
+                  <button
+                    key={t}
+                    id={`dev-set-tier-${t}`}
+                    onClick={() => setTier(t)}
+                    style={{
+                      flex: 1,
+                      padding: '0.4rem 0.5rem',
+                      borderRadius: '7px',
+                      border: `1px solid ${tier === t ? '#00F59B' : 'rgba(255,255,255,0.08)'}`,
+                      background: tier === t ? 'rgba(0,245,155,0.12)' : 'rgba(255,255,255,0.03)',
+                      color: tier === t ? '#00F59B' : '#94A3B8',
+                      fontWeight: 700,
+                      fontSize: '0.74rem',
+                      cursor: 'pointer',
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Scan counter controls */}
+            <div>
+              <p style={{ color: '#475569', marginBottom: '0.4rem', fontWeight: 700, textTransform: 'uppercase', fontSize: '0.66rem', letterSpacing: '0.07em' }}>
+                Scan Counter Controls
+              </p>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  id="dev-increment-scan"
+                  onClick={() => incrementScanCount()}
+                  style={{
+                    flex: 1,
+                    padding: '0.45rem 0.75rem',
+                    borderRadius: '7px',
+                    border: '1px solid rgba(0, 210, 255, 0.3)',
+                    background: 'rgba(0, 210, 255, 0.07)',
+                    color: '#00D2FF',
+                    fontWeight: 700,
+                    fontSize: '0.74rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  + Simulate Scan
+                </button>
+                <button
+                  id="dev-reset-scan"
+                  onClick={() => resetScanCount()}
+                  style={{
+                    flex: 1,
+                    padding: '0.45rem 0.75rem',
+                    borderRadius: '7px',
+                    border: '1px solid rgba(148,163,184,0.15)',
+                    background: 'rgba(255,255,255,0.03)',
+                    color: '#94A3B8',
+                    fontWeight: 700,
+                    fontSize: '0.74rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  ↺ Reset to 0
+                </button>
+                <button
+                  id="dev-set-scan-at-limit"
+                  onClick={() => {
+                    resetScanCount();
+                    for (let i = 0; i < freeScanLimit; i++) incrementScanCount();
+                  }}
+                  style={{
+                    flex: '1 1 100%',
+                    padding: '0.45rem 0.75rem',
+                    borderRadius: '7px',
+                    border: '1px solid rgba(255,71,87,0.3)',
+                    background: 'rgba(255,71,87,0.07)',
+                    color: '#FF6B81',
+                    fontWeight: 700,
+                    fontSize: '0.74rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  🔒 Set to Limit ({freeScanLimit}) — triggers paywall
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Pricing / Limit Modal */}
       <PricingModal
         isOpen={showLimitModal}
         onClose={() => setShowLimitModal(false)}

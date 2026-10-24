@@ -3,31 +3,57 @@ import { useState, useEffect, useCallback } from 'react';
 export type UserTier = 'free' | 'plus' | 'pro';
 
 const STORAGE_KEY_TIER = 'user_tier';
-const STORAGE_KEY_SCANS = 'scanCount';
-const STORAGE_KEY_MONTH = 'scanMonth';
 
 export const FREE_SCAN_LIMIT = 3;
+
+// ─── Storage key helpers ──────────────────────────────────────────────────────
+
+/** Returns the current-month storage key, e.g. "scanCount_2026-10" */
+function monthKey(date = new Date()): string {
+  return `scanCount_${date.toISOString().slice(0, 7)}`;
+}
+
+/**
+ * Read scan count for the current month from localStorage.
+ * Handles legacy migration from old 'scanCount' + 'scanMonth' keys.
+ */
+export function getScanCount(): number {
+  const key = monthKey();
+  const raw = localStorage.getItem(key);
+  if (raw !== null) {
+    return parseInt(raw, 10) || 0;
+  }
+
+  // ── Legacy migration: old separate 'scanCount' + 'scanMonth' keys ──
+  const currentMonth = new Date().toISOString().slice(0, 7);
+  const legacyMonth = localStorage.getItem('scanMonth');
+  const legacyCount = localStorage.getItem('scanCount');
+  if (legacyMonth === currentMonth && legacyCount !== null) {
+    const count = parseInt(legacyCount, 10) || 0;
+    localStorage.setItem(key, count.toString());
+    localStorage.removeItem('scanCount');
+    localStorage.removeItem('scanMonth');
+    return count;
+  }
+
+  return 0;
+}
+
+/** Write the scan count for the current month into localStorage. */
+function writeScanCount(count: number): void {
+  localStorage.setItem(monthKey(), count.toString());
+}
+
+// ─── Hook ─────────────────────────────────────────────────────────────────────
 
 export function useUserTier() {
   const [tier, setTierState] = useState<UserTier>(() => {
     const saved = localStorage.getItem(STORAGE_KEY_TIER);
-    if (saved === 'plus' || saved === 'pro' || saved === 'free') {
-      return saved;
-    }
+    if (saved === 'plus' || saved === 'pro' || saved === 'free') return saved;
     return 'free';
   });
 
-  const [scanCount, setScanCountState] = useState<number>(() => {
-    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
-    const storedMonth = localStorage.getItem(STORAGE_KEY_MONTH);
-    if (storedMonth !== currentMonth) {
-      localStorage.setItem(STORAGE_KEY_MONTH, currentMonth);
-      localStorage.setItem(STORAGE_KEY_SCANS, '0');
-      return 0;
-    }
-    const val = localStorage.getItem(STORAGE_KEY_SCANS);
-    return val ? parseInt(val, 10) || 0 : 0;
-  });
+  const [scanCount, setScanCountState] = useState<number>(() => getScanCount());
 
   // Sync tier changes to localStorage and dispatch custom event for cross-component sync
   const setTier = useCallback((newTier: UserTier) => {
@@ -37,23 +63,17 @@ export function useUserTier() {
   }, []);
 
   const incrementScanCount = useCallback(() => {
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const storedMonth = localStorage.getItem(STORAGE_KEY_MONTH);
-    let nextCount = 1;
-    if (storedMonth === currentMonth) {
-      const current = parseInt(localStorage.getItem(STORAGE_KEY_SCANS) || '0', 10) || 0;
-      nextCount = current + 1;
-    } else {
-      localStorage.setItem(STORAGE_KEY_MONTH, currentMonth);
-    }
-    localStorage.setItem(STORAGE_KEY_SCANS, nextCount.toString());
+    const current = getScanCount();
+    const nextCount = current + 1;
+    writeScanCount(nextCount);
     setScanCountState(nextCount);
+    // Dispatch event so progress pill / any other listener updates immediately
     window.dispatchEvent(new Event('scan_count_change'));
     return nextCount;
   }, []);
 
   const resetScanCount = useCallback(() => {
-    localStorage.setItem(STORAGE_KEY_SCANS, '0');
+    writeScanCount(0);
     setScanCountState(0);
     window.dispatchEvent(new Event('scan_count_change'));
   }, []);
@@ -68,8 +88,7 @@ export function useUserTier() {
     };
 
     const handleScanChange = () => {
-      const val = localStorage.getItem(STORAGE_KEY_SCANS);
-      setScanCountState(val ? parseInt(val, 10) || 0 : 0);
+      setScanCountState(getScanCount());
     };
 
     window.addEventListener('tier_change', handleTierChange);
@@ -87,7 +106,6 @@ export function useUserTier() {
   const isPlus = tier === 'plus';
   const isPro = tier === 'pro';
 
-  // Check if scan limit reached
   const hasReachedScanLimit = isFree && scanCount >= FREE_SCAN_LIMIT;
   const remainingFreeScans = Math.max(0, FREE_SCAN_LIMIT - scanCount);
 
@@ -95,6 +113,7 @@ export function useUserTier() {
     tier,
     setTier,
     scanCount,
+    getScanCount,
     incrementScanCount,
     resetScanCount,
     isFree,
