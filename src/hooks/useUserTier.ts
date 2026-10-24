@@ -7,41 +7,57 @@ const STORAGE_KEY_TIER = 'user_tier';
 export const FREE_SCAN_LIMIT = 3;
 
 // ─── Storage key helpers ──────────────────────────────────────────────────────
-
-/** Returns the current-month storage key, e.g. "scanCount_2026-10" */
-function monthKey(date = new Date()): string {
-  return `scanCount_${date.toISOString().slice(0, 7)}`;
-}
+const STORAGE_KEY_DAILY_SCANS = 'scanCount_daily';
+const STORAGE_KEY_RESET_TIMESTAMP = 'scanCount_lastResetTime';
+const TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000;
 
 /**
- * Read scan count for the current month from localStorage.
- * Handles legacy migration from old 'scanCount' + 'scanMonth' keys.
+ * Read scan count for the current 24-hour window from localStorage.
+ * Automatically resets count if 24 hours have elapsed since last reset timestamp.
  */
 export function getScanCount(): number {
-  const key = monthKey();
-  const raw = localStorage.getItem(key);
-  if (raw !== null) {
-    return parseInt(raw, 10) || 0;
-  }
+  try {
+    if (typeof localStorage === 'undefined') return 0;
+    const now = Date.now();
+    const lastReset = localStorage.getItem(STORAGE_KEY_RESET_TIMESTAMP);
+    
+    // If no reset timestamp exists, initialize it
+    if (!lastReset) {
+      localStorage.setItem(STORAGE_KEY_RESET_TIMESTAMP, now.toString());
+      localStorage.setItem(STORAGE_KEY_DAILY_SCANS, '0');
+      return 0;
+    }
 
-  // ── Legacy migration: old separate 'scanCount' + 'scanMonth' keys ──
-  const currentMonth = new Date().toISOString().slice(0, 7);
-  const legacyMonth = localStorage.getItem('scanMonth');
-  const legacyCount = localStorage.getItem('scanCount');
-  if (legacyMonth === currentMonth && legacyCount !== null) {
-    const count = parseInt(legacyCount, 10) || 0;
-    localStorage.setItem(key, count.toString());
-    localStorage.removeItem('scanCount');
-    localStorage.removeItem('scanMonth');
-    return count;
-  }
+    const lastResetTime = parseInt(lastReset, 10) || 0;
+    // Check if 24 hours have passed
+    if (now - lastResetTime >= TWENTY_FOUR_HOURS_MS) {
+      localStorage.setItem(STORAGE_KEY_RESET_TIMESTAMP, now.toString());
+      localStorage.setItem(STORAGE_KEY_DAILY_SCANS, '0');
+      return 0;
+    }
 
-  return 0;
+    const raw = localStorage.getItem(STORAGE_KEY_DAILY_SCANS);
+    if (raw !== null) {
+      return parseInt(raw, 10) || 0;
+    }
+
+    return 0;
+  } catch {
+    return 0;
+  }
 }
 
-/** Write the scan count for the current month into localStorage. */
+/** Write the daily scan count into localStorage. */
 function writeScanCount(count: number): void {
-  localStorage.setItem(monthKey(), count.toString());
+  try {
+    if (typeof localStorage === 'undefined') return;
+    localStorage.setItem(STORAGE_KEY_DAILY_SCANS, count.toString());
+    if (!localStorage.getItem(STORAGE_KEY_RESET_TIMESTAMP)) {
+      localStorage.setItem(STORAGE_KEY_RESET_TIMESTAMP, Date.now().toString());
+    }
+  } catch {
+    // Ignore storage quota errors
+  }
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
@@ -106,9 +122,9 @@ export function useUserTier() {
   const isPlus = tier === 'plus';
   const isPro = tier === 'pro';
 
-  // Free Beta Testing Mode: Unlimited scans for all users without soft paywall
-  const hasReachedScanLimit = false;
-  const remainingFreeScans = Infinity;
+  // Daily Beta Scan Limit: Exactly 3 scans per user/session every 24 hours
+  const hasReachedScanLimit = isFree && scanCount >= FREE_SCAN_LIMIT;
+  const remainingFreeScans = Math.max(0, FREE_SCAN_LIMIT - scanCount);
 
   return {
     tier,

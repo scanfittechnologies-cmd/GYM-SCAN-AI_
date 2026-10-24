@@ -135,52 +135,45 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
     onMachineSelected(machine, scanType);
   };
 
-  // ── Paywall overlay shown instead of scanner when limit reached ────────────
-  const PaywallOverlay = () => (
+  // ── Daily beta limit banner shown instead of scanner when limit reached ──────
+  const DailyLimitBanner = () => (
     <div
-      id="scan-hub-paywall-overlay"
+      id="scan-hub-daily-limit-banner"
       style={{
-        minHeight: '280px',
+        minHeight: '220px',
         borderRadius: '20px',
-        border: '1.5px solid rgba(255, 71, 87, 0.35)',
-        background: 'linear-gradient(135deg, rgba(255,71,87,0.08) 0%, rgba(4,10,26,0.97) 100%)',
+        border: '1.5px solid rgba(255, 165, 0, 0.35)',
+        background: 'linear-gradient(135deg, rgba(255,165,0,0.07) 0%, rgba(4,10,26,0.97) 100%)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '1rem',
+        gap: '0.85rem',
         padding: '2rem 1.5rem',
         textAlign: 'center',
       }}
     >
-      <span style={{ fontSize: '2.5rem' }}>🔒</span>
+      <span style={{ fontSize: '2.2rem' }}>🌅</span>
       <div>
         <p style={{ fontSize: '1.05rem', fontWeight: 800, color: '#F1F5F9', marginBottom: '0.35rem' }}>
-          Monthly Scan Limit Reached
+          Daily Scan Limit Reached
         </p>
-        <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.5, maxWidth: '320px' }}>
-          You have used all{' '}
-          <strong style={{ color: '#FF6B81' }}>{freeScanLimit} free scans</strong>{' '}
-          for this month. Upgrade to Plus or Pro for unlimited scanning.
+        <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.6, maxWidth: '340px' }}>
+          You've reached your{' '}
+          <strong style={{ color: '#FFA500' }}>{freeScanLimit} free daily beta scans</strong>.
+          {' '}Check back tomorrow for more!
         </p>
       </div>
-      <button
-        id="scan-hub-paywall-upgrade-btn"
-        onClick={() => setShowLimitModal(true)}
-        style={{
-          background: 'linear-gradient(135deg, #00F59B, #00D2FF)',
-          border: 'none',
-          borderRadius: '10px',
-          padding: '0.65rem 1.5rem',
-          color: '#05140F',
-          fontWeight: 800,
-          fontSize: '0.88rem',
-          cursor: 'pointer',
-          boxShadow: '0 6px 20px rgba(0,245,155,0.3)',
-        }}
-      >
-        ⚡ Upgrade to Plus or Pro
-      </button>
+      <div style={{
+        background: 'rgba(255, 165, 0, 0.08)',
+        border: '1px solid rgba(255, 165, 0, 0.2)',
+        borderRadius: '10px',
+        padding: '0.5rem 1.25rem',
+        fontSize: '0.78rem',
+        color: '#94A3B8',
+      }}>
+        ⏰ Scans reset every 24 hours
+      </div>
     </div>
   );
 
@@ -202,12 +195,18 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
                 padding: '2px 8px',
                 fontWeight: 700,
                 letterSpacing: '0.02em',
-                background: 'rgba(0, 210, 255, 0.15)',
-                border: '1px solid #00D2FF',
-                color: '#00D2FF',
+                background: hasReachedScanLimit
+                  ? 'rgba(255, 107, 129, 0.15)'
+                  : 'rgba(0, 210, 255, 0.15)',
+                border: hasReachedScanLimit
+                  ? '1px solid #FF6B81'
+                  : '1px solid #00D2FF',
+                color: hasReachedScanLimit ? '#FF6B81' : '#00D2FF',
               }}
             >
-              ⚡ Beta Mode: Unlimited Scans
+              {hasReachedScanLimit
+                ? '🔒 Daily Limit Reached'
+                : `⚡ Beta: ${scanCount} of ${freeScanLimit} daily scans used`}
             </span>
           )}
         </div>
@@ -342,7 +341,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
 
       {/* 3. Active Scanner View — or Paywall Overlay when limit reached */}
       {tier === 'free' && hasReachedScanLimit ? (
-        <PaywallOverlay />
+        <DailyLimitBanner />
       ) : activeMode === 'qr' ? (
         <CameraScanner
           activeMode={activeMode}

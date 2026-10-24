@@ -64,11 +64,13 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   const animationFrameRef = useRef<number | null>(null);
   const isScanningRef = useRef<boolean>(false);
   const activeStreamRef = useRef<MediaStream | null>(null);
+  const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   
   const [cameraState, setCameraState] = useState<CameraPermissionState>('unrequested');
   const [cameraFacing, setCameraFacing] = useState<'environment' | 'user'>('environment');
   const [scanError, setScanError] = useState<string | null>(null);
   const [showCameraHelpModal, setShowCameraHelpModal] = useState(false);
+  const [cooldownSeconds, setCooldownSeconds] = useState<number>(0);
 
   // Result identification states
   const [detectedMachine, setDetectedMachine] = useState<Machine | null>(null);
@@ -101,6 +103,22 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       videoRef.current.srcObject = null;
     }
     setCameraState('stopped');
+  }, []);
+
+  /** Start a post-scan cooldown timer (default 10s) to prevent rapid button spam. */
+  const startCooldown = useCallback((seconds = 10) => {
+    if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
+    setCooldownSeconds(seconds);
+    cooldownIntervalRef.current = setInterval(() => {
+      setCooldownSeconds(prev => {
+        if (prev <= 1) {
+          clearInterval(cooldownIntervalRef.current!);
+          cooldownIntervalRef.current = null;
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
   }, []);
 
   // Process QR Code against exact database mapping with audio & haptic chime
@@ -297,6 +315,9 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
         cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = null;
       }
+      if (cooldownIntervalRef.current) {
+        clearInterval(cooldownIntervalRef.current);
+      }
     };
   }, []);
 
@@ -443,6 +464,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
           setDetectedConfidence(output.confidence || 92);
           // Consume scan credit immediately upon AI recognition, before user confirmation
           onScanCredited?.();
+          startCooldown(10);
         } else {
           setScanError('Could not reliably recognize machine. Please try another angle or select manually.');
         }
@@ -484,6 +506,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
         setDetectedConfidence(output.confidence || 85);
         // Consume scan credit immediately upon AI recognition, before user confirmation
         onScanCredited?.();
+        startCooldown(10);
       } else {
         setScanError(output.uncertainty_reason || 'Could not reliably identify this machine. Please center the full frame or scan its QR code.');
       }
@@ -875,10 +898,15 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
                 <button
                   type="button"
                   onClick={handleCaptureAndScanMachine}
+                  disabled={isAiScanning || cooldownSeconds > 0}
                   style={{
-                    background: 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)',
-                    color: '#FFFFFF',
-                    border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                    background: (isAiScanning || cooldownSeconds > 0)
+                      ? 'rgba(30, 40, 60, 0.85)'
+                      : 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)',
+                    color: (isAiScanning || cooldownSeconds > 0) ? '#64748B' : '#FFFFFF',
+                    border: (isAiScanning || cooldownSeconds > 0)
+                      ? '1.5px solid rgba(100,116,139,0.3)'
+                      : '1.5px solid rgba(255, 255, 255, 0.35)',
                     borderRadius: '999px',
                     padding: '0.75rem 1.85rem',
                     fontSize: '0.88rem',
@@ -886,14 +914,18 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     gap: '10px',
-                    boxShadow: '0 8px 25px rgba(0, 210, 255, 0.45)',
-                    cursor: 'pointer',
+                    boxShadow: (isAiScanning || cooldownSeconds > 0)
+                      ? 'none'
+                      : '0 8px 25px rgba(0, 210, 255, 0.45)',
+                    cursor: (isAiScanning || cooldownSeconds > 0) ? 'not-allowed' : 'pointer',
                     transition: 'all 0.2s ease',
                     textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
                   }}
                 >
                   <Camera size={18} />
-                  <span>📸 Snap Photo to Scan</span>
+                  {cooldownSeconds > 0
+                    ? <span>⏳ Ready in {cooldownSeconds}s…</span>
+                    : <span>📸 Snap Photo to Scan</span>}
                   <Sparkles size={15} />
                 </button>
               )}

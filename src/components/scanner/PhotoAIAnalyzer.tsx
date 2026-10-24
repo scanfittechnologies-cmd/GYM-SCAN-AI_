@@ -386,12 +386,14 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     };
   }, []);
 
-  const startCooldown = (delayStr?: string | null) => {
+  const startCooldown = (delayStrOrSeconds?: string | number | null) => {
     if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
     
     let seconds = 30; // default 30s
-    if (delayStr) {
-      const match = delayStr.match(/(\d+)/);
+    if (typeof delayStrOrSeconds === 'number') {
+      seconds = delayStrOrSeconds;
+    } else if (delayStrOrSeconds) {
+      const match = delayStrOrSeconds.match(/(\d+)/);
       if (match) seconds = parseInt(match[1], 10);
     }
 
@@ -675,6 +677,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             setSelectedMatch(primary);
             // Consume scan credit immediately upon AI recognition, before user confirmation
             onScanCredited?.();
+            startCooldown(10);
           }
         }
       }
@@ -848,10 +851,15 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
               <button
                 type="button"
                 onClick={captureLivePhoto}
+                disabled={analyzing || cooldownSeconds > 0}
                 style={{
-                  background: 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)',
-                  color: '#FFFFFF',
-                  border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                  background: (analyzing || cooldownSeconds > 0)
+                    ? 'rgba(30, 40, 60, 0.85)'
+                    : 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)',
+                  color: (analyzing || cooldownSeconds > 0) ? '#64748B' : '#FFFFFF',
+                  border: (analyzing || cooldownSeconds > 0)
+                    ? '1.5px solid rgba(100,116,139,0.3)'
+                    : '1.5px solid rgba(255, 255, 255, 0.35)',
                   borderRadius: '999px',
                   padding: '0.75rem 1.85rem',
                   fontSize: '0.88rem',
@@ -859,14 +867,18 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '10px',
-                  boxShadow: '0 8px 25px rgba(0, 210, 255, 0.45)',
-                  cursor: 'pointer',
+                  boxShadow: (analyzing || cooldownSeconds > 0)
+                    ? 'none'
+                    : '0 8px 25px rgba(0, 210, 255, 0.45)',
+                  cursor: (analyzing || cooldownSeconds > 0) ? 'not-allowed' : 'pointer',
                   transition: 'all 0.2s ease',
                   textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
                 }}
               >
                 <Camera size={18} />
-                <span>📸 Snap Photo to Scan</span>
+                {cooldownSeconds > 0
+                  ? <span>⏳ Ready in {cooldownSeconds}s…</span>
+                  : <span>📸 Snap Photo to Scan</span>}
                 <Sparkles size={15} />
               </button>
             )}
