@@ -77,6 +77,7 @@ interface PhotoAIAnalyzerProps {
   initialMode?: 'ai' | 'qr' | 'upload';
   activeMode?: 'qr' | 'ai_camera' | 'upload';
   onModeChange?: (mode: 'qr' | 'ai_camera' | 'upload') => void;
+  onScanCredited?: () => void;
 }
 
 export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
@@ -85,7 +86,8 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   onSelectManual,
   initialMode = 'ai',
   activeMode,
-  onModeChange
+  onModeChange,
+  onScanCredited
 }) => {
   const { machines, userProfile } = useGym();
   const cameraInputRef = useRef<HTMLInputElement | null>(null);
@@ -671,6 +673,8 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
 
             setPossibleMatches(matchCandidates);
             setSelectedMatch(primary);
+            // Consume scan credit immediately upon AI recognition, before user confirmation
+            onScanCredited?.();
           }
         }
       }

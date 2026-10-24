@@ -117,14 +117,14 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
     imageUrl?: string,
     confidence?: number
   ) => {
-    // Defence-in-depth check (handles concurrent tabs / edge cases)
-    if (tier === 'free' && hasReachedScanLimit) {
-      setShowLimitModal(true);
-      return;
+    // For QR code scans (which don't invoke Gemini Vision AI), consume credit here
+    if (scanType === 'qr') {
+      if (tier === 'free' && hasReachedScanLimit) {
+        setShowLimitModal(true);
+        return;
+      }
+      incrementScanCount();
     }
-
-    // Increment immediately — saves to scanCount_YYYY-MM + dispatches event
-    incrementScanCount();
 
     // Soft-gate: saving scan results + earning XP requires auth
     requireAuth(
@@ -376,6 +376,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
           onMachineIdentified={(m, type, img, conf) => handleScanSuccess(m, type || 'qr', img, conf)}
           onSwitchToManual={() => onNavigate('library')}
           onSwitchToPhoto={() => setActiveMode('ai_camera')}
+          onScanCredited={incrementScanCount}
         />
       ) : (
         <PhotoAIAnalyzer
@@ -384,6 +385,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
           onMachineConfirmed={(m, type, img, conf) => handleScanSuccess(m, type, img, conf)}
           onOpenSettingsDocs={() => onNavigate('profile')}
           onSelectManual={() => onNavigate('library')}
+          onScanCredited={incrementScanCount}
         />
       )}
 

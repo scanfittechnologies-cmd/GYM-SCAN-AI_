@@ -33,6 +33,7 @@ export interface CameraScannerProps {
   initialMode?: 'qr' | 'ai-snapshot';
   activeMode?: 'qr' | 'ai_camera' | 'upload';
   onModeChange?: (mode: 'qr' | 'ai_camera' | 'upload') => void;
+  onScanCredited?: () => void;
 }
 
 export type CameraPermissionState = 
@@ -50,7 +51,8 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   onSwitchToPhoto,
   initialMode = 'qr',
   activeMode = 'qr',
-  onModeChange
+  onModeChange,
+  onScanCredited
 }) => {
   const { machines, getMachineByQRCode } = useGym();
   
@@ -439,6 +441,8 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
           setDetectedMachine(primary);
           setDetectedScanType('photo');
           setDetectedConfidence(output.confidence || 92);
+          // Consume scan credit immediately upon AI recognition, before user confirmation
+          onScanCredited?.();
         } else {
           setScanError('Could not reliably recognize machine. Please try another angle or select manually.');
         }
@@ -478,6 +482,8 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
         setDetectedMachine(dynamicMachine);
         setDetectedScanType('photo');
         setDetectedConfidence(output.confidence || 85);
+        // Consume scan credit immediately upon AI recognition, before user confirmation
+        onScanCredited?.();
       } else {
         setScanError(output.uncertainty_reason || 'Could not reliably identify this machine. Please center the full frame or scan its QR code.');
       }
