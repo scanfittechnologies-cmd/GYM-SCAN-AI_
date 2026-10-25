@@ -19,8 +19,7 @@ import {
   Sliders, 
   CheckCircle2, 
   HelpCircle, 
-  ExternalLink,
-  Lock
+  ExternalLink
 } from 'lucide-react';
 import { MachineImageGallery } from '../components/machines/MachineImageGallery';
 import { InteractiveTutorialModal } from '../components/machines/InteractiveTutorialModal';
@@ -29,8 +28,6 @@ import { ReportModal } from '../components/machines/ReportModal';
 import { MachineSvgIllustration } from '../components/machines/MachineSvgIllustrations';
 import { getExercisesForMachine } from '../data/machineExercises';
 import { useSoftGate } from '../hooks/useSoftGate';
-import { useUserTier } from '../hooks/useUserTier';
-import { PricingModal } from '../components/pricing/PricingModal';
 
 // Feature flag: set to true to re-enable the interactive guide button & modal
 const SHOW_START_GUIDE = false;
@@ -59,12 +56,9 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
   } = useGym();
 
   const { requireAuth } = useSoftGate();
-  const { isFree } = useUserTier();
-
   const [activeTab, setActiveTab] = useState<'overview' | 'adjustments' | 'exercises' | 'mistakes'>('overview');
   const [showTutorialModal, setShowTutorialModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [showPricingModal, setShowPricingModal] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<MachineExercise | null>(null);
 
   // Scroll to top and reset tab whenever machine changes
@@ -331,19 +325,21 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
 
       {/* 3. Navigation Tabs for Specific Sections */}
       <div>
-        <div style={{
-          display: 'flex',
-          gap: '0.4rem',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          paddingBottom: '0.5rem',
-          overflowX: 'auto',
-          scrollbarWidth: 'none'
-        }}>
+        <div 
+          className="w-full max-w-full overflow-x-auto no-scrollbar flex items-center snap-x scroll-smooth py-1"
+          style={{
+            gap: '0.4rem',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+            paddingBottom: '0.5rem',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+          }}
+        >
           {[
             { id: 'overview', label: 'Step-by-Step Usage' },
             { id: 'adjustments', label: 'Machine Adjustments' },
             { id: 'exercises', label: `Exercises (${exercises.length})` },
-            { id: 'mistakes', label: 'Common Mistakes & Injury Prevention', isLockedForFree: isFree },
+            { id: 'mistakes', label: 'Common Mistakes & Injury Prevention' },
           ].map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -351,41 +347,24 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id as any)}
+                className="snap-start shrink-0"
                 style={{
-                  background: isActive ? 'rgba(0, 245, 155, 0.12)' : 'transparent',
+                  background: isActive ? 'rgba(0, 245, 155, 0.12)' : 'rgba(255, 255, 255, 0.03)',
                   color: isActive ? '#00F59B' : '#94A3B8',
-                  border: isActive ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid transparent',
+                  border: isActive ? '1px solid rgba(0, 245, 155, 0.35)' : '1px solid rgba(255, 255, 255, 0.06)',
                   borderRadius: '10px',
-                  padding: '0.55rem 1rem',
-                  fontSize: '0.85rem',
+                  padding: '0.5rem 0.85rem',
+                  fontSize: '0.82rem',
                   fontWeight: 700,
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
-                  transition: 'all 0.15s',
+                  transition: 'all 0.15s ease',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
                 }}
               >
                 {tab.label}
-                {tab.isLockedForFree && (
-                  <span
-                    style={{
-                      background: 'rgba(255, 184, 0, 0.15)',
-                      border: '1px solid rgba(255, 184, 0, 0.35)',
-                      color: '#FFB800',
-                      fontSize: '0.66rem',
-                      padding: '1px 6px',
-                      borderRadius: '999px',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '3px',
-                      fontWeight: 800,
-                    }}
-                  >
-                    <Lock size={10} /> PRO
-                  </span>
-                )}
               </button>
             );
           })}
@@ -850,93 +829,10 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                 </div>
 
                 <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  {isFree && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        inset: 0,
-                        zIndex: 10,
-                        backdropFilter: 'blur(7px)',
-                        WebkitBackdropFilter: 'blur(7px)',
-                        background: 'rgba(10, 14, 23, 0.78)',
-                        borderRadius: '16px',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        textAlign: 'center',
-                        padding: '2rem 1.5rem',
-                        gap: '0.85rem',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: '54px',
-                          height: '54px',
-                          borderRadius: '50%',
-                          background: 'linear-gradient(135deg, rgba(255, 184, 0, 0.2), rgba(255, 71, 87, 0.2))',
-                          border: '1px solid rgba(255, 184, 0, 0.4)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: '#FFB800',
-                          boxShadow: '0 0 20px rgba(255, 184, 0, 0.25)',
-                        }}
-                      >
-                        <Lock size={26} />
-                      </div>
-                      <h4
-                        style={{
-                          fontSize: '1.2rem',
-                          fontWeight: 800,
-                          color: '#F8FAFC',
-                          margin: 0,
-                        }}
-                      >
-                        Injury Prevention & Form Advice is Locked
-                      </h4>
-                      <p
-                        style={{
-                          fontSize: '0.86rem',
-                          color: '#94A3B8',
-                          maxWidth: '420px',
-                          margin: 0,
-                          lineHeight: 1.5,
-                        }}
-                      >
-                        Unlock detailed common form mistakes, injury prevention guides, and posture checks with Plus or Pro.
-                      </p>
-                      <button
-                        onClick={() => setShowPricingModal(true)}
-                        style={{
-                          background: 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
-                          border: 'none',
-                          borderRadius: '12px',
-                          padding: '0.65rem 1.35rem',
-                          color: '#05140F',
-                          fontWeight: 800,
-                          fontSize: '0.86rem',
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                          boxShadow: '0 4px 16px rgba(0, 245, 155, 0.35)',
-                        }}
-                      >
-                        <Sparkles size={16} /> Unlock Form Advice & Injury Prevention
-                      </button>
-                    </div>
-                  )}
-
                   {mistakesList.map((item, idx) => (
                     <div
                       key={idx}
                       className="grid grid-cols-1 md:grid-cols-2 gap-3"
-                      style={{
-                        filter: isFree ? 'blur(4px)' : 'none',
-                        userSelect: isFree ? 'none' : 'auto',
-                        pointerEvents: isFree ? 'none' : 'auto',
-                      }}
                     >
                       {/* Left: ❌ Mistake */}
                       <div style={{
@@ -1089,21 +985,6 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
           onClose={() => setShowReportModal(false)}
         />
       )}
-
-      {/* Free Beta Testing Mode: PricingModal disabled */}
-      {/* {showPricingModal && (
-        <PricingModal
-          isOpen={showPricingModal}
-          onClose={() => setShowPricingModal(false)}
-          onNavigateToPricing={() => {
-            setShowPricingModal(false);
-            if (onNavigate) onNavigate('pricing');
-          }}
-          highlightTier="pro"
-          customTitle="Unlock Form Injury Prevention"
-          customMessage="Unlock common mistakes, injury prevention tips, and AI form analysis by upgrading to Pro or Plus."
-        />
-      )} */}
 
     </div>
   );

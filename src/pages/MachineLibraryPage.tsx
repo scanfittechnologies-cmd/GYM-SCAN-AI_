@@ -375,12 +375,15 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
 
   /* ── Categories List ── */
   const allCategories = useMemo(() => {
+    // Keep Core visible, hide Cardio filter
+    const activeCategories = MACHINE_CATEGORIES.filter(c => c.id !== 'Cardio');
+    const nonCardioMachines = machines.filter(m => m.category !== 'Cardio' && !m.equipmentType?.toLowerCase().includes('cardio'));
     return [
-      { id: 'all', name: 'All Machines', count: machines.length, emoji: '🏋️' },
-      ...MACHINE_CATEGORIES.map(c => ({
+      { id: 'all', name: 'All Machines', count: nonCardioMachines.length, emoji: '🏋️' },
+      ...activeCategories.map(c => ({
         id: c.id,
         name: c.name,
-        count: machines.filter(m => m.category === c.id).length,
+        count: nonCardioMachines.filter(m => m.category === c.id).length,
         emoji: CATEGORY_COLORS[c.id]?.icon ?? '🔧',
       })),
     ];
@@ -389,12 +392,16 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
   /* ── Muscle Groups List for secondary filter ── */
   const muscleGroups = useMemo(() => {
     const muscles = new Set<string>();
-    machines.forEach(m => {
-      m.primaryMuscles.forEach(pm => {
-        const simpleName = pm.split('(')[0].trim();
-        if (simpleName) muscles.add(simpleName);
+    machines
+      .filter(m => m.category !== 'Cardio' && !m.equipmentType?.toLowerCase().includes('cardio'))
+      .forEach(m => {
+        m.primaryMuscles.forEach(pm => {
+          const simpleName = pm.split('(')[0].trim();
+          if (simpleName && simpleName.toLowerCase() !== 'cardiovascular system') {
+            muscles.add(simpleName);
+          }
+        });
       });
-    });
     return Array.from(muscles).sort();
   }, [machines]);
 
@@ -404,7 +411,10 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
 
     const query = searchQuery.toLowerCase().trim();
 
-    let result = machines.filter(m => {
+    // Hide Cardio machines and images across library
+    const nonCardioMachines = machines.filter(m => m.category !== 'Cardio' && !m.equipmentType?.toLowerCase().includes('cardio'));
+
+    let result = nonCardioMachines.filter(m => {
       // 1. Universal text search
       const matchesSearch = !query ||
         m.name.toLowerCase().includes(query) ||
@@ -423,8 +433,9 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
           ex.description.toLowerCase().includes(query)
         );
 
-      // 2. Category filter
-      const matchesCategory = selectedCategory === 'all' || m.category === selectedCategory;
+      // 2. Category filter (fallback to 'all' if 'Cardio' was somehow selected)
+      const effectiveCategory = selectedCategory === 'Cardio' ? 'all' : selectedCategory;
+      const matchesCategory = effectiveCategory === 'all' || m.category === effectiveCategory;
 
       // 3. Muscle group filter
       const matchesMuscle = selectedMuscle === 'all' ||
@@ -650,7 +661,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
         {/* Quick Search Suggestions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', paddingLeft: '4px' }}>
           <span style={{ fontSize: '0.72rem', color: '#64748B' }}>Quick search:</span>
-          {['Chest Press', 'Lat Pulldown', 'Treadmill', 'Leg Press', 'Stationary Bike', 'Abdominal'].map(tag => (
+          {['Chest Press', 'Lat Pulldown', 'Leg Press', 'Shoulder Press', 'Cable Row', 'Abdominal'].map(tag => (
             <button
               key={tag}
               onClick={() => setSearchQuery(tag)}
