@@ -1,56 +1,248 @@
 {
-  "totalClasses": 8,
-  "source": "prototype_8_class",
+  "totalClasses": 40,
+  "source": "src/data/machines.ts",
   "indexToClass": {
     "0": {
-      "machineId": "assisted-pull-up-machine",
-      "machineName": "Assisted Pull Up Machine",
-      "category": "Gym Equipment"
+      "machineId": "ab-crunch-machine",
+      "machineName": "Abdominal Crunch Machine",
+      "category": "Core"
     },
     "1": {
-      "machineId": "hack-squat-machine",
-      "machineName": "Hack Squat Machine",
-      "category": "Gym Equipment"
+      "machineId": "assisted-dip-machine",
+      "machineName": "Assisted Dip Machine",
+      "category": "Arms"
     },
     "2": {
-      "machineId": "incline-chest-press",
-      "machineName": "Incline Chest Press",
-      "category": "Gym Equipment"
+      "machineId": "assisted-pull-up-machine",
+      "machineName": "Assisted Pull-Up Machine",
+      "category": "Back"
     },
     "3": {
-      "machineId": "lat-pulldown",
-      "machineName": "Lat Pulldown",
-      "category": "Gym Equipment"
+      "machineId": "biceps-curl-machine",
+      "machineName": "Biceps Curl Machine",
+      "category": "Arms"
     },
     "4": {
-      "machineId": "leg-extension",
-      "machineName": "Leg Extension",
-      "category": "Gym Equipment"
+      "machineId": "cable-crossover",
+      "machineName": "Cable Crossover",
+      "category": "Chest"
     },
     "5": {
-      "machineId": "leg-press-45",
-      "machineName": "Leg Press 45",
-      "category": "Gym Equipment"
+      "machineId": "cable-shoulder-machine",
+      "machineName": "Face Pull Machine",
+      "category": "Shoulders"
     },
     "6": {
-      "machineId": "pec-deck-machine",
-      "machineName": "Pec Deck Machine",
-      "category": "Gym Equipment"
+      "machineId": "calf-raise-machine",
+      "machineName": "Calf Raise Machine",
+      "category": "Legs"
     },
     "7": {
+      "machineId": "captains-chair-leg-raise",
+      "machineName": "Captain's Chair Leg Raise",
+      "category": "Core"
+    },
+    "8": {
+      "machineId": "chest-supported-row",
+      "machineName": "Chest-Supported Row Machine",
+      "category": "Back"
+    },
+    "9": {
+      "machineId": "decline-ab-bench",
+      "machineName": "Decline Ab Bench",
+      "category": "Core"
+    },
+    "10": {
+      "machineId": "decline-chest-press",
+      "machineName": "Decline Chest Press Machine",
+      "category": "Chest"
+    },
+    "11": {
+      "machineId": "hack-squat-machine",
+      "machineName": "Hack Squat Machine",
+      "category": "Legs"
+    },
+    "12": {
+      "machineId": "hip-abduction-machine",
+      "machineName": "Hip Abduction Machine",
+      "category": "Legs"
+    },
+    "13": {
+      "machineId": "hip-adduction-machine",
+      "machineName": "Hip Adduction Machine",
+      "category": "Legs"
+    },
+    "14": {
+      "machineId": "incline-chest-press",
+      "machineName": "Incline Chest Press Machine",
+      "category": "Chest"
+    },
+    "15": {
+      "machineId": "lat-pulldown",
+      "machineName": "Lat Pulldown Machine",
+      "category": "Back"
+    },
+    "16": {
+      "machineId": "lateral-raise-machine",
+      "machineName": "Lateral Raise Machine",
+      "category": "Shoulders"
+    },
+    "17": {
+      "machineId": "leg-extension",
+      "machineName": "Leg Extension Machine",
+      "category": "Legs"
+    },
+    "18": {
+      "machineId": "leg-press-45",
+      "machineName": "Leg Press Machine",
+      "category": "Legs"
+    },
+    "19": {
+      "machineId": "lying-leg-curl",
+      "machineName": "Lying Leg Curl Machine",
+      "category": "Legs"
+    },
+    "20": {
+      "machineId": "pec-deck-machine",
+      "machineName": "Pec Deck Machine",
+      "category": "Chest"
+    },
+    "21": {
+      "machineId": "power-rack",
+      "machineName": "Power Rack",
+      "category": "Other"
+    },
+    "22": {
+      "machineId": "preacher-curl",
+      "machineName": "Preacher Curl Machine",
+      "category": "Arms"
+    },
+    "23": {
+      "machineId": "pullover-machine",
+      "machineName": "Pullover Machine",
+      "category": "Back"
+    },
+    "24": {
+      "machineId": "rear-delt-machine",
+      "machineName": "Rear Delt Machine",
+      "category": "Shoulders"
+    },
+    "25": {
+      "machineId": "rotary-torso-machine",
+      "machineName": "Rotary Torso Machine",
+      "category": "Core"
+    },
+    "26": {
+      "machineId": "rowing-machine",
+      "machineName": "Rowing Machine",
+      "category": "Cardio"
+    },
+    "27": {
       "machineId": "seated-cable-row",
       "machineName": "Seated Cable Row",
-      "category": "Gym Equipment"
+      "category": "Back"
+    },
+    "28": {
+      "machineId": "seated-chest-press",
+      "machineName": "Chest Press Machine",
+      "category": "Chest"
+    },
+    "29": {
+      "machineId": "seated-leg-curl",
+      "machineName": "Seated Leg Curl Machine",
+      "category": "Legs"
+    },
+    "30": {
+      "machineId": "seated-shoulder-press",
+      "machineName": "Shoulder Press Machine",
+      "category": "Shoulders"
+    },
+    "31": {
+      "machineId": "smith-machine-chest",
+      "machineName": "Smith Machine",
+      "category": "Chest"
+    },
+    "32": {
+      "machineId": "smith-machine-functional",
+      "machineName": "Smith Machine",
+      "category": "Other"
+    },
+    "33": {
+      "machineId": "smith-machine-squats",
+      "machineName": "Smith Machine for Squats",
+      "category": "Legs"
+    },
+    "34": {
+      "machineId": "stair-climber",
+      "machineName": "Stair Climber",
+      "category": "Cardio"
+    },
+    "35": {
+      "machineId": "stationary-bike-upright",
+      "machineName": "Stationary Bike",
+      "category": "Cardio"
+    },
+    "36": {
+      "machineId": "t-bar-row-machine",
+      "machineName": "T-Bar Row Machine",
+      "category": "Back"
+    },
+    "37": {
+      "machineId": "treadmill-commercial",
+      "machineName": "Treadmill",
+      "category": "Cardio"
+    },
+    "38": {
+      "machineId": "triceps-extension-machine",
+      "machineName": "Triceps Extension Machine",
+      "category": "Arms"
+    },
+    "39": {
+      "machineId": "triceps-pushdown-cable",
+      "machineName": "Triceps Pushdown Cable Station",
+      "category": "Arms"
     }
   },
-  "classToIndex": {
-    "assisted-pull-up-machine": 0,
-    "hack-squat-machine": 1,
-    "incline-chest-press": 2,
-    "lat-pulldown": 3,
-    "leg-extension": 4,
-    "leg-press-45": 5,
-    "pec-deck-machine": 6,
-    "seated-cable-row": 7
+  "classToIdx": {
+    "ab-crunch-machine": 0,
+    "assisted-dip-machine": 1,
+    "assisted-pull-up-machine": 2,
+    "biceps-curl-machine": 3,
+    "cable-crossover": 4,
+    "cable-shoulder-machine": 5,
+    "calf-raise-machine": 6,
+    "captains-chair-leg-raise": 7,
+    "chest-supported-row": 8,
+    "decline-ab-bench": 9,
+    "decline-chest-press": 10,
+    "hack-squat-machine": 11,
+    "hip-abduction-machine": 12,
+    "hip-adduction-machine": 13,
+    "incline-chest-press": 14,
+    "lat-pulldown": 15,
+    "lateral-raise-machine": 16,
+    "leg-extension": 17,
+    "leg-press-45": 18,
+    "lying-leg-curl": 19,
+    "pec-deck-machine": 20,
+    "power-rack": 21,
+    "preacher-curl": 22,
+    "pullover-machine": 23,
+    "rear-delt-machine": 24,
+    "rotary-torso-machine": 25,
+    "rowing-machine": 26,
+    "seated-cable-row": 27,
+    "seated-chest-press": 28,
+    "seated-leg-curl": 29,
+    "seated-shoulder-press": 30,
+    "smith-machine-chest": 31,
+    "smith-machine-functional": 32,
+    "smith-machine-squats": 33,
+    "stair-climber": 34,
+    "stationary-bike-upright": 35,
+    "t-bar-row-machine": 36,
+    "treadmill-commercial": 37,
+    "triceps-extension-machine": 38,
+    "triceps-pushdown-cable": 39
   }
 }

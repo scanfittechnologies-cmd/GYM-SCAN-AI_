@@ -967,7 +967,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onSelectMa
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Dumbbell size={14} color="#00F59B" />
           <span style={{ fontWeight: 700, color: '#64748B' }}>ScanFit</span>
-          <span>&mdash; Educational Gym Equipment Companion</span>
+          <span>&mdash; Smart Gym Equipment Guide</span>
         </div>
         <div>Demo mode active &middot; All data stored locally in browser</div>
         <div style={{ display: 'flex', gap: '1.25rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '0.2rem' }}>

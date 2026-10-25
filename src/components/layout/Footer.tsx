@@ -31,7 +31,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Dumbbell size={16} color="#00F59B" />
-          <span style={{ fontWeight: 800, color: '#F1F5F9', letterSpacing: '0.02em' }}>ScanFit AI</span>
+          <span style={{ fontWeight: 800, color: '#F1F5F9', letterSpacing: '0.02em' }}>ScanFit</span>
           <span style={{ color: '#475569' }}>&mdash; Smart Gym Equipment Guide</span>
         </div>
 
