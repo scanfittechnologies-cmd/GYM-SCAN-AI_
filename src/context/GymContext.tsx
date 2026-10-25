@@ -266,8 +266,10 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         if (Array.isArray(parsed)) return parsed;
       }
     } catch {
-      // fallback
+      // corrupted data — sanitize
     }
+    // Explicitly write clean state back for null/undefined/corrupt values
+    localStorage.setItem(STORAGE_KEYS.DISCOVERED, JSON.stringify([]));
     return [];
   });
 
@@ -279,8 +281,9 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         if (Array.isArray(parsed)) return parsed;
       }
     } catch {
-      // fallback
+      // corrupted data — sanitize
     }
+    localStorage.setItem(STORAGE_KEYS.TUTORIALS, JSON.stringify([]));
     return [];
   });
 
@@ -292,8 +295,9 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         if (Array.isArray(parsed)) return parsed;
       }
     } catch {
-      // fallback
+      // corrupted data — sanitize
     }
+    localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify([]));
     return [];
   });
 
@@ -305,8 +309,9 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         if (Array.isArray(parsed)) return parsed;
       }
     } catch {
-      // fallback
+      // corrupted data — sanitize
     }
+    localStorage.setItem(STORAGE_KEYS.ACTIVITY_LOG, JSON.stringify([]));
     return [];
   });
 
@@ -318,8 +323,10 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         if (Array.isArray(parsed)) return parsed;
       }
     } catch {
-      // fallback
+      // corrupted data — sanitize
     }
+    // Fresh session or corrupt data: start at 0 XP (empty transaction log)
+    localStorage.setItem(STORAGE_KEYS.XP_TRANSACTIONS, JSON.stringify([]));
     return [];
   });
 
@@ -331,18 +338,29 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         if (Array.isArray(parsed) && parsed.length > 0) return parsed;
       }
     } catch {
-      // fallback
+      // corrupted data — sanitize
     }
-    return PROMPT_ACHIEVEMENTS.map(ach => ({
+    const fresh = PROMPT_ACHIEVEMENTS.map(ach => ({
       ...ach,
       currentCount: 0,
       unlocked: false,
     }));
+    localStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(fresh));
+    return fresh;
   });
 
   const [userProfile, setUserProfile] = useState<UserProfile>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.PROFILE);
-    return saved ? JSON.parse(saved) : DEFAULT_PROFILE;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.PROFILE);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') return { ...DEFAULT_PROFILE, ...parsed, totalXP: 0, currentLevel: 1 };
+      }
+    } catch {
+      // corrupted data — sanitize
+    }
+    localStorage.setItem(STORAGE_KEYS.PROFILE, JSON.stringify(DEFAULT_PROFILE));
+    return DEFAULT_PROFILE;
   });
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -671,7 +689,7 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       timestamp: Date.now(),
       createdAt: new Date().toISOString(),
       status: 'Verified',
-      confidence: scanType === 'photo' ? (confidence || 95) : 100,
+      confidence: scanType === 'photo' ? Math.round((confidence ?? 0.9) * 100) : 100,
       imageUrl,
       notes: isFirstTime 
         ? `First discovery! Scanned via ${scanType.toUpperCase()} (+${totalAwarded} XP)` 
@@ -921,6 +939,7 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   // Reset all user data for fresh zero-state testing
   const clearAllUserData = useCallback(() => {
+    // Clear current v2 keys
     localStorage.removeItem(STORAGE_KEYS.DISCOVERED);
     localStorage.removeItem(STORAGE_KEYS.TUTORIALS);
     localStorage.removeItem(STORAGE_KEYS.FAVORITES);
@@ -928,6 +947,15 @@ export const GymProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     localStorage.removeItem(STORAGE_KEYS.XP_TRANSACTIONS);
     localStorage.removeItem(STORAGE_KEYS.ACHIEVEMENTS);
     localStorage.removeItem(STORAGE_KEYS.PROFILE);
+
+    // Purge any legacy v1 keys that could re-seed stale XP on next load
+    const legacyKeys = [
+      'gym_scan_discovered_machines', 'gym_scan_completed_tutorials',
+      'gym_scan_favorites', 'gym_scan_activity_log', 'gym_scan_xp_transactions',
+      'gym_scan_achievements', 'gym_scan_user_profile', 'gym_scan_demo_mode',
+      'user_xp', 'user_level', 'user_xp_total'
+    ];
+    legacyKeys.forEach(k => localStorage.removeItem(k));
 
     setDiscoveredMachineIds([]);
     setCompletedTutorialIds([]);

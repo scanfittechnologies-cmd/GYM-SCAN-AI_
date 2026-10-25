@@ -40,47 +40,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
   const favoriteMachines = machines.filter(m => favoriteMachineIds.includes(m.id));
   const unlockedAchievementsCount = achievements.filter(a => a.unlocked).length;
 
-  // Ensure stats reflect real dynamic progress or clean 0 for new users
-  const displayTotalXP = totalXP ?? userProfile?.totalXP ?? (() => {
-    try {
-      const saved = localStorage.getItem('gym_scan_xp_transactions_v2');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.reduce((sum: number, tx: { amount?: number }) => sum + (tx.amount || 0), 0);
-        }
-      }
-    } catch {
-      // fallback
-    }
-    return 0;
-  })();
-
-  const displayDiscoveredCount = (discoveredMachineIds?.length ?? 0) || (userProfile?.uniqueMachineCount ?? 0) || (() => {
-    try {
-      const saved = localStorage.getItem('gym_scan_discovered_machines_v2');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed.length;
-      }
-    } catch {
-      // fallback
-    }
-    return 0;
-  })();
-
-  const displayBadgesCount = unlockedAchievementsCount || (userProfile?.achievementsUnlockedCount ?? 0) || (() => {
-    try {
-      const saved = localStorage.getItem('gym_scan_achievements_v2');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed.filter((a: { unlocked?: boolean }) => a.unlocked).length;
-      }
-    } catch {
-      // fallback
-    }
-    return 0;
-  })();
+  // All XP stats derive from GymContext (single source of truth) — never from localStorage directly.
+  // This prevents stale/hardcoded fallbacks like the former "return 95" bug.
+  const displayTotalXP = totalXP ?? 0;
+  const displayDiscoveredCount = discoveredMachineIds?.length ?? 0;
+  const displayBadgesCount = unlockedAchievementsCount ?? 0;
 
   const handleSaveName = (e: React.FormEvent) => {
     e.preventDefault();
