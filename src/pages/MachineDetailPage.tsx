@@ -32,6 +32,9 @@ import { useSoftGate } from '../hooks/useSoftGate';
 import { useUserTier } from '../hooks/useUserTier';
 import { PricingModal } from '../components/pricing/PricingModal';
 
+// Feature flag: set to true to re-enable the interactive guide button & modal
+const SHOW_START_GUIDE = false;
+
 interface MachineDetailPageProps {
   machine: Machine | null;
   source?: 'qr' | 'photo' | 'library' | 'activity';
@@ -302,24 +305,26 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
             </div>
 
             {/* Launch Tutorial Action */}
-            <div style={{ display: 'flex', gap: '0.65rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
-              <button
-                type="button"
-                onClick={() => setShowTutorialModal(true)}
-                className="btn-primary"
-                style={{ flex: 1, minWidth: '180px', padding: '0.75rem 1.1rem', fontSize: '0.88rem' }}
-              >
-                {tutorialDone ? (
-                  <>
-                    <CheckCircle size={16} /> Revisit Interactive Guide
-                  </>
-                ) : (
-                  <>
-                    <Award size={16} /> Start Guide (+5 XP)
-                  </>
-                )}
-              </button>
-            </div>
+            {SHOW_START_GUIDE && (
+              <div style={{ display: 'flex', gap: '0.65rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowTutorialModal(true)}
+                  className="btn-primary"
+                  style={{ flex: 1, minWidth: '180px', padding: '0.75rem 1.1rem', fontSize: '0.88rem' }}
+                >
+                  {tutorialDone ? (
+                    <>
+                      <CheckCircle size={16} /> Revisit Interactive Guide
+                    </>
+                  ) : (
+                    <>
+                      <Award size={16} /> Start Guide (+5 XP)
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -1050,18 +1055,20 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
           </button>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setShowTutorialModal(true)}
-          className="btn-primary"
-          style={{ fontSize: '0.82rem', padding: '0.5rem 1rem' }}
-        >
-          <Award size={15} /> Launch Step Guide (+5 XP)
-        </button>
+        {SHOW_START_GUIDE && (
+          <button
+            type="button"
+            onClick={() => setShowTutorialModal(true)}
+            className="btn-primary"
+            style={{ fontSize: '0.82rem', padding: '0.5rem 1rem' }}
+          >
+            <Award size={15} /> Launch Step Guide (+5 XP)
+          </button>
+        )}
       </div>
 
       {/* Interactive Modals */}
-      {showTutorialModal && (
+      {SHOW_START_GUIDE && showTutorialModal && (
         <InteractiveTutorialModal
           machine={machine}
           onClose={() => setShowTutorialModal(false)}
