@@ -86,16 +86,34 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
           </div>
 
           <div>
-            <div style={{
-              fontFamily: 'var(--font-heading)',
-              fontWeight: 900,
-              letterSpacing: '-0.02em',
-              lineHeight: 1,
-              background: 'linear-gradient(90deg, #FFFFFF 30%, #00F59B 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }} className="text-sm sm:text-base md:text-[1.2rem] whitespace-nowrap">
-              ScanFit
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span style={{
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                lineHeight: 1,
+                background: 'linear-gradient(90deg, #FFFFFF 30%, #00F59B 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }} className="text-sm sm:text-base md:text-[1.2rem] whitespace-nowrap">
+                ScanFit
+              </span>
+              <span style={{
+                fontSize: '0.55rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                lineHeight: 1,
+                color: '#00F59B',
+                background: 'rgba(0, 245, 155, 0.1)',
+                border: '1px solid rgba(0, 245, 155, 0.28)',
+                padding: '2px 5px',
+                borderRadius: '6px',
+                textTransform: 'uppercase',
+                display: 'inline-flex',
+                alignItems: 'center'
+              }}>
+                BETA
+              </span>
             </div>
             <div className="text-[0.55rem] sm:text-[0.6rem] md:text-[0.65rem] text-[#64748B] font-semibold tracking-wider uppercase hidden sm:block">
               Smart Gym Equipment Guide
