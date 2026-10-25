@@ -547,9 +547,10 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     const targetImg = imgDataUrl || uploadedImage;
     if (!targetImg) return;
 
-    const currentScans = parseInt(localStorage.getItem('guest_scan_count') || '1', 10);
-    if (currentScans >= 4) {
-      // Trigger your paywall / limit modal here
+    const completedScans = parseInt(localStorage.getItem('guest_scan_count') || '0', 10);
+
+    // Block ONLY when 3 full scans have already been completed
+    if (completedScans >= 3) {
       setShowLimitModal(true);
       return;
     }
@@ -587,8 +588,8 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
       }
 
       if (output.result_status === 'MACHINE_IDENTIFIED' || output.result_status === 'confirmed_candidate') {
-        // Increment guest scan count right after successful machine result
-        localStorage.setItem('guest_scan_count', (currentScans + 1).toString());
+        // Increment guest scan count ONLY inside the successful response block after Gemini Vision returns result
+        localStorage.setItem('guest_scan_count', (completedScans + 1).toString());
         // Include output.title as a valid candidate source for dynamic Gemini-identified machines
         if (output.possible_machine_name || output.machineName || output.title) {
           const candidateName = output.title || output.possible_machine_name || output.machineName || 'Identified Machine';
