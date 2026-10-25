@@ -2,17 +2,17 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import jsQR from 'jsqr';
 import { useGym } from '../../context/GymContext';
 import { Machine, MachineCategory } from '../../types';
-import { 
-  Upload, 
-  Sparkles, 
-  CheckCircle, 
-  AlertTriangle, 
-  Check, 
-  Trash2, 
-  AlertCircle, 
-  RotateCcw, 
-  Camera, 
-  XCircle, 
+import {
+  Upload,
+  Sparkles,
+  CheckCircle,
+  AlertTriangle,
+  Check,
+  Trash2,
+  AlertCircle,
+  RotateCcw,
+  Camera,
+  XCircle,
   Clock,
   HelpCircle,
   FileSearch,
@@ -22,9 +22,9 @@ import {
 
 import ScanningLoader from './ScanningLoader';
 import { PhotoUploadTab } from './PhotoUploadTab';
-import { 
-  analyzeGymMachineImage, 
-  StructuredVisionOutput, 
+import {
+  analyzeGymMachineImage,
+  StructuredVisionOutput,
   AnalysisDebugRecord,
   markAnalysisDebugRecordConfirmed,
   sanitizeMatchReasons
@@ -109,11 +109,11 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   const qrAnimationRef = useRef<number | null>(null);
   const isQrScanningRef = useRef<boolean>(false);
 
-  // Analysis State
   const [analyzing, setAnalyzing] = useState(false);
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
   const [analysisStep, setAnalysisStep] = useState<string>('');
-  
+  const [showLimitModal, setShowLimitModal] = useState<boolean>(false);
+
   // Rate limit cooldown state
   const [cooldownSeconds, setCooldownSeconds] = useState<number>(0);
 
@@ -209,7 +209,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   };
 
   // Real-time QR scanner loop for live camera feed
-  const scanQrFrameRef = useRef<() => void>(() => {});
+  const scanQrFrameRef = useRef<() => void>(() => { });
 
   const scanQrFrame = useCallback(() => {
     if (!videoRef.current || videoRef.current.readyState !== videoRef.current.HAVE_ENOUGH_DATA) {
@@ -243,8 +243,8 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
 
       if (code && code.data) {
         const cleanCode = extractGymMachineCode(code.data);
-        const match = machines.find(m => 
-          (m.qrCodeId && m.qrCodeId.toUpperCase() === cleanCode) || 
+        const match = machines.find(m =>
+          (m.qrCodeId && m.qrCodeId.toUpperCase() === cleanCode) ||
           m.id.toUpperCase() === cleanCode ||
           m.name.toUpperCase() === cleanCode
         );
@@ -388,7 +388,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
 
   const startCooldown = (delayStrOrSeconds?: string | number | null) => {
     if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
-    
+
     let seconds = 30; // default 30s
     if (typeof delayStrOrSeconds === 'number') {
       seconds = delayStrOrSeconds;
@@ -547,6 +547,13 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     const targetImg = imgDataUrl || uploadedImage;
     if (!targetImg) return;
 
+    const currentScans = parseInt(localStorage.getItem('guest_scan_count') || '1', 10);
+    if (currentScans >= 4) {
+      // Trigger your paywall / limit modal here
+      setShowLimitModal(true);
+      return;
+    }
+
     cancelTokenRef.current = false;
     setAnalyzing(true);
     setVisionOutput(null);
@@ -580,10 +587,12 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
       }
 
       if (output.result_status === 'MACHINE_IDENTIFIED' || output.result_status === 'confirmed_candidate') {
+        // Increment guest scan count right after successful machine result
+        localStorage.setItem('guest_scan_count', (currentScans + 1).toString());
         // Include output.title as a valid candidate source for dynamic Gemini-identified machines
         if (output.possible_machine_name || output.machineName || output.title) {
           const candidateName = output.title || output.possible_machine_name || output.machineName || 'Identified Machine';
-          let primary = machines.find(m => 
+          let primary = machines.find(m =>
             (output.libraryId && m.id.toLowerCase() === output.libraryId.toLowerCase()) ||
             m.name.toLowerCase() === candidateName.toLowerCase()
           );
@@ -591,27 +600,27 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
           // Dynamic Machine generation for ANY equipment recognized by Gemini outside library
           if (!primary) {
             const dynamicCategory = (output.equipment_category !== 'Unknown' ? output.equipment_category : (output.machineCategory !== 'Unknown' ? output.machineCategory : 'Other')) as MachineCategory;
-            const dynamicSetup = output.setupGuide && output.setupGuide.length > 0 
-              ? output.setupGuide 
+            const dynamicSetup = output.setupGuide && output.setupGuide.length > 0
+              ? output.setupGuide
               : (output.setupSteps && output.setupSteps.length > 0 ? output.setupSteps : ['Adjust seating, pins, or console settings to appropriate starter levels.', 'Ensure proper posture and align joints with the pivot or motion path.', 'Execute the exercise or workout smoothly with controlled breathing.']);
 
             const lowerCand = candidateName.toLowerCase();
             const lowerCat = String(dynamicCategory).toLowerCase();
             const dynamicSvg = lowerCand.includes('treadmill') ? 'treadmill'
               : (lowerCand.includes('bike') || lowerCand.includes('cycle')) ? 'stationary-bike'
-              : (lowerCand.includes('elliptical') || lowerCat.includes('cardio')) ? 'treadmill'
-              : lowerCand.includes('cable') ? 'cable-station'
-              : lowerCand.includes('lat') ? 'lat-pulldown'
-              : lowerCand.includes('row') ? 'seated-row'
-              : lowerCand.includes('smith') ? 'smith-machine'
-              : (lowerCand.includes('leg press') || lowerCand.includes('hack')) ? 'leg-press'
-              : lowerCand.includes('leg extension') ? 'leg-extension'
-              : lowerCand.includes('leg curl') ? 'leg-curl'
-              : lowerCand.includes('curl') ? 'preacher-curl'
-              : lowerCand.includes('shoulder') ? 'shoulder-press'
-              : (lowerCand.includes('pec deck') || lowerCand.includes('fly')) ? 'pec-deck'
-              : lowerCand.includes('incline') ? 'incline-press'
-              : 'chest-press';
+                : (lowerCand.includes('elliptical') || lowerCat.includes('cardio')) ? 'treadmill'
+                  : lowerCand.includes('cable') ? 'cable-station'
+                    : lowerCand.includes('lat') ? 'lat-pulldown'
+                      : lowerCand.includes('row') ? 'seated-row'
+                        : lowerCand.includes('smith') ? 'smith-machine'
+                          : (lowerCand.includes('leg press') || lowerCand.includes('hack')) ? 'leg-press'
+                            : lowerCand.includes('leg extension') ? 'leg-extension'
+                              : lowerCand.includes('leg curl') ? 'leg-curl'
+                                : lowerCand.includes('curl') ? 'preacher-curl'
+                                  : lowerCand.includes('shoulder') ? 'shoulder-press'
+                                    : (lowerCand.includes('pec deck') || lowerCand.includes('fly')) ? 'pec-deck'
+                                      : lowerCand.includes('incline') ? 'incline-press'
+                                        : 'chest-press';
 
             primary = output.dynamicMachine || {
               id: `new-machine-${Date.now()}`,
@@ -646,8 +655,8 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
           }
 
           if (primary) {
-            const rawPrimaryFeatures = output.visible_features.length > 0 
-              ? output.visible_features 
+            const rawPrimaryFeatures = output.visible_features.length > 0
+              ? output.visible_features
               : (output.isNewMachine ? ['Dynamically Identified Machine', 'Custom AI Setup Guide Generated'] : (primary.visualCharacteristics || ['Verified Category Alignment']));
 
             const matchCandidates: { machine: Machine; matchingFeatures: string[]; notes: string }[] = [
@@ -700,8 +709,8 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
     // Release ephemeral captured image immediately to clear from memory/state
     setUploadedImage(null);
     onMachineConfirmed(
-      selectedMatch, 
-      'photo', 
+      selectedMatch,
+      'photo',
       ephemeralImg || undefined,
       (visionOutput?.confidence || 90) / 100
     );
@@ -709,7 +718,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
 
   return (
     <div className="pb-28 md:pb-6" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', maxWidth: '680px', margin: '0 auto' }}>
-      
+
       {/* 0. Fullscreen AI Vision Scanning Loader */}
       <ScanningLoader isScanning={analyzing} />
 
@@ -719,18 +728,18 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
         <div
           className="h-[55vh] max-h-[420px] md:h-[480px]"
           style={{
-          position: 'relative',
-          backgroundColor: '#07090E',
-          borderRadius: '24px',
-          overflow: 'hidden',
-          border: liveCameraMode === 'ai' ? '1.5px solid #00D2FF' : '1.5px solid #00F59B',
-          boxShadow: liveCameraMode === 'ai' ? '0 16px 36px rgba(0, 210, 255, 0.25)' : '0 16px 36px rgba(0, 245, 155, 0.25)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: '1rem'
-        }}>
+            position: 'relative',
+            backgroundColor: '#07090E',
+            borderRadius: '24px',
+            overflow: 'hidden',
+            border: liveCameraMode === 'ai' ? '1.5px solid #00D2FF' : '1.5px solid #00F59B',
+            boxShadow: liveCameraMode === 'ai' ? '0 16px 36px rgba(0, 210, 255, 0.25)' : '0 16px 36px rgba(0, 245, 155, 0.25)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '1rem'
+          }}>
           <video
             ref={videoRef}
             autoPlay
@@ -1433,92 +1442,92 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
         const resultStatus = visionOutput?.result_status;
         const isUnrecognized = resultStatus === 'MACHINE_NOT_IDENTIFIED' || resultStatus === 'unknown';
         return analysisCompleted && visionOutput && (isUnrecognized || resultStatus === 'uncertain') && !visionOutput?.title && !visionOutput?.machineName && (
-        <div style={{
-          background: 'rgba(255, 184, 0, 0.08)',
-          border: '1px solid rgba(255, 184, 0, 0.3)',
-          borderRadius: '18px',
-          padding: '1.75rem 1.5rem',
-          textAlign: 'center',
-          animation: 'fadeIn 0.25s ease-out'
-        }}>
           <div style={{
-            width: '52px',
-            height: '52px',
-            borderRadius: '50%',
-            background: 'rgba(255, 184, 0, 0.12)',
-            border: '1px solid rgba(255, 184, 0, 0.35)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            margin: '0 auto 0.85rem auto'
+            background: 'rgba(255, 184, 0, 0.08)',
+            border: '1px solid rgba(255, 184, 0, 0.3)',
+            borderRadius: '18px',
+            padding: '1.75rem 1.5rem',
+            textAlign: 'center',
+            animation: 'fadeIn 0.25s ease-out'
           }}>
-            <HelpCircle size={30} color="#FFB800" />
-          </div>
+            <div style={{
+              width: '52px',
+              height: '52px',
+              borderRadius: '50%',
+              background: 'rgba(255, 184, 0, 0.12)',
+              border: '1px solid rgba(255, 184, 0, 0.35)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 0.85rem auto'
+            }}>
+              <HelpCircle size={30} color="#FFB800" />
+            </div>
 
-          <h4 style={{ fontSize: '1.2rem', color: '#F1F5F9', marginBottom: '0.45rem', fontWeight: 600 }}>
-            Machine Unrecognized or Low Confidence
-          </h4>
+            <h4 style={{ fontSize: '1.2rem', color: '#F1F5F9', marginBottom: '0.45rem', fontWeight: 600 }}>
+              Machine Unrecognized or Low Confidence
+            </h4>
 
-          <p style={{ fontSize: '0.86rem', color: '#CBD5E1', margin: '0 auto 0.85rem auto', maxWidth: '480px', lineHeight: 1.5 }}>
-            {visionOutput.uncertainty_reason || "The image was uploaded, but the recognition model confidence is below the required 50% threshold. The machine features could not be reliably identified."}
-          </p>
+            <p style={{ fontSize: '0.86rem', color: '#CBD5E1', margin: '0 auto 0.85rem auto', maxWidth: '480px', lineHeight: 1.5 }}>
+              {visionOutput.uncertainty_reason || "The image was uploaded, but the recognition model confidence is below the required 50% threshold. The machine features could not be reliably identified."}
+            </p>
 
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.04)',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: '12px',
-            padding: '0.75rem 1rem',
-            margin: '0 auto 1.4rem auto',
-            maxWidth: '440px',
-            fontSize: '0.78rem',
-            color: '#94A3B8',
-            textAlign: 'left',
-            lineHeight: 1.45
-          }}>
-            <span style={{ color: '#00D2FF', fontWeight: 600, display: 'block', marginBottom: '3px' }}>💡 Helpful Tips:</span>
-            • Try taking a photo from another angle showing the full frame & seat.<br />
-            • Ensure good lighting without glare or blur.<br />
-            • Or select/search for the machine directly from the exercise library.
-          </div>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '12px',
+              padding: '0.75rem 1rem',
+              margin: '0 auto 1.4rem auto',
+              maxWidth: '440px',
+              fontSize: '0.78rem',
+              color: '#94A3B8',
+              textAlign: 'left',
+              lineHeight: 1.45
+            }}>
+              <span style={{ color: '#00D2FF', fontWeight: 600, display: 'block', marginBottom: '3px' }}>💡 Helpful Tips:</span>
+              • Try taking a photo from another angle showing the full frame & seat.<br />
+              • Ensure good lighting without glare or blur.<br />
+              • Or select/search for the machine directly from the exercise library.
+            </div>
 
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <button
-              type="button"
-              onClick={() => cameraInputRef.current?.click()}
-              className="btn-primary"
-              style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
-            >
-              <Camera size={15} /> Try Another Angle
-            </button>
-
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="btn-secondary"
-              style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
-            >
-              <Upload size={15} /> Upload Clearer Photo
-            </button>
-
-            {onSelectManual && (
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               <button
                 type="button"
-                onClick={onSelectManual}
+                onClick={() => cameraInputRef.current?.click()}
+                className="btn-primary"
+                style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <Camera size={15} /> Try Another Angle
+              </button>
+
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
                 className="btn-secondary"
                 style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
               >
-                <FileSearch size={15} /> Search Manually
+                <Upload size={15} /> Upload Clearer Photo
               </button>
-            )}
+
+              {onSelectManual && (
+                <button
+                  type="button"
+                  onClick={onSelectManual}
+                  className="btn-secondary"
+                  style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <FileSearch size={15} /> Search Manually
+                </button>
+              )}
+            </div>
           </div>
-        </div>
         );
       })()}
 
       {/* 8. STATE: MACHINE_IDENTIFIED */}
       {analysisCompleted && visionOutput && (visionOutput.result_status === 'MACHINE_IDENTIFIED' || visionOutput.result_status === 'confirmed_candidate') && possibleMatches.length > 0 && selectedMatch && (
         <div className="glass-card" style={{ padding: '1.5rem', animation: 'fadeIn 0.25s ease-out' }}>
-          
+
           <div style={{ marginBottom: '1rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '6px' }}>
               {visionOutput.isNewMachine ? (
@@ -1533,11 +1542,11 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                 Confidence: {visionOutput.confidence}%
               </span>
             </div>
-            
+
             <h3 style={{ fontSize: '1.25rem', color: '#F1F5F9', margin: '4px 0 4px 0' }}>
               Machine: <strong style={{ color: '#00F59B' }}>{selectedMatch.name}</strong>
             </h3>
-            
+
             <p style={{ fontSize: '0.85rem', color: '#CBD5E1', margin: '0 0 6px 0' }}>
               Exercise: <strong style={{ color: '#00D2FF' }}>{selectedMatch.name}</strong> • Category: <strong style={{ color: '#F1F5F9' }}>{selectedMatch.category}</strong>
             </p>
@@ -1547,7 +1556,7 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                 {selectedMatch.description}
               </p>
             )}
-            
+
             {selectedMatch.primaryMuscles && selectedMatch.primaryMuscles.length > 0 && (
               <p style={{ fontSize: '0.8rem', color: '#94A3B8', margin: 0 }}>
                 Target Muscles: <span style={{ color: '#CBD5E1' }}>{selectedMatch.primaryMuscles.join(', ')}</span>
@@ -1710,6 +1719,81 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
             <div><strong>Request Status:</strong> {activeDebugRecord.requestStatus}</div>
             <div><strong>HTTP Status:</strong> {activeDebugRecord.responseStatus}</div>
             <div><strong>Selected Machine:</strong> {activeDebugRecord.selectedMachineName || 'None'}</div>
+          </div>
+        </div>
+      )}
+
+      {/* Scan Limit Paywall Modal */}
+      {showLimitModal && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          background: 'rgba(5, 8, 15, 0.88)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1.25rem',
+        }}>
+          <div style={{
+            background: 'linear-gradient(145deg, #101626 0%, #0A0E18 100%)',
+            border: '1.5px solid rgba(255, 184, 0, 0.4)',
+            borderRadius: '24px',
+            padding: '2rem 1.5rem',
+            maxWidth: '420px',
+            width: '100%',
+            textAlign: 'center',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 184, 0, 0.15)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem',
+            animation: 'fadeIn 0.2s ease-out',
+          }}>
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+              background: 'rgba(255, 184, 0, 0.12)',
+              border: '1px solid rgba(255, 184, 0, 0.35)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.8rem',
+            }}>
+              🔒
+            </div>
+
+            <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#F8FAFC', margin: 0 }}>
+              Daily Scan Limit Reached
+            </h3>
+
+            <p style={{ fontSize: '0.88rem', color: '#94A3B8', margin: 0, lineHeight: 1.55 }}>
+              You've completed your <strong style={{ color: '#FFB800' }}>3 free scans</strong>. Further AI machine scans are locked until your limit resets.
+            </p>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '12px',
+              padding: '0.65rem 1rem',
+              fontSize: '0.78rem',
+              color: '#CBD5E1',
+              width: '100%',
+            }}>
+              ✨ 3 of 3 Free Scans Completed
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowLimitModal(false)}
+              className="btn-primary"
+              style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', marginTop: '0.5rem' }}
+            >
+              Got It
+            </button>
           </div>
         </div>
       )}
