@@ -90,6 +90,13 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
     }
   }, [initialMode]);
 
+  // ── Reactively show limit banner when scan limit is reached ───────────────
+  useEffect(() => {
+    if (hasReachedScanLimit) {
+      setShowLimitBanner(true);
+    }
+  }, [hasReachedScanLimit]);
+
   const { recordMachineScan } = useGym();
   const { requireAuth } = useSoftGate();
 

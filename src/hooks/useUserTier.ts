@@ -107,14 +107,23 @@ export function useUserTier() {
       setScanCountState(getScanCount());
     };
 
+    const handleStorageChange = (e: StorageEvent) => {
+      if (!e.key || e.key === STORAGE_KEY_TIER) {
+        handleTierChange();
+      }
+      if (!e.key || e.key === STORAGE_KEY_DAILY_SCANS || e.key === STORAGE_KEY_RESET_TIMESTAMP) {
+        handleScanChange();
+      }
+    };
+
     window.addEventListener('tier_change', handleTierChange);
     window.addEventListener('scan_count_change', handleScanChange);
-    window.addEventListener('storage', handleTierChange);
+    window.addEventListener('storage', handleStorageChange);
 
     return () => {
       window.removeEventListener('tier_change', handleTierChange);
       window.removeEventListener('scan_count_change', handleScanChange);
-      window.removeEventListener('storage', handleTierChange);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
