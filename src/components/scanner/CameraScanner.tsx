@@ -70,6 +70,7 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
   const [cameraFacing, setCameraFacing] = useState<'environment' | 'user'>('environment');
   const [scanError, setScanError] = useState<string | null>(null);
   const [showCameraHelpModal, setShowCameraHelpModal] = useState(false);
+  const [showLimitModal, setShowLimitModal] = useState(false);
   const [cooldownSeconds, setCooldownSeconds] = useState<number>(0);
 
   // Result identification states
@@ -337,6 +338,13 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
     const video = videoRef.current;
     if (video.videoWidth === 0 || video.videoHeight === 0) return;
 
+    const completedScans = parseInt(localStorage.getItem('guest_scan_count') || '0', 10);
+    // Block ONLY when 3 full scans have already been completed
+    if (completedScans >= 3) {
+      setShowLimitModal(true);
+      return;
+    }
+
     // 1. Capture current video frame onto HTML canvas
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
@@ -369,6 +377,8 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
       setVisionOutput(output);
 
       if (output.result_status === 'MACHINE_IDENTIFIED' || output.result_status === 'confirmed_candidate') {
+        // Increment guest scan count ONLY inside the successful response block
+        localStorage.setItem('guest_scan_count', (completedScans + 1).toString());
         // Include output.title as a valid candidate source for dynamic Gemini-identified machines
         const candidateName = output.title || output.possible_machine_name || output.machineName || 'Identified Machine';
         let primary = machines.find(m =>
@@ -1166,6 +1176,81 @@ export const CameraScanner: React.FC<CameraScannerProps> = ({
               style={{ width: '100%', marginTop: '1.25rem' }}
             >
               Got it
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Scan Limit Paywall Modal */}
+      {showLimitModal && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          background: 'rgba(5, 8, 15, 0.88)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1.25rem',
+        }}>
+          <div style={{
+            background: 'linear-gradient(145deg, #101626 0%, #0A0E18 100%)',
+            border: '1.5px solid rgba(255, 184, 0, 0.4)',
+            borderRadius: '24px',
+            padding: '2rem 1.5rem',
+            maxWidth: '420px',
+            width: '100%',
+            textAlign: 'center',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 184, 0, 0.15)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '1rem',
+            animation: 'fadeIn 0.2s ease-out',
+          }}>
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+              background: 'rgba(255, 184, 0, 0.12)',
+              border: '1px solid rgba(255, 184, 0, 0.35)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.8rem',
+            }}>
+              🔒
+            </div>
+
+            <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#F8FAFC', margin: 0 }}>
+              Daily Scan Limit Reached
+            </h3>
+
+            <p style={{ fontSize: '0.88rem', color: '#94A3B8', margin: 0, lineHeight: 1.55 }}>
+              You've completed your <strong style={{ color: '#FFB800' }}>3 free scans</strong>. Further AI machine scans are locked until your limit resets.
+            </p>
+
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '12px',
+              padding: '0.65rem 1rem',
+              fontSize: '0.78rem',
+              color: '#CBD5E1',
+              width: '100%',
+            }}>
+              ✨ 3 of 3 Free Scans Completed
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowLimitModal(false)}
+              className="btn-primary"
+              style={{ width: '100%', padding: '0.75rem', fontSize: '0.9rem', marginTop: '0.5rem' }}
+            >
+              Got It
             </button>
           </div>
         </div>
