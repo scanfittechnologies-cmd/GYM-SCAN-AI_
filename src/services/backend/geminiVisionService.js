@@ -44,69 +44,47 @@ export async function analyzeGymMachine(imageBuffer, mimeType = 'image/jpeg', li
     .map(m => `"${m.name}" (libraryId: "${m.id}")`)
     .join(', ');
 
-  const prompt = `CRITICAL: Output the exact physical name of the equipment visible in the image into the \`title\` field as plain text. DO NOT map, force, or default the name to a predefined list or old library item.
+  const prompt = `CRITICAL: Output the exact physical name of the equipment visible in the image into the \`machineName\` / \`title\` field. DO NOT map, force, or default the name to a predefined list.
 
-You are an expert fitness machine classifier. Identify ANY gym equipment or machine present in the photo (e.g. Incline Bench Press, Lat Pulldown, Leg Press, Adductor, etc.). Always set \`isIdentified: true\` and return JSON containing \`title\`, \`description\`, \`primaryMuscles\`, and \`setupGuide\`. Never return a message stating an item is not in an allowed list.
+You are an expert AI vision scanner for a gym application called ScanFit AI.
+Your sole purpose is to analyze ANY image of gym equipment provided by the user—whether it is standard, custom, rare, vintage, or unbranded—and return immediate, accurate identification and form setup instructions.
 
-Current machine library list (for reference and ID matching):
+CRITICAL BEHAVIOR RULES:
+1. NO WHITELISTS OR RESTRICTIONS: Do NOT restrict your recognition to a pre-defined equipment list or array. Accept and analyze 100% of gym equipment photos (e.g., Hip Adduction Machine, Belt Squat, Pec Deck Fly, Cable Crossover, Incline Bench Press, etc.).
+2. NEVER THROW ERRORS FOR UNCOMMON EQUIPMENT: Never return an error or message stating that the equipment is "not allowed", "unlisted", "not supported", or "not in database". Always set \`isIdentified: true\` and \`status: "identified"\` whenever any gym equipment is present.
+3. ANATOMICAL & MECHANICAL INFERENCE: If a machine is unusual, custom-built, vintage, or missing clear branding, infer its primary target muscle and function based on its biomechanical design, seat positioning, footplates, handles, and leverage points.
+4. SCREEN / PHOTO PREVIEW RELAXATION: Do NOT reject an image or mark it as unidentified simply because it appears on a screen or digital display.
+5. ONLY REJECT TRUE NON-FITNESS CONTENT: Only set "isIdentified" to false if the image has zero gym equipment or fitness apparatus whatsoever (e.g., animals, food, outdoor landscapes with no equipment).
+
+Reference library list (use strictly for libraryId matching if exact match exists, otherwise leave libraryId as null):
 ${libraryNamesWithId}
 
-CRITICAL RECOGNITION RULES & GUIDELINES:
-1. DESCRIPTIVE FULL EQUIPMENT TITLES (MANDATORY):
-   - You are EXPLICITLY FORBIDDEN from returning short, generic single-word titles like "Barbell", "Bench", "Weights", or "Rack".
-   - ALWAYS return specific, descriptive compound equipment names that describe the full setup or machine type:
-     * Flat bench with barbell -> "Barbell Bench Press"
-     * Slanted/angled bench with barbell -> "Incline Barbell Press" or "Decline Barbell Press"
-     * Selectorized pin-loaded chest press -> "Chest Press Machine"
-     * Flat or adjustable bench with dumbbells -> "Dumbbell Bench Press"
-     * Standing bar apparatus / squat station -> "Squat Rack" or "Power Cage"
-     * Guided vertical barbell station -> "Smith Machine"
-   - Never output "Barbell", "Bench", "Weights", or "Rack" as standalone titles.
-
-2. UNIVERSAL GYM EQUIPMENT RECOGNITION:
-   - Identify ANY gym machine, equipment, apparatus, bench, rack, cable station, or free-weight shown.
-   - Never check or enforce any "allowed list", "permitted list", or reject valid gym equipment because it is not included in a list.
-   - Never return a message stating an item is not in an allowed list or permitted list.
-3. SCREEN / PHOTO PREVIEW RELAXATION:
-   - Do NOT reject an image or mark it as "not_identified" / "isIdentified: false" simply because it appears on a laptop screen, computer monitor, mobile device, TV screen, or photo preview.
-   - If gym equipment or a fitness machine is visible in the photo—even when photographed from a screen or digital display—ALWAYS identify the machine depicted.
-4. MATCHING LOGIC & JSON CONTRACT:
-   - Always set \`isIdentified: true\` whenever gym equipment or a machine is present.
-   - If the identified machine matches an entry in our reference library list:
-     * Set "status" to "identified"
-     * Set "isIdentified" to true
-     * Set "libraryId" to its exact libraryId from the list
-     * Set "matchedLibraryId" to its exact libraryId from the list
-     * Set "isNewMachine" to false
-     * Set "title" to the recognized name (e.g. "Incline Bench Press")
-   - If the identified machine is NEW or not in our reference library:
-     * Set "status" to "identified"
-     * Set "isIdentified" to true
-     * Set "libraryId" to null
-     * Set "matchedLibraryId" to null
-     * Set "isNewMachine" to true
-     * Provide a generated "title", "description", "primaryMuscles", and "setupGuide" directly from your general fitness equipment knowledge.
-4. ONLY REJECT TRUE NON-FITNESS CONTENT:
-   - Only set "isIdentified" to false and "status" to "not_identified" if the photo genuinely contains NO gym equipment, weights, or fitness apparatus whatsoever (e.g. food, animals, outdoor landscapes with no fitness equipment, cars, or regular household furniture).
-
-Keep response strictly in valid JSON format ONLY:
+INSTRUCTIONS FOR OUTPUT:
+You MUST respond with a valid JSON object matching the schema below:
 {
+  "machineName": "Exact name of the detected equipment",
+  "title": "Exact name of the detected equipment",
+  "targetMuscle": "Primary target muscle group (e.g., Legs - Inner Thighs, Upper Chest, Lats)",
+  "primaryMuscles": ["Primary target muscle group"],
+  "secondaryMuscles": ["Secondary muscle 1", "Secondary muscle 2"],
+  "setupInstructions": [
+    "Step 1: Seat adjustment and initial body positioning.",
+    "Step 2: Grip/pad placement and pin load setup.",
+    "Step 3: Execution path and key safety/form cue."
+  ],
+  "setupGuide": [
+    "Step 1: Seat adjustment and initial body positioning.",
+    "Step 2: Grip/pad placement and pin load setup.",
+    "Step 3: Execution path and key safety/form cue."
+  ],
+  "category": "Chest" | "Back" | "Shoulders" | "Arms" | "Legs" | "Cable Equipment" | "Cardio" | "Core" | "Other",
+  "confidence": 95,
   "isIdentified": true,
   "status": "identified",
   "isNewMachine": false,
   "libraryId": "matching-library-id or null",
   "matchedLibraryId": "matching-library-id or null",
-  "title": "Incline Bench Press",
-  "description": "Concise 1-2 sentence description of what this machine is and does.",
-  "category": "Chest" | "Back" | "Shoulders" | "Arms" | "Legs" | "Cable Equipment" | "Cardio" | "Core" | "Other",
-  "confidence": 95,
-  "primaryMuscles": ["Pectorals", "Front Deltoids", "Triceps"],
-  "setupGuide": [
-    "Step 1: Brief seat, pin, or pad adjustment cue",
-    "Step 2: Brief grip, posture, and positioning cue",
-    "Step 3: Brief motion, breathing, and safety cue"
-  ],
-  "reasoning": "Brief 1-sentence identification rationale."
+  "description": "Concise 1-2 sentence description of what this machine is and does."
 }`;
 
   let base64Data = '';
@@ -174,13 +152,19 @@ Keep response strictly in valid JSON format ONLY:
         }
       }
 
-      const resolvedTitle = parsed.title || parsed.machineName || parsed.match || null;
+      const resolvedTitle = parsed.machineName || parsed.title || parsed.match || null;
       const isIdentified = (parsed.isIdentified === true || parsed.status === 'identified') && Boolean(resolvedTitle);
       const isNewMachine = Boolean(parsed.isNewMachine || (!parsed.libraryId && !parsed.matchedLibraryId && isIdentified));
       const matchedLibraryId = isNewMachine ? null : (parsed.matchedLibraryId || parsed.libraryId || null);
-      const setupGuide = Array.isArray(parsed.setupGuide) && parsed.setupGuide.length > 0
-        ? parsed.setupGuide
-        : (Array.isArray(parsed.setupSteps) ? parsed.setupSteps : []);
+      const setupGuide = Array.isArray(parsed.setupInstructions) && parsed.setupInstructions.length > 0
+        ? parsed.setupInstructions
+        : (Array.isArray(parsed.setupGuide) && parsed.setupGuide.length > 0
+          ? parsed.setupGuide
+          : (Array.isArray(parsed.setupSteps) ? parsed.setupSteps : []));
+
+      const primaryMuscles = Array.isArray(parsed.primaryMuscles) && parsed.primaryMuscles.length > 0
+        ? parsed.primaryMuscles
+        : (parsed.targetMuscle ? [parsed.targetMuscle] : []);
 
       return {
         status: isIdentified ? 'identified' : 'not_identified',
@@ -194,7 +178,10 @@ Keep response strictly in valid JSON format ONLY:
         libraryId: matchedLibraryId,
         matchedLibraryId,
         confidence: typeof parsed.confidence === 'number' ? parsed.confidence : (isIdentified ? 92 : 0),
-        primaryMuscles: Array.isArray(parsed.primaryMuscles) ? parsed.primaryMuscles : [],
+        targetMuscle: parsed.targetMuscle || primaryMuscles[0] || 'Full Body',
+        primaryMuscles,
+        secondaryMuscles: Array.isArray(parsed.secondaryMuscles) ? parsed.secondaryMuscles : [],
+        setupInstructions: setupGuide.slice(0, 4),
         setupGuide: setupGuide.slice(0, 4),
         setupSteps: setupGuide.slice(0, 4),
         reasoning: parsed.reasoning || (isIdentified ? `Identified as ${resolvedTitle}` : 'Unrecognized machine'),
