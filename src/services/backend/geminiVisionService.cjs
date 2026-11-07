@@ -105,10 +105,16 @@ Keep response strictly in valid JSON format ONLY:
           },
         },
       ],
+      config: {
+        responseMimeType: 'application/json',
+        maxOutputTokens: 2048,
+        temperature: 0.2
+      }
     });
 
-    const textResponse = (response.text || '').replace(/```json/gi, '').replace(/```/gi, '').trim();
-    const parsed = JSON.parse(textResponse);
+    let rawText = (response.text || '').trim();
+    rawText = rawText.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '').trim();
+    const parsed = JSON.parse(rawText);
     const resolvedTitle = parsed.title || parsed.machineName || parsed.match || null;
     const isIdentified = (parsed.isIdentified === true || parsed.status === 'identified') && Boolean(resolvedTitle);
     const isNewMachine = Boolean(parsed.isNewMachine || (!parsed.libraryId && !parsed.matchedLibraryId && isIdentified));

@@ -60,22 +60,22 @@ Reference library list (use strictly for libraryId matching if exact match exist
 ${libraryNamesWithId}
 
 INSTRUCTIONS FOR OUTPUT:
-You MUST respond with a valid JSON object matching the schema below:
+Return ONLY concise, complete JSON matching this schema:
 {
-  "machineName": "Exact name of the detected equipment",
-  "title": "Exact name of the detected equipment",
-  "targetMuscle": "Primary target muscle group (e.g., Legs - Inner Thighs, Upper Chest, Lats)",
+  "machineName": "Exact name of detected equipment",
+  "title": "Exact name of detected equipment",
+  "targetMuscle": "Primary target muscle group (e.g. Legs - Quads, Upper Chest, Lats)",
   "primaryMuscles": ["Primary target muscle group"],
   "secondaryMuscles": ["Secondary muscle 1", "Secondary muscle 2"],
   "setupInstructions": [
-    "Step 1: Seat adjustment and initial body positioning.",
-    "Step 2: Grip/pad placement and pin load setup.",
-    "Step 3: Execution path and key safety/form cue."
+    "Step 1: Seat and pad adjustment.",
+    "Step 2: Grip placement and weight load setup.",
+    "Step 3: Execution path and key form cue."
   ],
   "setupGuide": [
-    "Step 1: Seat adjustment and initial body positioning.",
-    "Step 2: Grip/pad placement and pin load setup.",
-    "Step 3: Execution path and key safety/form cue."
+    "Step 1: Seat and pad adjustment.",
+    "Step 2: Grip placement and weight load setup.",
+    "Step 3: Execution path and key form cue."
   ],
   "category": "Chest" | "Back" | "Shoulders" | "Arms" | "Legs" | "Cable Equipment" | "Cardio" | "Core" | "Other",
   "confidence": 95,
@@ -84,7 +84,7 @@ You MUST respond with a valid JSON object matching the schema below:
   "isNewMachine": false,
   "libraryId": "matching-library-id or null",
   "matchedLibraryId": "matching-library-id or null",
-  "description": "Concise 1-2 sentence description of what this machine is and does."
+  "description": "Short 1-sentence description of the machine."
 }`;
 
   let base64Data = '';
@@ -110,9 +110,9 @@ You MUST respond with a valid JSON object matching the schema below:
     try {
       // Configure generation parameters
       const generationConfig = {
-        maxOutputTokens: 350,
-        temperature: 0.1,
-        responseMimeType: 'application/json'
+        responseMimeType: 'application/json',
+        maxOutputTokens: 2048,
+        temperature: 0.2
       };
 
       // If using a model with thinking support (like 3.8-flash), set low thinking effort
@@ -137,14 +137,14 @@ You MUST respond with a valid JSON object matching the schema below:
       });
 
       // Clean response text to ensure it's pure JSON
-      const rawText = (response.text || '').trim();
-      const cleanedText = rawText.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim();
+      let rawText = (response.text || '').trim();
+      rawText = rawText.replace(/^```json\s*/i, '').replace(/^```\s*/, '').replace(/\s*```$/, '').trim();
 
       let parsed;
       try {
-        parsed = JSON.parse(cleanedText);
+        parsed = JSON.parse(rawText);
       } catch (parseErr) {
-        const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           parsed = JSON.parse(jsonMatch[0]);
         } else {
