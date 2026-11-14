@@ -363,6 +363,12 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
   /* ── Quick counts ── */
   const totalFavorites = favoriteMachineIds.length;
   const totalDiscovered = discoveredMachineIds.length;
+  const libraryTotal = useMemo(() => {
+    return machines.filter(m => m.category !== 'Cardio' && !m.equipmentType?.toLowerCase().includes('cardio')).length;
+  }, [machines]);
+  const activeCategoriesCount = useMemo(() => {
+    return MACHINE_CATEGORIES.filter(c => c.id !== 'Cardio').length;
+  }, []);
 
   /* ── Trigger simulated refresh ── */
   const triggerRefresh = () => {
@@ -563,9 +569,9 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
               <span className="badge badge-emerald" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                 <BookOpen size={10} /> Machine Library
               </span>
-              <span style={{ fontSize: '0.72rem', color: '#64748B' }}>• {machines.length} Equipment Records</span>
+              <span style={{ fontSize: '0.72rem', color: '#64748B' }}>• {libraryTotal} Equipment Records</span>
               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold" style={{ fontSize: '0.7rem' }}>
-                50 Commercial Machines
+                {libraryTotal} Commercial Machines
               </span>
             </div>
 
@@ -583,10 +589,10 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
           className="grid grid-cols-3 gap-2 w-full p-2.5 sm:p-4 mt-4 border-t border-white/[0.06] relative z-10 sm:flex sm:items-center sm:gap-6"
         >
           {[
-            { label: 'Total Machines', mobileLabel: 'Total', value: machines.length, color: '#00F59B', icon: <Layers size={14} /> },
+            { label: 'Total Machines', mobileLabel: 'Total', value: libraryTotal, color: '#00F59B', icon: <Layers size={14} /> },
             { label: 'Discovered', mobileLabel: 'Discovered', value: totalDiscovered, color: '#38BDF8', icon: <CheckCircle size={14} /> },
             { label: 'Saved Favorites', mobileLabel: 'Favorites', value: totalFavorites, color: '#FFB800', icon: <Star size={14} /> },
-            { label: 'Categories', mobileLabel: 'Categories', value: MACHINE_CATEGORIES.length, color: '#C084FC', icon: <LayoutGrid size={14} />, desktopOnly: true },
+            { label: 'Categories', mobileLabel: 'Categories', value: activeCategoriesCount, color: '#C084FC', icon: <LayoutGrid size={14} />, desktopOnly: true },
           ].map(stat => (
             <div 
               key={stat.label} 
@@ -890,7 +896,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
         {/* Right Sort & View Modes - Group dropdowns and list/grid toggles neatly: flex items-center justify-between gap-2 w-full */}
         <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t border-white/[0.06] sm:border-t-0 shrink-0">
           <span className="text-xs text-[#64748B] whitespace-nowrap">
-            <strong className="text-[#F1F5F9]">{filteredMachines.length}</strong> of {machines.length}
+            <strong className="text-[#F1F5F9]">{filteredMachines.length}</strong> of {libraryTotal}
           </span>
 
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -1000,7 +1006,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
 
           {/* Machine Count Summary Footer */}
           <div style={{ textAlign: 'center', padding: '0.5rem 0', fontSize: '0.78rem', color: '#64748B' }}>
-            Showing {filteredMachines.length} of {machines.length} machines in library
+            Showing {filteredMachines.length} of {libraryTotal} machines in library
             {activeFilterCount > 0 && (
               <button onClick={clearAllFilters} style={{ background: 'transparent', border: 'none', color: '#00F59B', cursor: 'pointer', marginLeft: '6px', textDecoration: 'underline', fontSize: '0.78rem' }}>
                 (clear all filters)

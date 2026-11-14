@@ -202,7 +202,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onSelectMa
                 style={{ marginBottom: '1.25rem' }}
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                ⚡ AI Vision Online · 50+ Gym Machines Supported
+                ⚡ AI Vision Online · 36 Gym Machines Supported
               </div>
 
               <h1
