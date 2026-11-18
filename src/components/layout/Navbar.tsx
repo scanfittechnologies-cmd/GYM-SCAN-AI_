@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { UserMenu } from '../auth/UserMenu';
 import { 
   Dumbbell, 
-  QrCode, 
+  Camera, 
   BookOpen, 
   History, 
   Trophy, 
@@ -35,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
 
   const navItems: NavItem[] = [
     { id: 'home', label: 'Home', icon: Home },
-    { id: 'scan', label: 'Scan Machine', icon: QrCode },
+    { id: 'scan', label: 'Scan Machine', icon: Camera },
     { id: 'library', label: 'Machine Library', icon: BookOpen },
     // { id: 'routines', label: 'AI Routines', icon: Sparkles, isPro: true },
     { id: 'activity', label: 'My Activity', icon: History },

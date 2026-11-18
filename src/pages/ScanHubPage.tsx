@@ -3,11 +3,10 @@ import { useGym } from '../context/GymContext';
 import { useSoftGate } from '../hooks/useSoftGate';
 import { useUserTier } from '../hooks/useUserTier';
 import { Machine } from '../types';
-import { QrCode, Sparkles, Upload } from 'lucide-react';
-import { CameraScanner } from '../components/scanner/CameraScanner';
+import { Sparkles, Upload, Camera } from 'lucide-react';
 import { PhotoAIAnalyzer } from '../components/scanner/PhotoAIAnalyzer';
 
-export type ScanMode = 'qr' | 'ai_camera' | 'upload';
+export type ScanMode = 'ai_camera' | 'upload';
 
 interface ScanHubPageProps {
   initialMode?: 'qr' | 'photo' | 'ai_camera' | 'upload';
@@ -27,26 +26,15 @@ const TABS: {
   borderActive: string;
 }[] = [
   {
-    id: 'qr',
-    label: 'Scan QR Code',
-    shortLabel: 'QR Code',
-    sublabel: 'Instant auto-detect',
-    icon: <QrCode size={18} />,
-    accent: '#00F59B',
-    glow: 'rgba(0, 245, 155, 0.22)',
-    gradientActive: 'linear-gradient(135deg, rgba(0, 245, 155, 0.18) 0%, rgba(4, 12, 20, 0.96) 100%)',
-    borderActive: '#00F59B',
-  },
-  {
     id: 'ai_camera',
     label: 'Snap Machine Photo',
     shortLabel: 'Snap',
     sublabel: 'Vision Scanner Active',
-    icon: <Sparkles size={18} />,
-    accent: '#00D2FF',
-    glow: 'rgba(0, 210, 255, 0.22)',
-    gradientActive: 'linear-gradient(135deg, rgba(0, 210, 255, 0.18) 0%, rgba(4, 10, 26, 0.96) 100%)',
-    borderActive: '#00D2FF',
+    icon: <Camera size={18} />,
+    accent: '#00F59B',
+    glow: 'rgba(0, 245, 155, 0.22)',
+    gradientActive: 'linear-gradient(135deg, rgba(0, 245, 155, 0.18) 0%, rgba(4, 12, 20, 0.96) 100%)',
+    borderActive: '#00F59B',
   },
   {
     id: 'upload',
@@ -62,14 +50,13 @@ const TABS: {
 ];
 
 export const ScanHubPage: React.FC<ScanHubPageProps> = ({
-  initialMode = 'qr',
+  initialMode = 'ai_camera',
   onMachineSelected,
   onNavigate
 }) => {
   const resolveInitialMode = (mode?: string): ScanMode => {
     if (mode === 'upload') return 'upload';
-    if (mode === 'photo' || mode === 'ai_camera') return 'ai_camera';
-    return 'qr';
+    return 'ai_camera';
   };
 
   const [activeMode, setActiveMode] = useState<ScanMode>(() => resolveInitialMode(initialMode));
@@ -216,7 +203,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
           Identify Gym Machine
         </h1>
         <p style={{ fontSize: '0.9rem', color: '#94A3B8', lineHeight: 1.45, margin: 0 }}>
-          Scan a QR code, snap a photo, or upload an image — instant machine setup guides.
+          Snap a photo or upload an image — instant machine setup guides.
         </p>
       </div>
 
@@ -224,7 +211,7 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
       <div
         role="tablist"
         aria-label="Scanner mode"
-        className="grid grid-cols-3 gap-1.5 sm:gap-2 w-full max-w-[680px] mx-auto p-1.5"
+        className="grid grid-cols-2 gap-1.5 sm:gap-2 w-full max-w-[520px] mx-auto p-1.5"
         style={{
           background: 'rgba(7, 10, 18, 0.88)',
           backdropFilter: 'blur(16px)',
@@ -344,19 +331,14 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
       {/* 3. Active Scanner View — or Daily Limit Banner when user tries a new scan after limit */}
       {showLimitBanner ? (
         <DailyLimitBanner />
-      ) : activeMode === 'qr' ? (
-        <CameraScanner
-          activeMode={activeMode}
-          onModeChange={setActiveMode}
-          onMachineIdentified={(m, type, img, conf) => handleScanSuccess(m, type || 'qr', img, conf)}
-          onSwitchToManual={() => onNavigate('library')}
-          onSwitchToPhoto={() => setActiveMode('ai_camera')}
-          onScanCredited={incrementScanCount}
-        />
       ) : (
         <PhotoAIAnalyzer
           activeMode={activeMode}
-          onModeChange={setActiveMode}
+          onModeChange={(m) => {
+            if (m === 'upload' || m === 'ai_camera') {
+              setActiveMode(m);
+            }
+          }}
           onMachineConfirmed={(m, type, img, conf) => handleScanSuccess(m, type, img, conf)}
           onOpenSettingsDocs={() => onNavigate('profile')}
           onSelectManual={() => onNavigate('library')}

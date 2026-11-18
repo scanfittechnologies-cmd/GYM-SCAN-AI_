@@ -32,7 +32,7 @@ const AppContent: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('home');
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
   const [machineSource, setMachineSource] = useState<'qr' | 'photo' | 'library' | 'activity'>('library');
-  const [scanInitialMode, setScanInitialMode] = useState<'qr' | 'photo' | 'ai_camera' | 'upload'>('qr');
+  const [scanInitialMode, setScanInitialMode] = useState<'photo' | 'ai_camera' | 'upload'>('ai_camera');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -57,10 +57,8 @@ const AppContent: React.FC = () => {
     if (targetTab === 'scan') {
       if (scanModeOrMachineId === 'upload') {
         setScanInitialMode('upload');
-      } else if (scanModeOrMachineId === 'photo' || scanModeOrMachineId === 'ai_camera') {
+      } else {
         setScanInitialMode('ai_camera');
-      } else if (scanModeOrMachineId === 'qr') {
-        setScanInitialMode('qr');
       }
     }
     setCurrentTab(targetTab);

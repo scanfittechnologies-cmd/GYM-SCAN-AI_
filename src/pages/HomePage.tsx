@@ -3,7 +3,7 @@ import { useGym } from '../context/GymContext';
 import { Machine } from '../types';
 import { 
   Dumbbell,
-  QrCode, 
+  Camera, 
   Upload, 
   Sparkles, 
   ArrowRight, 
@@ -133,9 +133,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
           gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
           gap: '1rem'
         }}>
-          {/* Button 1: Scan QR Code */}
+          {/* Button 1: Snap Machine Photo */}
           <button
-            onClick={() => onNavigate('scan', 'qr')}
+            onClick={() => onNavigate('scan', 'ai_camera')}
             style={{
               background: 'linear-gradient(135deg, rgba(0, 245, 155, 0.15) 0%, rgba(13, 22, 28, 0.95) 100%)',
               border: '1.5px solid rgba(0, 245, 155, 0.4)',
@@ -165,7 +165,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
                 flexShrink: 0,
                 boxShadow: '0 4px 14px rgba(0, 245, 155, 0.4)'
               }}>
-                <QrCode size={26} strokeWidth={2.4} />
+                <Camera size={26} strokeWidth={2.4} />
               </div>
 
               <div>
@@ -176,10 +176,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
                   color: '#FFFFFF',
                   lineHeight: 1.2
                 }}>
-                  Scan QR Code
+                  Snap Machine Photo
                 </div>
                 <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '3px', lineHeight: 1.3 }}>
-                  Scan equipment sticker badge with camera
+                  Point camera at any gym machine
                 </div>
               </div>
             </div>

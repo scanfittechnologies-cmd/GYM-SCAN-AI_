@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, QrCode, BookOpen, History, Trophy } from 'lucide-react';
+import { Home, Camera, BookOpen, History, Trophy } from 'lucide-react';
 
 interface BottomNavProps {
   currentTab: string;
@@ -10,7 +10,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'library', label: 'Library', icon: BookOpen },
-    { id: 'scan', label: 'Scan', icon: QrCode, isSpecial: true },
+    { id: 'scan', label: 'Scan', icon: Camera, isSpecial: true },
     { id: 'activity', label: 'Activity', icon: History },
     { id: 'achievements', label: 'XP & Badges', icon: Trophy },
   ];
