@@ -44,11 +44,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
     }
   }, []);
 
-  // Highlight specific beginner starter machines requested: Chest Press, Lat Pulldown, Leg Press, Seated Cable Row
-  const starterMachineIds = ['seated-chest-press', 'lat-pulldown', '45-leg-press', 'seated-cable-row'];
-  const discoverMachines = machines.filter(m => starterMachineIds.includes(m.id));
-  // If some are not matched, fallback to first 4 machines
-  const displayDiscoverMachines = discoverMachines.length === 4 ? discoverMachines : machines.slice(0, 4);
+  // Explicitly select the exact 4 machines in order: Chest Press, Lat Pulldown, Leg Press, Seated Cable Row
+  const starterMachineIds = ['seated-chest-press', 'lat-pulldown', 'leg-press-45', 'seated-cable-row'];
+  const displayDiscoverMachines = starterMachineIds
+    .map(id => machines.find(m => m.id === id))
+    .filter((m): m is Machine => Boolean(m));
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
