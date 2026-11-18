@@ -171,11 +171,8 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
 
       {/* 1. Page Header */}
       <div style={{ textAlign: 'center', maxWidth: '580px', margin: '0 auto' }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '0.35rem', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <span className="badge badge-emerald" style={{ fontSize: '0.7rem', padding: '2px 8px' }}>
-            <Sparkles size={11} /> Equipment Identification Hub
-          </span>
-          {tier === 'free' && (
+        {tier === 'free' && (
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginBottom: '0.45rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             <span
               id="scan-counter-pill"
               className="badge badge-blue"
@@ -197,8 +194,8 @@ export const ScanHubPage: React.FC<ScanHubPageProps> = ({
                 ? '🔒 Daily Limit Reached'
                 : `⚡ Beta: ${scanCount} of ${freeScanLimit} daily scans used`}
             </span>
-          )}
-        </div>
+          </div>
+        )}
         <h1 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.2rem)', color: '#F1F5F9', marginBottom: '0.35rem', lineHeight: 1.2 }}>
           Identify Gym Machine
         </h1>

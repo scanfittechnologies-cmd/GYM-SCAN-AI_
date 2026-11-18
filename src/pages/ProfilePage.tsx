@@ -60,10 +60,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
       {/* Header */}
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-            <span className="badge badge-emerald" style={{ fontSize: '0.7rem' }}>Lifter Profile</span>
-            <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>• Settings & Cloud Hub</span>
-          </div>
           <h1 style={{ fontSize: '1.85rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>
             Profile & App Preferences
           </h1>

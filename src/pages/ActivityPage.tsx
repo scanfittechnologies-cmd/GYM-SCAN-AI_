@@ -196,25 +196,6 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
       {/* Page Header */}
       <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
-            <span className="badge badge-emerald" style={{ fontSize: '0.72rem', padding: '3px 9px' }}>
-              Activity Feed
-            </span>
-            <span
-              className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold"
-              style={{
-                fontSize: '0.7rem',
-                padding: '2px 8px',
-                borderRadius: '999px',
-                background: 'rgba(16, 185, 129, 0.1)',
-                border: '1px solid rgba(16, 185, 129, 0.2)',
-                color: '#34D399',
-                fontWeight: 600
-              }}
-            >
-              Activity Verified
-            </span>
-          </div>
           <h1 style={{ fontSize: '1.9rem', color: '#F1F5F9', margin: 0, fontWeight: 800, letterSpacing: '-0.02em' }}>
             My Activity
           </h1>
