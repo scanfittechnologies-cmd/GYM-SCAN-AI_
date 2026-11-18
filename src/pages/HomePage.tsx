@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGym } from '../context/GymContext';
 import { Machine } from '../types';
 import { 
@@ -22,6 +22,27 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
     machines,
     userProfile
   } = useGym();
+
+  const [isReturningUser] = useState<boolean>(() => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        return localStorage.getItem('scanfit_has_visited') === 'true';
+      }
+    } catch {
+      // In case localStorage is blocked/unavailable
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage.setItem('scanfit_has_visited', 'true');
+      }
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, []);
 
   // Highlight specific beginner starter machines requested: Chest Press, Lat Pulldown, Leg Press, Seated Cable Row
   const starterMachineIds = ['seated-chest-press', 'lat-pulldown', '45-leg-press', 'seated-cable-row'];
@@ -104,7 +125,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
             marginBottom: '0.6rem',
             color: '#FFFFFF'
           }}>
-            Welcome back, <span style={{
+            {isReturningUser ? 'Welcome back, ' : 'Welcome, '}<span style={{
               background: 'linear-gradient(90deg, #FFFFFF 20%, #00F59B 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
