@@ -51,11 +51,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
     .filter((m): m is Machine => Boolean(m));
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-6 mt-2">
+    <div className="flex flex-col gap-4 sm:gap-6 mt-3 sm:mt-4">
       
       {/* 1. Header Branding & Welcome Message (Hero Banner) */}
       <div 
-        className="p-4 sm:p-5 md:p-6"
+        className="p-5 sm:p-6"
         style={{
           background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(10, 14, 22, 0.98) 100%)',
           border: '1px solid rgba(0, 245, 155, 0.22)',
@@ -89,13 +89,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
 
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '680px' }}>
           
-          {/* Compact Single-Line Title */}
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white mb-1">
-            Scan Any Gym Machine
+          {/* Welcome Heading */}
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight mb-0">
+            Welcome back, Gym Explorer.
           </h1>
 
-          <p className="text-xs sm:text-sm text-[#94A3B8] leading-snug m-0">
-            Snap or upload a photo for instant setup cues and form tips.
+          <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed mt-2 max-w-2xl m-0">
+            Ready to train? Tap a scan mode below to instantly pull up setup cues and form tips.
           </p>
         </div>
       </div>
