@@ -51,18 +51,18 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
     .filter((m): m is Machine => Boolean(m));
 
   return (
-    <div className="flex flex-col gap-5 sm:gap-8">
+    <div className="flex flex-col gap-4 sm:gap-6 mt-2">
       
       {/* 1. Header Branding & Welcome Message (Hero Banner) */}
       <div 
-        className="p-5 sm:p-6 md:p-8"
+        className="p-4 sm:p-5 md:p-6"
         style={{
           background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(10, 14, 22, 0.98) 100%)',
           border: '1px solid rgba(0, 245, 155, 0.22)',
-          borderRadius: '24px',
+          borderRadius: '20px',
           position: 'relative',
           overflow: 'hidden',
-          boxShadow: '0 20px 40px -15px rgba(0, 0, 0, 0.7)'
+          boxShadow: '0 16px 36px -15px rgba(0, 0, 0, 0.7)'
         }}
       >
         {/* Ambient Glows */}
@@ -89,22 +89,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
 
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '680px' }}>
           
-          {/* Friendly Welcome Greeting */}
-          <h1 style={{
-            fontSize: 'clamp(1.5rem, 4vw, 2.2rem)',
-            lineHeight: 1.15,
-            marginBottom: '0.45rem',
-            color: '#FFFFFF'
-          }}>
-            {isReturningUser ? 'Welcome back, ' : 'Welcome, '}<span style={{
-              background: 'linear-gradient(90deg, #FFFFFF 20%, #00F59B 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>{userProfile.displayName || 'Gym Explorer'}</span>.
+          {/* Compact Single-Line Title */}
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white mb-1">
+            Scan Any Gym Machine
           </h1>
 
-          <p style={{ fontSize: '0.88rem', color: '#94A3B8', lineHeight: 1.45, margin: 0 }}>
-            Ready to train? Tap a scan mode below to instantly pull up setup guides and form cues.
+          <p className="text-xs sm:text-sm text-[#94A3B8] leading-snug m-0">
+            Snap or upload a photo for instant setup cues and form tips.
           </p>
         </div>
       </div>
