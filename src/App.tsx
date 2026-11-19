@@ -94,7 +94,17 @@ const AppContent: React.FC = () => {
 
       {/* Main Responsive App Content Area */}
       <main
-        className={isFullWidthPage ? '' : currentTab === 'library' ? 'w-full overflow-x-hidden' : currentTab === 'home' ? 'app-container pt-3 sm:pt-6 md:pt-6' : 'app-container pt-16 sm:pt-20 md:pt-6'}
+        className={
+          isFullWidthPage 
+            ? '' 
+            : currentTab === 'library' 
+              ? 'w-full overflow-x-hidden' 
+              : currentTab === 'home' 
+                ? 'app-container pt-3 sm:pt-6 md:pt-6' 
+                : ['activity', 'achievements'].includes(currentTab)
+                  ? 'app-container pt-4 sm:pt-6 md:pt-6'
+                  : 'app-container pt-16 sm:pt-20 md:pt-6'
+        }
         style={{ flex: 1 }}
       >
         {selectedMachine ? (

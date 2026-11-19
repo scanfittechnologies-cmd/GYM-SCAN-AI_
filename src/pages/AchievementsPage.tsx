@@ -57,7 +57,7 @@ export const AchievementsPage: React.FC<AchievementsPageProps> = ({ onNavigate }
           XP & Achievements
         </h1>
         <p style={{ fontSize: '0.88rem', color: '#94A3B8', marginTop: '6px', maxWidth: '650px', lineHeight: 1.45 }}>
-          Earn Experience Points (XP) for expanding your machine repertoire, verifying equipment QR codes, and completing form tutorials.
+          Earn XP by scanning new gym machines, mastering form guides, and unlocking rank milestones.
         </p>
       </div>
 

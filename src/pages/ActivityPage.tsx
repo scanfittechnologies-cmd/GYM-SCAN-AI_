@@ -200,7 +200,7 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
             My Activity
           </h1>
           <p style={{ fontSize: '0.88rem', color: '#94A3B8', marginTop: '6px', maxWidth: '620px', lineHeight: 1.45 }}>
-            Real-time chronological timeline of your verified equipment scans, tutorials mastered, XP earnings, and milestone achievements.
+            Track your scanned machines, completed form guides, and earned XP.
           </p>
         </div>
       </div>
