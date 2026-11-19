@@ -91,7 +91,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
           
           {/* Welcome Heading */}
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight mb-0">
-            Welcome back, Gym Explorer.
+            {isReturningUser ? 'Welcome back, ' : 'Welcome, '}
+            <span className="text-[#00F59B]">Gym Explorer.</span>
           </h1>
 
           <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed mt-2 max-w-2xl m-0">
