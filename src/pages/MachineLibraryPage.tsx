@@ -569,10 +569,6 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
               <span className="badge badge-emerald" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                 <BookOpen size={10} /> Machine Library
               </span>
-              <span style={{ fontSize: '0.72rem', color: '#64748B' }}>• {libraryTotal} Equipment Records</span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold" style={{ fontSize: '0.7rem' }}>
-                {libraryTotal} Commercial Machines
-              </span>
             </div>
 
             <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.1rem)', color: '#F1F5F9', margin: '0 0 0.35rem 0', lineHeight: 1.2 }}>
@@ -624,7 +620,7 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
             id="machine-search"
             type="search"
             aria-label="Search machines"
-            placeholder="Search machine name, category, muscle group, or exercise (e.g. Chest Press, Lats, Treadmill, Quads)..."
+            placeholder="Search machines or muscles..."
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             className="input-modern w-full sm:w-auto"
