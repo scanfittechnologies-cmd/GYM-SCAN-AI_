@@ -1374,13 +1374,68 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
         );
       })()}
 
-      {/* 8. STATE: MACHINE_IDENTIFIED - Native Hevy/Strong Gym Result View */}
-      {analysisCompleted && visionOutput && (visionOutput.result_status === 'MACHINE_IDENTIFIED' || visionOutput.result_status === 'confirmed_candidate') && possibleMatches.length > 0 && selectedMatch && (
-        <div className="w-full flex flex-col gap-3.5 select-none">
+      {/* 8. STATE: MACHINE_IDENTIFIED — Full Post-Scan Result View */}
+      {analysisCompleted && visionOutput && (visionOutput.result_status === 'MACHINE_IDENTIFIED' || visionOutput.result_status === 'confirmed_candidate') && possibleMatches.length > 0 && selectedMatch && (() => {
+        // Pull real data from the matched machine + vision output
+        const rawSetupSteps = (selectedMatch.setupInstructions && selectedMatch.setupInstructions.length > 0)
+          ? selectedMatch.setupInstructions
+          : ((visionOutput.setupSteps && visionOutput.setupSteps.length > 0)
+              ? visionOutput.setupSteps
+              : ((visionOutput.setupGuide && visionOutput.setupGuide.length > 0)
+                  ? visionOutput.setupGuide
+                  : [
+                      'Adjust seat height so the pivot aligns with your working joint.',
+                      'Select an appropriate warm-up resistance on the weight stack.',
+                      'Grip handles or position pads comfortably before starting.'
+                    ]));
+        const setupSteps: string[] = rawSetupSteps || [];
+        const formCues = selectedMatch.movementGuidance?.length > 0
+          ? selectedMatch.movementGuidance
+          : [
+              'Maintain flat back against pad, chest lifted, and core braced.',
+              'Move through full range of motion without slamming weight plates.',
+              'Exhale on the exertion stroke; inhale slowly on the eccentric return.'
+            ];
+        const mistakes = selectedMatch.commonMistakes?.length > 0
+          ? selectedMatch.commonMistakes
+          : [{ mistake: 'Using excessive momentum or arching spine off backrest.', fix: 'Control the weight; keep posture stable.' },
+             { mistake: 'Locking out joints forcefully at end range.', fix: 'Stop just short of full lock-out.' }];
+        const confidence = visionOutput.confidence ?? 90;
+        const primaryMuscle = selectedMatch.primaryMuscles?.[0]?.split('(')[0].trim() || selectedMatch.category;
+        const matchFeatures = possibleMatches[0]?.matchingFeatures || [];
 
-          {/* Top Machine Hero Card */}
-          <div className="relative w-full rounded-3xl overflow-hidden border border-[#222624] bg-[#141716] flex flex-col justify-end p-4">
-            <div className="relative h-44 w-full rounded-2xl overflow-hidden bg-[#0A0C0B] border border-[#222624] mb-3">
+        return (
+        <div className="w-full flex flex-col gap-3 select-none">
+
+          {/* ── Top Controls: Retake / Upload Another ── */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setAnalysisCompleted(false);
+                setVisionOutput(null);
+                setUploadedImage(null);
+                startLiveCamera();
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141716] border border-[#222624] text-[11px] font-semibold text-[#9CA3AF] hover:text-white cursor-pointer transition-colors"
+            >
+              <Camera size={13} />
+              <span>Retake</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#141716] border border-[#222624] text-[11px] font-semibold text-[#9CA3AF] hover:text-white cursor-pointer transition-colors"
+            >
+              <Upload size={13} />
+              <span>Upload Another</span>
+            </button>
+          </div>
+
+          {/* ── Machine Hero Card with Captured Image ── */}
+          <div className="relative w-full rounded-3xl overflow-hidden border border-[#222624] bg-[#141716]">
+            {/* Image preview */}
+            <div className="relative h-48 w-full bg-[#0A0C0B]">
               {uploadedImage || selectedMatch.frontReferenceImage ? (
                 <img
                   src={uploadedImage || selectedMatch.frontReferenceImage!}
@@ -1392,126 +1447,157 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                   <Camera size={36} />
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0C0B]/90 via-transparent to-transparent" />
-              
-              <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-[#0A0C0B]/85 border border-[#222624] text-[10px] font-mono font-bold text-[#22C55E]">
-                {visionOutput.confidence}% Match
+              <div className="absolute inset-0 bg-gradient-to-t from-[#141716] via-[#141716]/30 to-transparent" />
+
+              {/* Confidence badge */}
+              <div className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#0A0C0B]/90 border border-[#22C55E]/40 backdrop-blur-sm">
+                <CheckCircle size={12} className="text-[#22C55E]" />
+                <span className="text-[11px] font-bold text-[#22C55E]">{confidence}% Match</span>
+              </div>
+
+              {/* Category pill */}
+              <div className="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-[#0A0C0B]/80 border border-[#222624] text-[10px] font-semibold text-[#9CA3AF]">
+                {selectedMatch.category}
               </div>
             </div>
 
-            <div className="flex flex-col gap-0.5">
-              <h2 className="text-xl font-extrabold text-white tracking-tight leading-tight">
+            {/* Machine identity block */}
+            <div className="p-4 flex flex-col gap-1.5">
+              <h2 className="text-lg font-extrabold text-white tracking-tight leading-tight">
                 {selectedMatch.name}
               </h2>
-              <div className="flex items-center gap-2 mt-1 text-xs">
+              <div className="flex items-center gap-2 text-xs flex-wrap">
                 <span className="text-[#22C55E] font-bold flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
-                  {selectedMatch.primaryMuscles[0]?.split('(')[0].trim() || selectedMatch.category}
+                  {primaryMuscle}
                 </span>
                 {selectedMatch.secondaryMuscles && selectedMatch.secondaryMuscles.length > 0 && (
-                  <span className="text-[#9CA3AF] text-[11px] truncate">
-                    • {selectedMatch.secondaryMuscles.slice(0, 2).map(m => m.split('(')[0].trim()).join(', ')}
+                  <span className="text-[#9CA3AF] text-[11px]">
+                    • {selectedMatch.secondaryMuscles.slice(0, 3).map(m => m.split('(')[0].trim()).join(', ')}
                   </span>
                 )}
               </div>
+              {selectedMatch.tagline && (
+                <p className="text-[11px] text-[#9CA3AF] leading-snug mt-0.5">{selectedMatch.tagline}</p>
+              )}
             </div>
           </div>
 
-          {/* Scannable Workout Cards (Hevy/Strong inspired) */}
-          <div className="flex flex-col gap-2.5">
-            {/* Quick Setup Card */}
-            <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
-                  Quick Setup
-                </span>
-                <span className="text-[10px] text-[#6B7280] font-semibold">1-2-3 Guide</span>
-              </div>
-              <div className="flex flex-col gap-1.5 text-xs text-[#CBD5E1]">
-                <div className="flex items-start gap-2">
-                  <span className="w-4 h-4 rounded-full bg-[#0A0C0B] border border-[#222624] text-[10px] font-bold text-[#22C55E] flex items-center justify-center shrink-0 mt-0.5">1</span>
-                  <span><strong>Seat / Pad:</strong> Adjust seat height so joint aligns with the machine pivot.</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="w-4 h-4 rounded-full bg-[#0A0C0B] border border-[#222624] text-[10px] font-bold text-[#22C55E] flex items-center justify-center shrink-0 mt-0.5">2</span>
-                  <span><strong>Pin Weight:</strong> Choose a warm-up pin weight that allows 10–12 controlled reps.</span>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="w-4 h-4 rounded-full bg-[#0A0C0B] border border-[#222624] text-[10px] font-bold text-[#22C55E] flex items-center justify-center shrink-0 mt-0.5">3</span>
-                  <span><strong>Grip:</strong> Secure comfortable handle or pad position before initiating motion.</span>
-                </div>
-              </div>
-            </div>
+          {/* ── Workout Guide Cards ── */}
 
-            {/* Form Execution Card */}
-            <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-2">
+          {/* Setup Guide */}
+          <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
-                Form Execution
+                Setup Guide
               </span>
-              <ul className="flex flex-col gap-1.5 text-xs text-[#CBD5E1] pl-1">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#22C55E]">•</span>
-                  <span>Maintain flat back against pad, chest up, and brace core.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#22C55E]">•</span>
-                  <span>Push/pull through full active range without slamming weight plates.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#22C55E]">•</span>
-                  <span>Exhale on the exertion stroke; inhale slowly on the eccentric return.</span>
-                </li>
-              </ul>
+              <span className="text-[10px] text-[#6B7280] font-semibold">{setupSteps.length} steps</span>
             </div>
-
-            {/* Common Mistakes */}
-            <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#FF6B81] flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B81]" />
-                Common Mistakes
-              </span>
-              <ul className="flex flex-col gap-1.5 text-xs text-[#9CA3AF] pl-1">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#FF6B81]">✕</span>
-                  <span>Using excessive momentum or arching spine off backrest.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#FF6B81]">✕</span>
-                  <span>Locking out joints forcefully at the end of each rep.</span>
-                </li>
-              </ul>
+            <div className="flex flex-col gap-2 text-xs text-[#CBD5E1]">
+              {setupSteps.slice(0, 5).map((step, idx) => (
+                <div key={idx} className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-[#0A0C0B] border border-[#222624] text-[10px] font-bold text-[#22C55E] flex items-center justify-center shrink-0 mt-0.5">{idx + 1}</span>
+                  <span className="leading-snug">{step}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Action Footer */}
-          <div className="flex flex-col gap-2 pt-2">
+          {/* Form & Execution Cues */}
+          <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-2.5">
+            <span className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
+              Form & Execution
+            </span>
+            <ul className="flex flex-col gap-2 text-xs text-[#CBD5E1] list-none pl-0">
+              {formCues.slice(0, 5).map((cue, idx) => (
+                <li key={idx} className="flex items-start gap-2">
+                  <span className="text-[#22C55E] mt-0.5 shrink-0">•</span>
+                  <span className="leading-snug">{cue}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Common Mistakes */}
+          <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-2.5">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#FF6B81] flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B81]" />
+              Common Mistakes
+            </span>
+            <ul className="flex flex-col gap-2 text-xs text-[#9CA3AF] list-none pl-0">
+              {mistakes.slice(0, 4).map((m, idx) => (
+                <li key={idx} className="flex items-start gap-2">
+                  <span className="text-[#FF6B81] mt-0.5 shrink-0">✕</span>
+                  <span className="leading-snug">{typeof m === 'string' ? m : m.mistake}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* AI Match Verification Note */}
+          {matchFeatures.length > 0 && (
+            <div className="bg-[#101211] border border-[#1E2220] rounded-2xl p-3.5 flex flex-col gap-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#9CA3AF] flex items-center gap-1.5">
+                <Sparkles size={12} className="text-[#22C55E]" />
+                AI Match Details
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {matchFeatures.slice(0, 6).map((feat, idx) => (
+                  <span key={idx} className="text-[10px] font-medium text-[#CBD5E1] bg-[#141716] border border-[#222624] px-2 py-0.5 rounded-md">
+                    {feat}
+                  </span>
+                ))}
+              </div>
+              <p className="text-[10px] text-[#6B7280] leading-snug">
+                Targets: {selectedMatch.primaryMuscles?.join(', ')}
+                {selectedMatch.secondaryMuscles?.length > 0 && ` · Secondary: ${selectedMatch.secondaryMuscles.slice(0, 3).join(', ')}`}
+              </p>
+            </div>
+          )}
+
+          {/* ── Bottom Action Bar ── */}
+          <div className="flex flex-col gap-2 pt-1">
             <button
               type="button"
               onClick={handleConfirmAndProceed}
-              className="w-full py-3.5 rounded-2xl bg-[#22C55E] hover:bg-[#1ED760] active:scale-98 text-black font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg cursor-pointer transition-all"
+              className="w-full py-3.5 rounded-2xl bg-[#22C55E] hover:bg-[#1ED760] active:scale-[0.98] text-black font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg cursor-pointer transition-all"
             >
               <CheckCircle size={18} strokeWidth={2.4} />
-              <span>Mark Explored (+25 XP)</span>
+              <span>Confirm Machine (+25 XP)</span>
             </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                setAnalysisCompleted(false);
-                setVisionOutput(null);
-                setUploadedImage(null);
-                startLiveCamera();
-              }}
-              className="w-full py-2.5 rounded-2xl bg-[#141716] border border-[#222624] text-[#9CA3AF] hover:text-white font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
-            >
-              <RotateCcw size={14} />
-              <span>Scan Another Machine</span>
-            </button>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setAnalysisCompleted(false);
+                  setVisionOutput(null);
+                  setUploadedImage(null);
+                  startLiveCamera();
+                }}
+                className="py-2.5 rounded-2xl bg-[#141716] border border-[#222624] text-[#9CA3AF] hover:text-white font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+              >
+                <RotateCcw size={14} />
+                <span>Re-scan</span>
+              </button>
+
+              {onSelectManual && (
+                <button
+                  type="button"
+                  onClick={onSelectManual}
+                  className="py-2.5 rounded-2xl bg-[#141716] border border-[#222624] text-[#9CA3AF] hover:text-white font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <FileSearch size={14} />
+                  <span>Library</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      )}
+        );
+      })()}
 
       {/* Admin Debug Panel */}
       {userProfile?.role === 'admin' && activeDebugRecord && (

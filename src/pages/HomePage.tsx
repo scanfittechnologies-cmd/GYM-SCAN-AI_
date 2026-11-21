@@ -120,8 +120,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
           </button>
         </div>
 
-        {/* Swipeable row with peek width and smooth snap */}
-        <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none no-scrollbar -mx-4 px-4 scroll-smooth">
+        {/* Swipeable row — 2 full cards + 3rd peeking from right edge */}
+        <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-none no-scrollbar -mx-4 px-4 scroll-smooth">
           {displayDiscoverMachines.map((machine) => {
             const photos = getMachinePhotos(machine.id);
             const photoUrl = machine.frontReferenceImage || photos?.front || 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=400&q=80';
@@ -131,9 +131,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
               <div
                 key={machine.id}
                 onClick={() => onSelectMachine(machine)}
-                className="w-[124px] min-w-[124px] bg-[#141716] border border-[#222624] hover:border-[#2E3531] rounded-2xl overflow-hidden shrink-0 cursor-pointer active:scale-98 transition-all"
+                className="w-[44%] min-w-[165px] bg-[#141716] border border-[#222624] hover:border-[#22C55E]/30 rounded-2xl overflow-hidden shrink-0 cursor-pointer active:scale-[0.98] transition-all"
               >
-                <div className="relative h-20 w-full bg-[#0A0C0B]">
+                <div className="relative h-32 w-full bg-[#0A0C0B]">
                   <img
                     src={photoUrl}
                     alt={machine.name}
@@ -141,11 +141,11 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#141716] via-transparent to-transparent" />
                 </div>
-                <div className="p-2 flex flex-col gap-0.5">
-                  <h4 className="text-[11px] font-bold text-white truncate leading-snug">
+                <div className="p-2.5 flex flex-col gap-0.5">
+                  <h4 className="text-xs font-bold text-white leading-snug">
                     {machine.name}
                   </h4>
-                  <span className="text-[10px] text-[#22C55E] font-medium truncate">
+                  <span className="text-[11px] text-[#22C55E] font-semibold">
                     {targetMuscle}
                   </span>
                 </div>
