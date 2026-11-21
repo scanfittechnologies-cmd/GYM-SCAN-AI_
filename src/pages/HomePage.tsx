@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useGym } from '../context/GymContext';
 import { Machine } from '../types';
 import { 
-  Dumbbell,
   Camera, 
   Upload, 
-  Sparkles, 
-  ArrowRight, 
-  ChevronRight
+  ChevronRight,
+  Flame
 } from 'lucide-react';
-import { MachineCard } from '../components/machines/MachineCard';
+import { getMachinePhotos } from '../data/machinePhotos';
 
 interface HomePageProps {
   onNavigate: (tab: string, scanMode?: string) => void;
@@ -18,279 +16,142 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine }) => {
   const { 
-    discoveredMachineIds, 
-    machines,
-    userProfile
+    machines
   } = useGym();
 
-  const [isReturningUser] = useState<boolean>(() => {
-    try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        return localStorage.getItem('scanfit_has_visited') === 'true';
-      }
-    } catch {
-      // In case localStorage is blocked/unavailable
-    }
-    return false;
-  });
+  // 7-day consistency strip: Sun to Sat
+  const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const todayIndex = new Date().getDay(); // 0 is Sunday, 6 is Saturday
 
-  useEffect(() => {
-    try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        localStorage.setItem('scanfit_has_visited', 'true');
-      }
-    } catch {
-      // Ignore localStorage errors
-    }
-  }, []);
-
-  // Explicitly select the exact 4 machines in order: Chest Press, Lat Pulldown, Leg Press, Seated Cable Row
+  // Specific starter machines for quick horizontal swipe
   const starterMachineIds = ['seated-chest-press', 'lat-pulldown', 'leg-press-45', 'seated-cable-row'];
   const displayDiscoverMachines = starterMachineIds
     .map(id => machines.find(m => m.id === id))
     .filter((m): m is Machine => Boolean(m));
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-6 mt-3 sm:mt-4">
+    <div className="flex flex-col gap-4 w-full">
       
-      {/* 1. Header Branding & Welcome Message (Hero Banner) */}
-      <div 
-        className="p-5 sm:p-6"
-        style={{
-          background: 'linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(10, 14, 22, 0.98) 100%)',
-          border: '1px solid rgba(0, 245, 155, 0.22)',
-          borderRadius: '20px',
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: '0 16px 36px -15px rgba(0, 0, 0, 0.7)'
-        }}
-      >
-        {/* Ambient Glows */}
-        <div style={{
-          position: 'absolute',
-          top: '-40px',
-          right: '-40px',
-          width: '240px',
-          height: '240px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0, 245, 155, 0.15) 0%, transparent 70%)',
-          pointerEvents: 'none'
-        }} />
-        <div style={{
-          position: 'absolute',
-          bottom: '-30px',
-          left: '20%',
-          width: '180px',
-          height: '180px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0, 210, 255, 0.1) 0%, transparent 70%)',
-          pointerEvents: 'none'
-        }} />
+      {/* 1. Main Hero Scan Card (Compact sleek card, min-h-[190px] / h-52) */}
+      <div className="relative w-full rounded-3xl overflow-hidden border border-[#222624] bg-[#141716] min-h-[190px] h-52 flex flex-col justify-end p-4 select-none">
+        {/* Background photo & dark athletic scrim */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80')`
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0C0B] via-[#0A0C0B]/90 to-[#0A0C0B]/60" />
 
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '680px' }}>
-          
-          {/* Welcome Heading */}
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white leading-tight mb-0">
-            {isReturningUser ? 'Welcome back, ' : 'Welcome, '}
-            <span className="text-[#00F59B]">Gym Explorer.</span>
-          </h1>
-
-          <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed mt-2 max-w-2xl m-0">
-            Ready to train? Tap a scan mode below to instantly pull up setup cues and form tips.
-          </p>
-        </div>
-      </div>
-
-      {/* 2. Identify & Scan Equipment Action Launchpad */}
-      <div>
-        <div style={{ marginBottom: '0.75rem' }}>
-          <h2 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0 }}>
-            Identify & Scan Equipment
+        {/* Content */}
+        <div className="relative z-10 flex flex-col gap-0.5 mb-3">
+          <h2 className="text-xl font-black text-white tracking-tight leading-tight drop-shadow-md">
+            Snap & Scan Machine
           </h2>
-          <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: '2px 0 0 0' }}>
-            Choose your preferred scanning method below to load step-by-step guidance
+          <p className="text-[11px] text-[#CBD5E1] drop-shadow-sm font-medium">
+            Instant setup cues, seat adjustments & form tips
           </p>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '1rem'
-        }}>
-          {/* Button 1: Snap Machine Photo */}
+        {/* Thumb-friendly Scan Actions */}
+        <div className="relative z-10 grid grid-cols-2 gap-2">
           <button
             onClick={() => onNavigate('scan', 'ai_camera')}
-            style={{
-              background: 'linear-gradient(135deg, rgba(0, 245, 155, 0.15) 0%, rgba(13, 22, 28, 0.95) 100%)',
-              border: '1.5px solid rgba(0, 245, 155, 0.4)',
-              borderRadius: '18px',
-              padding: '1.25rem 1.4rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '1rem',
-              cursor: 'pointer',
-              textAlign: 'left',
-              boxShadow: '0 8px 24px -6px rgba(0, 245, 155, 0.15)',
-              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-            className="glass-card"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#22C55E] hover:bg-[#1ED760] active:scale-98 transition-all text-black font-extrabold text-xs shadow-md cursor-pointer"
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{
-                width: '50px',
-                height: '50px',
-                borderRadius: '14px',
-                background: 'linear-gradient(135deg, #00F59B 0%, #00D2B4 100%)',
-                color: '#05140F',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: '0 4px 14px rgba(0, 245, 155, 0.4)'
-              }}>
-                <Camera size={26} strokeWidth={2.4} />
-              </div>
-
-              <div>
-                <div style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.15rem',
-                  fontWeight: 800,
-                  color: '#FFFFFF',
-                  lineHeight: 1.2
-                }}>
-                  Snap Machine Photo
-                </div>
-                <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '3px', lineHeight: 1.3 }}>
-                  Point camera at any gym machine
-                </div>
-              </div>
-            </div>
-
-            <div style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: '50%',
-              background: 'rgba(0, 245, 155, 0.12)',
-              border: '1px solid rgba(0, 245, 155, 0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#00F59B',
-              flexShrink: 0
-            }}>
-              <ArrowRight size={18} />
-            </div>
+            <Camera size={16} strokeWidth={2.5} />
+            <span>Snap Photo</span>
           </button>
 
-          {/* Button 2: Upload Machine Photo */}
           <button
             onClick={() => onNavigate('scan', 'photo')}
-            style={{
-              background: 'linear-gradient(135deg, rgba(0, 210, 255, 0.15) 0%, rgba(12, 19, 32, 0.95) 100%)',
-              border: '1.5px solid rgba(0, 210, 255, 0.4)',
-              borderRadius: '18px',
-              padding: '1.25rem 1.4rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '1rem',
-              cursor: 'pointer',
-              textAlign: 'left',
-              boxShadow: '0 8px 24px -6px rgba(0, 210, 255, 0.15)',
-              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-            className="glass-card"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#141716]/95 hover:bg-[#1C201E] active:scale-98 transition-all border border-[#222624] text-white font-semibold text-xs cursor-pointer"
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-              <div style={{
-                width: '50px',
-                height: '50px',
-                borderRadius: '14px',
-                background: 'linear-gradient(135deg, #00D2FF 0%, #0088FF 100%)',
-                color: '#05140F',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: '0 4px 14px rgba(0, 210, 255, 0.4)'
-              }}>
-                <Upload size={24} strokeWidth={2.4} />
-              </div>
-
-              <div>
-                <div style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: '1.15rem',
-                  fontWeight: 800,
-                  color: '#FFFFFF',
-                  lineHeight: 1.2
-                }}>
-                  Upload Machine Photo
-                </div>
-                <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '3px', lineHeight: 1.3 }}>
-                  Identify equipment with AI vision analyzer
-                </div>
-              </div>
-            </div>
-
-            <div style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: '50%',
-              background: 'rgba(0, 210, 255, 0.12)',
-              border: '1px solid rgba(0, 210, 255, 0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#00D2FF',
-              flexShrink: 0
-            }}>
-              <ArrowRight size={18} />
-            </div>
+            <Upload size={15} strokeWidth={2.2} />
+            <span>Upload</span>
           </button>
         </div>
       </div>
 
-      {/* 3. Discover Machines Section */}
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span className="badge badge-emerald" style={{ fontSize: '0.68rem', padding: '2px 7px' }}>
-                Featured Equipment
-              </span>
-            </div>
-            <h2 style={{ fontSize: '1.25rem', color: '#F1F5F9', margin: '3px 0 0 0' }}>
-              Discover Machines
-            </h2>
-            <p style={{ fontSize: '0.8rem', color: '#94A3B8', margin: '2px 0 0 0' }}>
-              Key compound equipment recommended for beginner strength workouts (Chest Press, Lat Pulldown, Leg Press, Cable Row)
-            </p>
-          </div>
+      {/* 2. Weekly Consistency Strip */}
+      <div className="w-full bg-[#141716] border border-[#222624] rounded-2xl p-3.5 flex flex-col gap-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-[#9CA3AF] font-medium flex items-center gap-1.5">
+            <Flame size={14} className="text-[#22C55E]" />
+            Weekly Consistency
+          </span>
+          <span className="text-[11px] font-semibold text-white">
+            Streak Active
+          </span>
+        </div>
 
+        <div className="grid grid-cols-7 gap-1.5 pt-1">
+          {daysOfWeek.map((day, idx) => {
+            const isToday = idx === todayIndex;
+            return (
+              <div
+                key={idx}
+                className={`flex flex-col items-center justify-center py-1.5 rounded-xl border text-[11px] transition-colors ${
+                  isToday
+                    ? 'bg-[#22C55E]/15 border-[#22C55E] text-[#22C55E] font-bold'
+                    : 'bg-[#0A0C0B] border-[#222624] text-[#6B7280]'
+                }`}
+              >
+                <span className="text-[9px] uppercase font-bold tracking-wider">{day}</span>
+                <span className={`w-1.5 h-1.5 rounded-full mt-1 ${isToday ? 'bg-[#22C55E]' : 'bg-[#222624]'}`} />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. Quick-Scan Machines Row (Horizontal swipeable) */}
+      <div className="flex flex-col gap-2.5 pt-1">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-sm font-bold text-white tracking-tight">
+            Quick-Scan Machines
+          </span>
           <button
             onClick={() => onNavigate('library')}
-            className="btn-primary"
-            style={{ fontSize: '0.82rem', padding: '0.55rem 1.1rem' }}
+            className="flex items-center gap-0.5 text-xs font-semibold text-[#22C55E] hover:underline"
           >
-            View Machine Library ({machines.length}) <ChevronRight size={14} />
+            <span>Library</span>
+            <ChevronRight size={14} />
           </button>
         </div>
 
-        {/* Grid of Starter Machine Cards */}
-        <div className="grid-cards">
-          {displayDiscoverMachines.map((machine) => (
-            <MachineCard
-              key={machine.id}
-              machine={{
-                ...machine,
-                isDiscovered: discoveredMachineIds.includes(machine.id)
-              }}
-              onSelect={onSelectMachine}
-            />
-          ))}
+        {/* Swipeable row with peek width and smooth snap */}
+        <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-none no-scrollbar -mx-4 px-4 scroll-smooth">
+          {displayDiscoverMachines.map((machine) => {
+            const photos = getMachinePhotos(machine.id);
+            const photoUrl = machine.frontReferenceImage || photos?.front || 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=400&q=80';
+            const targetMuscle = machine.primaryMuscles[0]?.split('(')[0].trim() || machine.category;
+
+            return (
+              <div
+                key={machine.id}
+                onClick={() => onSelectMachine(machine)}
+                className="w-[124px] min-w-[124px] bg-[#141716] border border-[#222624] hover:border-[#2E3531] rounded-2xl overflow-hidden shrink-0 cursor-pointer active:scale-98 transition-all"
+              >
+                <div className="relative h-20 w-full bg-[#0A0C0B]">
+                  <img
+                    src={photoUrl}
+                    alt={machine.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#141716] via-transparent to-transparent" />
+                </div>
+                <div className="p-2 flex flex-col gap-0.5">
+                  <h4 className="text-[11px] font-bold text-white truncate leading-snug">
+                    {machine.name}
+                  </h4>
+                  <span className="text-[10px] text-[#22C55E] font-medium truncate">
+                    {targetMuscle}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

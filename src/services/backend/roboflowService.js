@@ -1,4 +1,4 @@
-import { RECOGNITION_CONFIG } from './recognitionConfig.js';
+Polish these two minor visual details on my ScanFit mobile home screen (max-w-[430px]) without changing the layout or breaking any existing functionality:   Hide the visible horizontal scrollbar on the "Quick-Scan Machines" row and prevent horizontal page overflow (overflow-x-hidden on the root mobile container and hidden scrollbars on the horizontal machine strip) so no thin scrollbar line appears above the bottom navigation bar.   Ensure the outer app wrapper and viewport background use a solid dark matte-black surface (bg-[#0A0C0B]) with clean edge alignment so no light/white strip appears along the right edge on any screen size or crop.   import { RECOGNITION_CONFIG } from './recognitionConfig.js';
 
 /**
  * CLASS_MAPPING: Maps Roboflow raw prediction class strings to canonical GymScan machine info.

@@ -27,27 +27,17 @@ export const UserMenu: React.FC<UserMenuProps> = ({ onNavigate }) => {
       >
         {/* Avatar Bubble */}
         <div 
-          className="w-5 h-5 sm:w-6 sm:h-6 text-[10px] sm:text-xs rounded-md"
-          style={{
-            background: 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
-            color: '#05140F',
-            fontWeight: 900,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            boxShadow: '0 0 8px rgba(0, 245, 155, 0.25)'
-          }}
+          className="w-5 h-5 sm:w-6 sm:h-6 text-[10px] sm:text-xs rounded-md bg-[#23272F] text-white font-bold flex items-center justify-center border border-[#2E3440]"
         >
           {initial}
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
-          <span className="font-bold text-[#F1F5F9] max-w-[65px] sm:max-w-[100px] truncate leading-tight text-[10px] sm:text-xs">
+          <span className="font-semibold text-white max-w-[65px] sm:max-w-[100px] truncate leading-tight text-[10px] sm:text-xs">
             {athleteName}
           </span>
           <span 
-            className="font-extrabold uppercase leading-none text-[8px] sm:text-[9px]"
-            style={{ color: '#00F59B' }}
+            className="font-medium uppercase leading-none text-[8px] sm:text-[9px] text-[#9CA3AF]"
           >
             Athlete
           </span>

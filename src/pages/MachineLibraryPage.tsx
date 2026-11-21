@@ -1,336 +1,17 @@
-import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import { useGym } from '../context/GymContext';
-import { Machine, MachineCategory } from '../types';
+import { Machine } from '../types';
 import { MACHINE_CATEGORIES } from '../data/machines';
 import {
   Search,
-  Sparkles,
-  CheckCircle,
-  Star,
   X,
-  Dumbbell,
-  ChevronDown,
-  AlertCircle,
-  BookOpen,
-  ArrowUpDown,
-  Layers,
-  LayoutGrid,
-  List,
-  RefreshCw,
-  AlertTriangle,
-  WifiOff
+  Star,
+  CheckCircle,
+  Dumbbell
 } from 'lucide-react';
-import { MachineCard } from '../components/machines/MachineCard';
+import { getMachinePhotos } from '../data/machinePhotos';
+import { MachineSvgIllustration } from '../components/machines/MachineSvgIllustrations';
 import { useSoftGate } from '../hooks/useSoftGate';
-
-/* ─────────────────────────────────────────────────────────────
-   Types & Configurations
-───────────────────────────────────────────────────────────── */
-type SortOption = 'recommended' | 'az' | 'za' | 'recent' | 'difficulty-asc' | 'difficulty-desc';
-type ViewMode = 'grid' | 'list';
-type DifficultyFilter = 'all' | 'Beginner' | 'Intermediate' | 'Advanced';
-
-const DIFFICULTY_ORDER: Record<string, number> = { Beginner: 0, Intermediate: 1, Advanced: 2 };
-
-const SORT_LABELS: Record<SortOption, string> = {
-  recommended: 'Recommended',
-  az: 'Alphabetical: A–Z',
-  za: 'Alphabetical: Z–A',
-  recent: 'Recently Added',
-  'difficulty-asc': 'Difficulty: Beginner First',
-  'difficulty-desc': 'Difficulty: Advanced First',
-};
-
-const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string; icon: string }> = {
-  Chest:             { bg: 'rgba(255, 99, 102, 0.14)',  border: 'rgba(255, 99, 102, 0.35)',  text: '#FF6366', icon: '🫀' },
-  Back:              { bg: 'rgba(56, 189, 248, 0.14)',  border: 'rgba(56, 189, 248, 0.35)',  text: '#38BDF8', icon: '🏋️' },
-  Shoulders:         { bg: 'rgba(168, 85, 247, 0.14)',  border: 'rgba(168, 85, 247, 0.35)',  text: '#C084FC', icon: '💪' },
-  Arms:              { bg: 'rgba(251, 146, 60, 0.14)',  border: 'rgba(251, 146, 60, 0.35)',  text: '#FB923C', icon: '🦾' },
-  Legs:              { bg: 'rgba(34, 197, 94, 0.14)',   border: 'rgba(34, 197, 94, 0.35)',   text: '#22C55E', icon: '🦵' },
-  Cardio:            { bg: 'rgba(255, 184, 0, 0.14)',   border: 'rgba(255, 184, 0, 0.35)',   text: '#FFB800', icon: '🏃' },
-  Core:              { bg: 'rgba(0, 245, 155, 0.14)',   border: 'rgba(0, 245, 155, 0.35)',   text: '#00F59B', icon: '⚡' },
-  'Cable Equipment': { bg: 'rgba(0, 210, 255, 0.14)',   border: 'rgba(0, 210, 255, 0.35)',   text: '#00D2FF', icon: '🔗' },
-  Other:             { bg: 'rgba(148, 163, 184, 0.12)', border: 'rgba(148, 163, 184, 0.28)', text: '#94A3B8', icon: '🏗️' },
-};
-
-/* ─────────────────────────────────────────────────────────────
-   List Mode Machine Row Component
-───────────────────────────────────────────────────────────── */
-interface MachineListRowProps {
-  machine: Machine;
-  onSelect: (machine: Machine) => void;
-}
-
-const MachineListRow: React.FC<MachineListRowProps> = ({ machine, onSelect }) => {
-  const { isMachineDiscovered, isFavorite, toggleFavorite } = useGym();
-  const { requireAuth } = useSoftGate();
-  const discovered = isMachineDiscovered(machine.id);
-  const favorited = isFavorite(machine.id);
-  const catColor = CATEGORY_COLORS[machine.category] ?? CATEGORY_COLORS['Other'];
-
-  return (
-    <div
-      role="button"
-      tabIndex={0}
-      onClick={() => onSelect(machine)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onSelect(machine);
-        }
-      }}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.85rem',
-        padding: '0.85rem 1rem',
-        background: 'linear-gradient(145deg, rgba(26, 32, 46, 0.75) 0%, rgba(18, 22, 32, 0.85) 100%)',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: '14px',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-      }}
-      onMouseEnter={e => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(0, 245, 155, 0.3)';
-        (e.currentTarget as HTMLDivElement).style.transform = 'translateX(3px)';
-      }}
-      onMouseLeave={e => {
-        (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.08)';
-        (e.currentTarget as HTMLDivElement).style.transform = 'none';
-      }}
-    >
-      {/* Category Indicator Stripe */}
-      <div style={{ width: '4px', height: '48px', borderRadius: '2px', background: catColor.text, flexShrink: 0 }} />
-
-      {/* Meta & Info */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '3px' }}>
-          <h3 style={{ fontSize: '0.95rem', color: '#F1F5F9', fontWeight: 700, margin: 0 }}>{machine.name}</h3>
-          {discovered && (
-            <span style={{ fontSize: '0.65rem', color: '#00F59B', background: 'rgba(0,245,155,0.12)', border: '1px solid rgba(0,245,155,0.3)', borderRadius: '999px', padding: '1px 6px', fontWeight: 700 }}>
-              ✓ Discovered
-            </span>
-          )}
-        </div>
-        <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {machine.description || machine.tagline}
-        </p>
-        <span style={{ fontSize: '0.68rem', color: '#64748B', fontStyle: 'italic' }}>
-          Availability not currently provided
-        </span>
-      </div>
-
-      {/* Category pill */}
-      <span style={{ fontSize: '0.72rem', background: catColor.bg, color: catColor.text, border: `1px solid ${catColor.border}`, borderRadius: '999px', padding: '2px 8px', fontWeight: 600, whiteSpace: 'nowrap', flexShrink: 0 }}>
-        {machine.category}
-      </span>
-
-      {/* Primary Muscle */}
-      <span style={{ fontSize: '0.72rem', color: '#CBD5E1', whiteSpace: 'nowrap', flexShrink: 0, display: 'flex', alignItems: 'center', gap: '4px' }}>
-        <Dumbbell size={12} color="#00F59B" /> {machine.primaryMuscles[0]?.split('(')[0].trim() ?? 'General'}
-      </span>
-
-      {/* Actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }} onClick={e => e.stopPropagation()}>
-        <button
-          aria-label={favorited ? 'Remove from favorites' : 'Save to favorites'}
-          onClick={(e) => { e.stopPropagation(); requireAuth(() => toggleFavorite(machine.id), 'Create a free account to bookmark your favorite machines!'); }}
-          style={{
-            background: favorited ? 'rgba(255,184,0,0.18)' : 'transparent',
-            border: favorited ? '1px solid rgba(255,184,0,0.4)' : '1px solid rgba(255,255,255,0.08)',
-            borderRadius: '8px',
-            padding: '6px',
-            color: favorited ? '#FFB800' : '#64748B',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-          title={favorited ? 'Saved in local favorites' : 'Save to favorites'}
-        >
-          <Star size={14} fill={favorited ? '#FFB800' : 'none'} />
-        </button>
-        <button
-          onClick={(e) => { e.stopPropagation(); onSelect(machine); }}
-          style={{
-            background: 'rgba(0,245,155,0.1)',
-            color: '#00F59B',
-            border: '1px solid rgba(0,245,155,0.25)',
-            borderRadius: '8px',
-            padding: '5px 11px',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          View Details →
-        </button>
-      </div>
-    </div>
-  );
-};
-
-/* ─────────────────────────────────────────────────────────────
-   Sort Dropdown
-───────────────────────────────────────────────────────────── */
-interface SortDropdownProps {
-  value: SortOption;
-  onChange: (v: SortOption) => void;
-}
-
-const SortDropdown: React.FC<SortDropdownProps> = ({ value, onChange }) => {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
-
-  const options: SortOption[] = ['recommended', 'az', 'za', 'recent', 'difficulty-asc', 'difficulty-desc'];
-
-  return (
-    <div ref={ref} style={{ position: 'relative' }}>
-      <button
-        onClick={() => setOpen(o => !o)}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-label="Sort machines"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px',
-          background: 'rgba(255,255,255,0.05)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: '12px',
-          padding: '0.55rem 0.85rem',
-          color: '#CBD5E1',
-          cursor: 'pointer',
-          fontSize: '0.8rem',
-          fontWeight: 600,
-          whiteSpace: 'nowrap',
-        }}
-      >
-        <ArrowUpDown size={14} color="#00F59B" />
-        <span>{SORT_LABELS[value]}</span>
-        <ChevronDown size={13} style={{ transition: 'transform 0.15s', transform: open ? 'rotate(180deg)' : 'none' }} />
-      </button>
-
-      {open && (
-        <div style={{
-          position: 'absolute',
-          top: 'calc(100% + 6px)',
-          right: 0,
-          background: '#161B26',
-          border: '1px solid rgba(255,255,255,0.12)',
-          borderRadius: '14px',
-          overflow: 'hidden',
-          zIndex: 50,
-          minWidth: '220px',
-          boxShadow: '0 16px 40px -10px rgba(0,0,0,0.8)',
-          animation: 'fadeIn 0.15s ease-out',
-        }}>
-          {options.map(opt => (
-            <button
-              key={opt}
-              onClick={() => { onChange(opt); setOpen(false); }}
-              style={{
-                width: '100%',
-                textAlign: 'left',
-                padding: '0.65rem 1rem',
-                background: value === opt ? 'rgba(0,245,155,0.1)' : 'transparent',
-                color: value === opt ? '#00F59B' : '#CBD5E1',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '0.82rem',
-                fontWeight: value === opt ? 700 : 500,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                transition: 'background 0.1s',
-              }}
-              onMouseEnter={e => { if (value !== opt) (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.04)'; }}
-              onMouseLeave={e => { if (value !== opt) (e.currentTarget as HTMLButtonElement).style.background = 'transparent'; }}
-            >
-              {value === opt ? <CheckCircle size={13} color="#00F59B" /> : <span style={{ width: 13 }} />}
-              {SORT_LABELS[opt]}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-/* ─────────────────────────────────────────────────────────────
-   Empty State Component
-───────────────────────────────────────────────────────────── */
-interface EmptyStateProps {
-  searchQuery: string;
-  onClear: () => void;
-  onNavigate: (tab: string) => void;
-}
-
-const EmptyState: React.FC<EmptyStateProps> = ({ searchQuery, onClear, onNavigate }) => (
-  <div
-    className="glass-card"
-    style={{
-      padding: '3.5rem 2rem',
-      textAlign: 'center',
-      maxWidth: '520px',
-      margin: '0 auto',
-      animation: 'fadeIn 0.25s ease-out',
-    }}
-  >
-    <div style={{
-      width: '72px', height: '72px', borderRadius: '22px',
-      background: 'rgba(148, 163, 184, 0.08)',
-      border: '1px solid rgba(255,255,255,0.08)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: '#64748B', margin: '0 auto 1.25rem auto',
-    }}>
-      <Search size={30} />
-    </div>
-
-    <h3 style={{ fontSize: '1.25rem', color: '#F1F5F9', marginBottom: '0.5rem' }}>
-      No machines found. Try another search or scan a machine.
-    </h3>
-    <p style={{ fontSize: '0.85rem', color: '#94A3B8', maxWidth: '380px', margin: '0 auto 0.5rem auto', lineHeight: 1.55 }}>
-      {searchQuery
-        ? <>No equipment records match <strong style={{ color: '#F1F5F9' }}>"{searchQuery}"</strong>. Try checking spelling, using general muscle names, or clearing active filters.</>
-        : 'No machines match your active filter combination.'}
-    </p>
-    <p style={{ fontSize: '0.78rem', color: '#64748B', marginBottom: '1.75rem' }}>
-      💡 Popular searches: <em>"Chest Press"</em>, <em>"Lat Pulldown"</em>, <em>"Treadmill"</em>, <em>"Legs"</em>, <em>"Quads"</em>
-    </p>
-
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', justifyContent: 'center' }}>
-      <button onClick={onClear} className="btn-primary" style={{ fontSize: '0.85rem', padding: '0.65rem 1.3rem' }}>
-        <X size={15} /> Clear Search &amp; Filters
-      </button>
-    </div>
-  </div>
-);
-
-/* ─────────────────────────────────────────────────────────────
-   Skeleton Card Loader
-───────────────────────────────────────────────────────────── */
-const SkeletonCard: React.FC = () => (
-  <div className="glass-card" style={{ height: '320px', display: 'flex', flexDirection: 'column', overflow: 'hidden', opacity: 0.7 }}>
-    <div style={{ height: '150px', background: 'rgba(255,255,255,0.04)', position: 'relative' }}>
-      <div style={{ position: 'absolute', top: 12, right: 12, width: 32, height: 32, borderRadius: '50%', background: 'rgba(255,255,255,0.06)' }} />
-      <div style={{ position: 'absolute', bottom: 12, left: 12, width: 70, height: 18, borderRadius: 999, background: 'rgba(255,255,255,0.06)' }} />
-    </div>
-    <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1 }}>
-      <div style={{ width: '60%', height: '16px', borderRadius: '4px', background: 'rgba(255,255,255,0.08)' }} />
-      <div style={{ width: '90%', height: '12px', borderRadius: '4px', background: 'rgba(255,255,255,0.04)' }} />
-      <div style={{ width: '40%', height: '18px', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', marginTop: 'auto' }} />
-    </div>
-  </div>
-);
 
 /* ─────────────────────────────────────────────────────────────
    Main Machine Library Page Component
@@ -340,680 +21,237 @@ interface MachineLibraryPageProps {
   onNavigate?: (tab: string, mode?: string) => void;
 }
 
-export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelectMachine, onNavigate }) => {
-  const { machines, isMachineDiscovered, isFavorite, discoveredMachineIds, favoriteMachineIds } = useGym();
+export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelectMachine }) => {
+  const { machines, isMachineDiscovered, isFavorite, toggleFavorite } = useGym();
+  const { requireAuth } = useSoftGate();
 
   /* ── State ── */
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [selectedMuscle, setSelectedMuscle] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<SortOption>('recommended');
-  const [filterDifficulty, setFilterDifficulty] = useState<DifficultyFilter>('all');
-  const [filterFavoritesOnly, setFilterFavoritesOnly] = useState(false);
-  const [filterDiscoveredOnly, setFilterDiscoveredOnly] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
-
-  // Dev state simulations (loading / offline / empty error test)
-  const [isSimulatingLoading, setIsSimulatingLoading] = useState(false);
-  const [simulatedError, setSimulatedError] = useState<string | null>(null);
-  const [isOfflineSimulation, setIsOfflineSimulation] = useState(false);
-
   const searchRef = useRef<HTMLInputElement>(null);
 
-  /* ── Quick counts ── */
-  const totalFavorites = favoriteMachineIds.length;
-  const totalDiscovered = discoveredMachineIds.length;
+  /* ── Non-Cardio dataset count ── */
   const libraryTotal = useMemo(() => {
     return machines.filter(m => m.category !== 'Cardio' && !m.equipmentType?.toLowerCase().includes('cardio')).length;
   }, [machines]);
-  const activeCategoriesCount = useMemo(() => {
-    return MACHINE_CATEGORIES.filter(c => c.id !== 'Cardio').length;
+
+  /* ── Muscle & Equipment Filter categories (All, Chest, Back, Legs, Shoulders, Arms, Core) ── */
+  const filterPills = useMemo(() => {
+    const list = [
+      { id: 'all', label: 'All' },
+      { id: 'Chest', label: 'Chest' },
+      { id: 'Back', label: 'Back' },
+      { id: 'Legs', label: 'Legs' },
+      { id: 'Shoulders', label: 'Shoulders' },
+      { id: 'Arms', label: 'Arms' },
+      { id: 'Core', label: 'Core' },
+      { id: 'Cable Equipment', label: 'Cables' }
+    ];
+    return list;
   }, []);
 
-  /* ── Trigger simulated refresh ── */
-  const triggerRefresh = () => {
-    setIsSimulatingLoading(true);
-    setSimulatedError(null);
-    setTimeout(() => {
-      setIsSimulatingLoading(false);
-    }, 450);
-  };
-
-  /* ── Categories List ── */
-  const allCategories = useMemo(() => {
-    // Keep Core visible, hide Cardio filter
-    const activeCategories = MACHINE_CATEGORIES.filter(c => c.id !== 'Cardio');
-    const nonCardioMachines = machines.filter(m => m.category !== 'Cardio' && !m.equipmentType?.toLowerCase().includes('cardio'));
-    return [
-      { id: 'all', name: 'All Machines', count: nonCardioMachines.length, emoji: '🏋️' },
-      ...activeCategories.map(c => ({
-        id: c.id,
-        name: c.name,
-        count: nonCardioMachines.filter(m => m.category === c.id).length,
-        emoji: CATEGORY_COLORS[c.id]?.icon ?? '🔧',
-      })),
-    ];
-  }, [machines]);
-
-  /* ── Muscle Groups List for secondary filter ── */
-  const muscleGroups = useMemo(() => {
-    const muscles = new Set<string>();
-    machines
-      .filter(m => m.category !== 'Cardio' && !m.equipmentType?.toLowerCase().includes('cardio'))
-      .forEach(m => {
-        m.primaryMuscles.forEach(pm => {
-          const simpleName = pm.split('(')[0].trim();
-          if (simpleName && simpleName.toLowerCase() !== 'cardiovascular system') {
-            muscles.add(simpleName);
-          }
-        });
-      });
-    return Array.from(muscles).sort();
-  }, [machines]);
-
-  /* ── Filter + Sort Logic ── */
+  /* ── Filtering Logic ── */
   const filteredMachines = useMemo(() => {
-    if (simulatedError) return [];
-
     const query = searchQuery.toLowerCase().trim();
-
-    // Hide Cardio machines and images across library
     const nonCardioMachines = machines.filter(m => m.category !== 'Cardio' && !m.equipmentType?.toLowerCase().includes('cardio'));
 
-    let result = nonCardioMachines.filter(m => {
-      // 1. Universal text search
+    return nonCardioMachines.filter(m => {
+      // 1. Text Search
       const matchesSearch = !query ||
         m.name.toLowerCase().includes(query) ||
         (m.alternativeNames ?? []).some(alt => alt.toLowerCase().includes(query)) ||
-        (m.brand && m.brand.toLowerCase().includes(query)) ||
         m.category.toLowerCase().includes(query) ||
-        m.tagline.toLowerCase().includes(query) ||
-        m.description.toLowerCase().includes(query) ||
         m.primaryMuscles.some(mus => mus.toLowerCase().includes(query)) ||
-        m.secondaryMuscles.some(mus => mus.toLowerCase().includes(query)) ||
-        m.qrCodeId.toLowerCase().includes(query) ||
-        m.matchKeywords.some(kw => kw.toLowerCase().includes(query)) ||
-        (m.exercises ?? []).some(ex =>
-          ex.name.toLowerCase().includes(query) ||
-          ex.mainMuscle.toLowerCase().includes(query) ||
-          ex.description.toLowerCase().includes(query)
-        );
+        m.secondaryMuscles.some(mus => mus.toLowerCase().includes(query));
 
-      // 2. Category filter (fallback to 'all' if 'Cardio' was somehow selected)
-      const effectiveCategory = selectedCategory === 'Cardio' ? 'all' : selectedCategory;
-      const matchesCategory = effectiveCategory === 'all' || m.category === effectiveCategory;
+      // 2. Category / Muscle Filter
+      const matchesCategory = selectedCategory === 'all' || 
+        m.category.toLowerCase() === selectedCategory.toLowerCase() ||
+        m.primaryMuscles.some(mus => mus.toLowerCase().includes(selectedCategory.toLowerCase()));
 
-      // 3. Muscle group filter
-      const matchesMuscle = selectedMuscle === 'all' ||
-        m.primaryMuscles.some(mus => mus.toLowerCase().includes(selectedMuscle.toLowerCase())) ||
-        m.secondaryMuscles.some(mus => mus.toLowerCase().includes(selectedMuscle.toLowerCase()));
-
-      // 4. Difficulty filter
-      const matchesDifficulty = filterDifficulty === 'all' || m.difficulty === filterDifficulty;
-
-      // 5. Favorites filter
-      const matchesFavorite = !filterFavoritesOnly || isFavorite(m.id);
-
-      // 6. Discovered filter
-      const matchesDiscovered = !filterDiscoveredOnly || isMachineDiscovered(m.id);
-
-      return matchesSearch && matchesCategory && matchesMuscle && matchesDifficulty && matchesFavorite && matchesDiscovered;
+      return matchesSearch && matchesCategory;
     });
-
-    // Sort order
-    switch (sortBy) {
-      case 'az':
-        result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case 'za':
-        result = [...result].sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case 'difficulty-asc':
-        result = [...result].sort((a, b) => (DIFFICULTY_ORDER[a.difficulty] ?? 0) - (DIFFICULTY_ORDER[b.difficulty] ?? 0));
-        break;
-      case 'difficulty-desc':
-        result = [...result].sort((a, b) => (DIFFICULTY_ORDER[b.difficulty] ?? 0) - (DIFFICULTY_ORDER[a.difficulty] ?? 0));
-        break;
-      case 'recent':
-        // Featured machines or newly indexed machines first
-        result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
-        break;
-      default: // Recommended
-        result = [...result].sort((a, b) => {
-          const aScore = (a.featured ? 10 : 0) + (isMachineDiscovered(a.id) ? 3 : 0) + (isFavorite(a.id) ? 2 : 0);
-          const bScore = (b.featured ? 10 : 0) + (isMachineDiscovered(b.id) ? 3 : 0) + (isFavorite(b.id) ? 2 : 0);
-          return bScore - aScore;
-        });
-    }
-
-    return result;
-  }, [machines, searchQuery, selectedCategory, selectedMuscle, sortBy, filterDifficulty, filterFavoritesOnly, filterDiscoveredOnly, isFavorite, isMachineDiscovered, simulatedError]);
-
-  /* ── Active Filters Count ── */
-  const activeFilterCount = [
-    searchQuery !== '',
-    selectedCategory !== 'all',
-    selectedMuscle !== 'all',
-    filterDifficulty !== 'all',
-    filterFavoritesOnly,
-    filterDiscoveredOnly,
-  ].filter(Boolean).length;
-
-  const clearAllFilters = useCallback(() => {
-    setSearchQuery('');
-    setSelectedCategory('all');
-    setSelectedMuscle('all');
-    setFilterDifficulty('all');
-    setFilterFavoritesOnly(false);
-    setFilterDiscoveredOnly(false);
-    setSortBy('recommended');
-    setSimulatedError(null);
-  }, []);
-
-  const handleSelectMachine = useCallback((machine: Machine) => {
-    onSelectMachine(machine, 'library');
-  }, [onSelectMachine]);
-
-  const handleNavigate = useCallback((tab: string, mode?: string) => {
-    if (onNavigate) onNavigate(tab, mode);
-  }, [onNavigate]);
+  }, [machines, searchQuery, selectedCategory]);
 
   return (
-    <div 
-      className="w-full max-w-7xl mx-auto px-3 sm:px-6 pt-16 sm:pt-20 md:pt-6 pb-28 md:pb-8 box-border flex flex-col gap-5 sm:gap-6" 
-      style={{ animation: 'fadeIn 0.3s ease-out' }}
-    >
+    <div className="flex flex-col gap-3.5 w-full">
+      {/* 1. Compact Header: Clean mobile header with count pill */}
+      <div className="flex items-center justify-between px-0.5">
+        <div>
+          <h1 className="text-xl font-extrabold tracking-tight text-white">
+            Machine Library
+          </h1>
+          <p className="text-[11px] text-[#9CA3AF] mt-0.5">
+            Browse strength machines & target muscles
+          </p>
+        </div>
 
-      {/* ── Offline Banner Simulation Notice ── */}
-      {isOfflineSimulation && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '0.75rem 1rem',
-          background: 'rgba(255, 184, 0, 0.12)',
-          border: '1px solid rgba(255, 184, 0, 0.35)',
-          borderRadius: '12px',
-          color: '#FFB800',
-          fontSize: '0.82rem'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <WifiOff size={16} />
-            <span><strong>Offline Mode Active:</strong> Browsing local cached library data. Cloud sync paused.</span>
-          </div>
+        {/* Subtle Machine Count Pill */}
+        <div className="px-2.5 py-1 rounded-full bg-[#141716] border border-[#222624] text-[11px] font-bold text-white tracking-wide shrink-0">
+          <span className="text-[#22C55E] font-mono">{filteredMachines.length}</span>
+          <span className="text-[#9CA3AF] font-normal text-[10px] ml-1">
+            {filteredMachines.length === libraryTotal ? `/${libraryTotal}` : 'found'}
+          </span>
+        </div>
+      </div>
+
+      {/* 2. Search Bar: Dark rounded search input */}
+      <div className="relative w-full">
+        <Search
+          size={16}
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B7280] pointer-events-none"
+        />
+        <input
+          ref={searchRef}
+          type="search"
+          aria-label="Search machines or muscles"
+          placeholder="Search machines or muscles..."
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          className="w-full bg-[#141716] border border-[#222624] focus:border-[#22C55E] text-white text-xs placeholder-[#6B7280] rounded-xl pl-9 pr-9 py-2.5 outline-none transition-colors"
+        />
+        {searchQuery && (
           <button
-            onClick={() => setIsOfflineSimulation(false)}
-            style={{ background: 'transparent', border: 'none', color: '#FFB800', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.78rem' }}
+            onClick={() => { setSearchQuery(''); searchRef.current?.focus(); }}
+            aria-label="Clear search query"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#222624] text-[#9CA3AF] hover:text-white flex items-center justify-center cursor-pointer"
           >
-            Reconnect
+            <X size={12} />
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* ── 1. Page Header ── */}
-      <div 
-        className="w-full max-w-full box-border p-4 sm:p-6 md:p-7 rounded-[22px] relative overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, rgba(17,24,39,0.95) 0%, rgba(10,14,22,0.98) 100%)',
-          border: '1px solid rgba(0,245,155,0.18)',
-        }}
-      >
-        {/* Glow gradients */}
-        <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,245,155,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-30px', left: '-30px', width: '180px', height: '180px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,210,255,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
-
-        {/* Main header row: flex-col on mobile, flex-row on sm+ */}
-        <div className="flex flex-col gap-3 w-full" style={{ position: 'relative', zIndex: 1 }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', flexWrap: 'wrap' }}>
-              <span className="badge badge-emerald" style={{ fontSize: '0.68rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                <BookOpen size={10} /> Machine Library
-              </span>
-            </div>
-
-            <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.1rem)', color: '#F1F5F9', margin: '0 0 0.35rem 0', lineHeight: 1.2 }}>
-              Machine Library
-            </h1>
-            <p style={{ fontSize: '0.85rem', color: '#94A3B8', margin: 0, maxWidth: '560px', lineHeight: 1.5 }}>
-              Explore gym equipment, discover exercises, and learn how to use each machine.
-            </p>
-          </div>
-        </div>
-
-        {/* Header Stats Bar: 3-column grid on mobile, flex row on sm+ */}
-        <div 
-          className="grid grid-cols-3 gap-2 w-full p-2.5 sm:p-4 mt-4 border-t border-white/[0.06] relative z-10 sm:flex sm:items-center sm:gap-6"
-        >
-          {[
-            { label: 'Total Machines', mobileLabel: 'Total', value: libraryTotal, color: '#00F59B', icon: <Layers size={14} /> },
-            { label: 'Discovered', mobileLabel: 'Discovered', value: totalDiscovered, color: '#38BDF8', icon: <CheckCircle size={14} /> },
-            { label: 'Saved Favorites', mobileLabel: 'Favorites', value: totalFavorites, color: '#FFB800', icon: <Star size={14} /> },
-            { label: 'Categories', mobileLabel: 'Categories', value: activeCategoriesCount, color: '#C084FC', icon: <LayoutGrid size={14} />, desktopOnly: true },
-          ].map(stat => (
-            <div 
-              key={stat.label} 
-              className={`flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 p-2 sm:p-0 text-center sm:text-left text-xs rounded-xl bg-white/[0.03] sm:bg-transparent border border-white/[0.05] sm:border-transparent ${
-                stat.desktopOnly ? 'hidden sm:flex' : 'flex'
+      {/* 3. Muscle Filter Strip: Smooth horizontal scrollable row with hidden scrollbars */}
+      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar scrollbar-none -mx-4 px-4 py-0.5">
+        {filterPills.map(pill => {
+          const isActive = selectedCategory === pill.id;
+          return (
+            <button
+              key={pill.id}
+              onClick={() => setSelectedCategory(pill.id)}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold tracking-tight transition-all duration-150 cursor-pointer select-none ${
+                isActive
+                  ? 'bg-[#22C55E] text-black shadow-sm'
+                  : 'bg-[#141716] border border-[#222624] text-[#9CA3AF] hover:text-white hover:border-[#2C312E]'
               }`}
             >
-              <span style={{ color: stat.color }}>{stat.icon}</span>
-              <span className="font-bold text-xs sm:text-sm" style={{ color: stat.color }}>{stat.value}</span>
-              <span className="text-[10px] sm:text-xs text-[#94A3B8] sm:text-[#64748B]">
-                <span className="sm:hidden">{stat.mobileLabel}</span>
-                <span className="hidden sm:inline">{stat.label}</span>
-              </span>
-            </div>
-          ))}
-        </div>
+              {pill.label}
+            </button>
+          );
+        })}
       </div>
 
-      {/* ── 2. Search Bar ── */}
-      <div className="flex flex-col gap-2 w-full">
-        <div className="relative w-full">
-          <Search
-            size={18}
-            color="#64748B"
-            style={{ position: 'absolute', left: '1.1rem', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}
-          />
-          <input
-            ref={searchRef}
-            id="machine-search"
-            type="search"
-            aria-label="Search machines"
-            placeholder="Search machines or muscles..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="input-modern w-full sm:w-auto"
-            style={{
-              width: '100%',
-              paddingLeft: '3rem',
-              paddingRight: searchQuery ? '2.8rem' : '1rem',
-              height: '50px',
-              fontSize: '0.88rem',
-              borderRadius: '14px',
-              border: searchQuery ? '1px solid rgba(0, 245, 155, 0.4)' : '1px solid rgba(255,255,255,0.1)'
-            }}
-          />
-          {searchQuery && (
-            <button
-              onClick={() => { setSearchQuery(''); searchRef.current?.focus(); }}
-              aria-label="Clear search query"
-              style={{
-                position: 'absolute',
-                right: '0.9rem',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                borderRadius: '50%',
-                width: '30px',
-                height: '30px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#94A3B8',
-                cursor: 'pointer',
-              }}
-            >
-              <X size={14} />
-            </button>
-          )}
-        </div>
+      {/* 4. Clean 2-Column Mobile Machine Card Grid */}
+      {filteredMachines.length > 0 ? (
+        <div className="grid grid-cols-2 gap-2.5 pt-1">
+          {filteredMachines.map(machine => {
+            const photos = getMachinePhotos(machine.id);
+            const isVerified = machine.verificationStatus === 'Verified' || photos?.verified === true;
+            const heroPhotoUrl = isVerified ? (machine.frontReferenceImage ?? photos?.front ?? null) : null;
+            const favorited = isFavorite(machine.id);
+            const primaryMuscle = machine.primaryMuscles[0]?.split('(')[0].trim() || machine.category;
 
-        {/* Quick Search Suggestions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', paddingLeft: '4px' }}>
-          <span style={{ fontSize: '0.72rem', color: '#64748B' }}>Quick search:</span>
-          {['Chest Press', 'Lat Pulldown', 'Leg Press', 'Shoulder Press', 'Cable Row', 'Abdominal'].map(tag => (
-            <button
-              key={tag}
-              onClick={() => setSearchQuery(tag)}
-              style={{
-                background: searchQuery === tag ? 'rgba(0, 245, 155, 0.15)' : 'rgba(255,255,255,0.03)',
-                color: searchQuery === tag ? '#00F59B' : '#94A3B8',
-                border: searchQuery === tag ? '1px solid rgba(0, 245, 155, 0.35)' : '1px solid rgba(255,255,255,0.06)',
-                borderRadius: '999px',
-                padding: '2px 8px',
-                fontSize: '0.72rem',
-                cursor: 'pointer',
-              }}
-            >
-              {tag}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* ── 3. Category Filter Tabs ── */}
-      <div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-          <span style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            Equipment Categories
-          </span>
-          {selectedCategory !== 'all' && (
-            <button
-              onClick={() => setSelectedCategory('all')}
-              style={{ background: 'transparent', border: 'none', color: '#00F59B', fontSize: '0.74rem', cursor: 'pointer' }}
-            >
-              Reset to All
-            </button>
-          )}
-        </div>
-
-        {/* Category pills: horizontal scroll on mobile, no scrollbar */}
-        <div 
-          className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full py-1"
-          style={{ WebkitOverflowScrolling: 'touch' }}
-        >
-          {allCategories.map(cat => {
-            const isSelected = selectedCategory === cat.id;
-            const catColor = CATEGORY_COLORS[cat.id];
             return (
-              <button
-                key={cat.id}
-                id={`cat-btn-${cat.id}`}
-                onClick={() => setSelectedCategory(cat.id)}
-                aria-pressed={isSelected}
-                className="whitespace-nowrap shrink-0 text-xs sm:text-sm cursor-pointer transition-all duration-150 flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full"
-                style={{
-                  background: isSelected
-                    ? (cat.id === 'all'
-                      ? 'linear-gradient(135deg, #00F59B, #00D2B4)'
-                      : catColor ? catColor.bg : 'rgba(0,245,155,0.15)')
-                    : 'rgba(255,255,255,0.04)',
-                  color: isSelected
-                    ? (cat.id === 'all' ? '#05140F' : catColor?.text ?? '#00F59B')
-                    : '#94A3B8',
-                  border: isSelected
-                    ? `1.5px solid ${cat.id === 'all' ? '#00F59B' : catColor?.border ?? 'rgba(0,245,155,0.4)'}`
-                    : '1px solid rgba(255,255,255,0.08)',
-                  fontWeight: isSelected ? 700 : 500,
+              <div
+                key={machine.id}
+                role="button"
+                tabIndex={0}
+                onClick={() => onSelectMachine(machine, 'library')}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelectMachine(machine, 'library');
+                  }
                 }}
+                className="group flex flex-col bg-[#141716] hover:bg-[#181A20] border border-[#222624] hover:border-[#2C312E] rounded-2xl overflow-hidden cursor-pointer select-none active:scale-[0.98] transition-all text-left"
               >
-                <span>{cat.emoji}</span>
-                <span>{cat.name}</span>
-                <span style={{
-                  fontSize: '0.68rem',
-                  background: isSelected ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.08)',
-                  color: isSelected ? (cat.id === 'all' ? '#05140F' : catColor?.text ?? '#00F59B') : '#64748B',
-                  borderRadius: '999px',
-                  padding: '1px 6px',
-                  fontWeight: 700,
-                  minWidth: '18px',
-                  textAlign: 'center',
-                }}>
-                  {cat.count}
-                </span>
-              </button>
+                {/* Equipment Photo */}
+                <div className="relative aspect-[4/3] w-full bg-[#0A0C0B] overflow-hidden flex items-center justify-center">
+                  {heroPhotoUrl ? (
+                    <img
+                      src={heroPhotoUrl}
+                      alt={machine.name}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full p-3 flex items-center justify-center text-[#6B7280]">
+                      <MachineSvgIllustration type={machine.imageSvg} />
+                    </div>
+                  )}
+
+                  {/* Gradient bottom scrim */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#141716] via-transparent to-transparent pointer-events-none" />
+
+                  {/* Favorite Bookmark */}
+                  <button
+                    aria-label={favorited ? `Remove from favorites` : `Save to favorites`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      requireAuth(
+                        () => toggleFavorite(machine.id),
+                        'Create a free account to bookmark machines!'
+                      );
+                    }}
+                    className="absolute top-2 right-2 w-6 h-6 rounded-lg bg-[#0A0C0B]/80 hover:bg-[#141716] border border-[#222624] flex items-center justify-center transition-colors z-10"
+                  >
+                    <Star
+                      size={11}
+                      className={favorited ? 'text-[#22C55E] fill-[#22C55E]' : 'text-[#6B7280]'}
+                    />
+                  </button>
+
+                  {/* Category Pill Tag */}
+                  <span className="absolute bottom-2 left-2 px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider bg-[#0A0C0B]/85 border border-[#222624] text-[#9CA3AF]">
+                    {machine.category}
+                  </span>
+                </div>
+
+                {/* Machine Details */}
+                <div className="p-2.5 flex flex-col justify-between flex-1 gap-1.5">
+                  <div>
+                    <h3 className="text-xs font-bold text-white tracking-tight line-clamp-1 group-hover:text-[#22C55E] transition-colors leading-snug">
+                      {machine.name}
+                    </h3>
+                    <p className="text-[10px] text-[#22C55E] font-medium truncate mt-0.5 flex items-center gap-1">
+                      <span className="w-1 h-1 rounded-full bg-[#22C55E]" />
+                      <span>{primaryMuscle}</span>
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1.5 border-t border-[#222624]/60 text-[10px]">
+                    <span className="text-[#6B7280] font-medium">
+                      {machine.difficulty || 'All levels'}
+                    </span>
+                    <span className="text-[#22C55E] font-semibold">
+                      Details →
+                    </span>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>
-      </div>
-
-      {/* ── 4. Secondary Filter + Sort Toolbar ── */}
-      <div 
-        className="flex flex-col sm:flex-row gap-2.5 w-full p-2.5 sm:p-3.5 bg-white/[0.02] border border-white/[0.07] rounded-2xl items-stretch sm:items-center justify-between"
-      >
-        {/* Left Filters Group (Horizontal Scroll on Mobile, Wrapped on Desktop) */}
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0 w-full sm:w-auto flex-nowrap sm:flex-wrap shrink-0">
-          <span className="text-[11px] text-[#64748B] font-semibold uppercase tracking-wider shrink-0 pr-1">
-            Filters:
-          </span>
-
-          {/* Muscle dropdown filter */}
-          <div style={{ position: 'relative' }} className="shrink-0">
-            <select
-              aria-label="Filter by primary muscle group"
-              value={selectedMuscle}
-              onChange={e => setSelectedMuscle(e.target.value)}
-              className="shrink-0"
-              style={{
-                background: selectedMuscle !== 'all' ? 'rgba(0,245,155,0.12)' : 'rgba(255,255,255,0.04)',
-                color: selectedMuscle !== 'all' ? '#00F59B' : '#94A3B8',
-                border: selectedMuscle !== 'all' ? '1px solid rgba(0,245,155,0.35)' : '1px solid rgba(255,255,255,0.08)',
-                padding: '4px 10px',
-                borderRadius: '999px',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                outline: 'none',
-              }}
-            >
-              <option value="all" style={{ background: '#161B26', color: '#F1F5F9' }}>All Muscle Groups</option>
-              {muscleGroups.map(mus => (
-                <option key={mus} value={mus} style={{ background: '#161B26', color: '#F1F5F9' }}>
-                  🎯 {mus}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Favorites toggle */}
-          <button
-            id="filter-favorites"
-            onClick={() => setFilterFavoritesOnly(v => !v)}
-            aria-pressed={filterFavoritesOnly}
-            className="shrink-0 whitespace-nowrap"
-            style={{
-              background: filterFavoritesOnly ? 'rgba(255,184,0,0.18)' : 'transparent',
-              color: filterFavoritesOnly ? '#FFB800' : '#94A3B8',
-              border: filterFavoritesOnly ? '1px solid rgba(255,184,0,0.45)' : '1px solid rgba(255,255,255,0.08)',
-              padding: '4px 10px',
-              borderRadius: '999px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              transition: 'all 0.15s',
-            }}
-          >
-            <Star size={12} fill={filterFavoritesOnly ? '#FFB800' : 'none'} />
-            Saved ({totalFavorites})
-          </button>
-
-          {/* Discovered toggle */}
-          <button
-            id="filter-discovered"
-            onClick={() => setFilterDiscoveredOnly(v => !v)}
-            aria-pressed={filterDiscoveredOnly}
-            className="shrink-0 whitespace-nowrap"
-            style={{
-              background: filterDiscoveredOnly ? 'rgba(0,245,155,0.12)' : 'transparent',
-              color: filterDiscoveredOnly ? '#00F59B' : '#94A3B8',
-              border: filterDiscoveredOnly ? '1px solid rgba(0,245,155,0.35)' : '1px solid rgba(255,255,255,0.08)',
-              padding: '4px 10px',
-              borderRadius: '999px',
-              fontSize: '0.75rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px',
-              transition: 'all 0.15s',
-            }}
-          >
-            <CheckCircle size={12} />
-            Discovered ({totalDiscovered})
-          </button>
-
-          {/* Difficulty filter buttons */}
-          {(['Beginner', 'Intermediate', 'Advanced'] as const).map(diff => {
-            const isActive = filterDifficulty === diff;
-            const diffColor = diff === 'Beginner' ? '#00F59B' : diff === 'Intermediate' ? '#FFB800' : '#FF6366';
-            return (
-              <button
-                key={diff}
-                id={`filter-diff-${diff}`}
-                onClick={() => setFilterDifficulty(isActive ? 'all' : diff)}
-                aria-pressed={isActive}
-                className="shrink-0 whitespace-nowrap"
-                style={{
-                  background: isActive ? `rgba(${diff === 'Beginner' ? '0,245,155' : diff === 'Intermediate' ? '255,184,0' : '255,99,102'},0.14)` : 'transparent',
-                  color: isActive ? diffColor : '#94A3B8',
-                  border: isActive ? `1px solid ${diffColor}44` : '1px solid rgba(255,255,255,0.08)',
-                  padding: '4px 9px',
-                  borderRadius: '999px',
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s',
-                }}
-              >
-                {diff}
-              </button>
-            );
-          })}
-
-          {/* Clear all active filters */}
-          {activeFilterCount > 0 && (
-            <button
-              onClick={clearAllFilters}
-              className="shrink-0 whitespace-nowrap"
-              style={{
-                background: 'rgba(255,71,87,0.1)',
-                color: '#FF6B81',
-                border: '1px solid rgba(255,71,87,0.3)',
-                padding: '4px 10px',
-                borderRadius: '999px',
-                fontSize: '0.72rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-              }}
-            >
-              <X size={11} /> Clear ({activeFilterCount})
-            </button>
-          )}
-        </div>
-
-        {/* Right Sort & View Modes - Group dropdowns and list/grid toggles neatly: flex items-center justify-between gap-2 w-full */}
-        <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto pt-2 sm:pt-0 border-t border-white/[0.06] sm:border-t-0 shrink-0">
-          <span className="text-xs text-[#64748B] whitespace-nowrap">
-            <strong className="text-[#F1F5F9]">{filteredMachines.length}</strong> of {libraryTotal}
-          </span>
-
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            <SortDropdown value={sortBy} onChange={setSortBy} />
-
-            {/* Grid / List View Toggle */}
-            <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)' }}>
-              {(['grid', 'list'] as ViewMode[]).map(mode => (
-                <button
-                  key={mode}
-                  id={`view-${mode}`}
-                  onClick={() => setViewMode(mode)}
-                  aria-pressed={viewMode === mode}
-                  title={mode === 'grid' ? 'Grid View' : 'List View'}
-                  style={{
-                    background: viewMode === mode ? 'rgba(0,245,155,0.15)' : 'transparent',
-                    color: viewMode === mode ? '#00F59B' : '#64748B',
-                    border: 'none',
-                    padding: '6px 10px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    transition: 'all 0.15s',
-                  }}
-                >
-                  {mode === 'grid' ? <LayoutGrid size={15} /> : <List size={15} />}
-                </button>
-              ))}
-            </div>
-
-            {/* Refresh / Re-index button */}
-            <button
-              onClick={triggerRefresh}
-              title="Refresh equipment library data"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                color: '#94A3B8',
-                borderRadius: '10px',
-                padding: '6px 8px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center'
-              }}
-            >
-              <RefreshCw size={14} className={isSimulatingLoading ? 'spin-animation' : ''} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 5. Simulated Error Banner if Active ── */}
-      {simulatedError && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: '1rem',
-          background: 'rgba(255, 71, 87, 0.1)',
-          border: '1px solid rgba(255, 71, 87, 0.3)',
-          borderRadius: '14px',
-          color: '#FF6B81',
-          fontSize: '0.85rem'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <AlertTriangle size={18} />
-            <span><strong>Database Query Error:</strong> {simulatedError}</span>
-          </div>
-          <button
-            onClick={() => setSimulatedError(null)}
-            className="btn-secondary"
-            style={{ fontSize: '0.75rem', padding: '4px 10px', color: '#FF6B81', borderColor: 'rgba(255,71,87,0.3)' }}
-          >
-            Retry Connection
-          </button>
-        </div>
-      )}
-
-      {/* ── 7. Machines Grid / List / Skeletons / Empty State ── */}
-      {isSimulatingLoading ? (
-        <div className="grid-cards">
-          {[1, 2, 3, 4, 5, 6].map(n => <SkeletonCard key={n} />)}
-        </div>
-      ) : filteredMachines.length > 0 ? (
-        <>
-          {viewMode === 'grid' ? (
-            <div className="grid-cards" style={{ animation: 'fadeIn 0.2s ease-out' }}>
-              {filteredMachines.map(machine => (
-                <MachineCard
-                  key={machine.id}
-                  machine={machine}
-                  onSelect={handleSelectMachine}
-                />
-              ))}
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', animation: 'fadeIn 0.2s ease-out' }}>
-              {filteredMachines.map(machine => (
-                <MachineListRow
-                  key={machine.id}
-                  machine={machine}
-                  onSelect={handleSelectMachine}
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Machine Count Summary Footer */}
-          <div style={{ textAlign: 'center', padding: '0.5rem 0', fontSize: '0.78rem', color: '#64748B' }}>
-            Showing {filteredMachines.length} of {libraryTotal} machines in library
-            {activeFilterCount > 0 && (
-              <button onClick={clearAllFilters} style={{ background: 'transparent', border: 'none', color: '#00F59B', cursor: 'pointer', marginLeft: '6px', textDecoration: 'underline', fontSize: '0.78rem' }}>
-                (clear all filters)
-              </button>
-            )}
-          </div>
-        </>
       ) : (
-        <EmptyState searchQuery={searchQuery} onClear={clearAllFilters} onNavigate={handleNavigate} />
+        /* Empty State */
+        <div className="p-8 text-center bg-[#141716] border border-[#222624] rounded-2xl flex flex-col items-center gap-2 mt-2">
+          <div className="w-10 h-10 rounded-xl bg-[#0A0C0B] border border-[#222624] flex items-center justify-center text-[#6B7280]">
+            <Search size={18} />
+          </div>
+          <h3 className="text-sm font-bold text-white mt-1">No machines found</h3>
+          <p className="text-xs text-[#9CA3AF] max-w-[240px]">
+            {searchQuery
+              ? `No equipment matching "${searchQuery}".`
+              : 'Try clearing your active filters.'}
+          </p>
+          <button
+            onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
+            className="mt-1 px-3 py-1.5 rounded-xl bg-[#22C55E] text-black text-xs font-bold cursor-pointer"
+          >
+            Reset Filters
+          </button>
+        </div>
       )}
-
     </div>
   );
 };
+

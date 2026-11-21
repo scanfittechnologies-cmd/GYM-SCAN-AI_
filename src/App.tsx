@@ -84,130 +84,114 @@ const AppContent: React.FC = () => {
   const isFullWidthPage = currentTab === 'pricing';
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="min-h-screen bg-[#0A0C0B] flex flex-col justify-between items-center w-full overflow-x-hidden">
       {/* Intro Splash Screen */}
       {showSplash && <IntroSplash onComplete={handleIntroComplete} />}
 
+      {/* Centered Mobile App Shell (max-w-[430px]) */}
+      <div className="w-full max-w-[430px] min-h-screen bg-[#0A0C0B] flex flex-col relative shadow-2xl border-x border-[#141716] overflow-x-hidden">
+        {/* Top Sticky Header */}
+        <Navbar currentTab={currentTab} onTabChange={handleNavigate} />
 
-      {/* Top Sticky Header */}
-      <Navbar currentTab={currentTab} onTabChange={handleNavigate} />
-
-      {/* Main Responsive App Content Area */}
-      <main
-        className={
-          isFullWidthPage 
-            ? '' 
-            : currentTab === 'library' 
-              ? 'w-full overflow-x-hidden' 
-              : currentTab === 'home' 
-                ? 'app-container pt-3 sm:pt-6 md:pt-6' 
-                : ['activity', 'achievements'].includes(currentTab)
-                  ? 'app-container pt-4 sm:pt-6 md:pt-6'
-                  : 'app-container pt-16 sm:pt-20 md:pt-6'
-        }
-        style={{ flex: 1 }}
-      >
-        {selectedMachine ? (
-          <div className="page-enter">
-            <MachineDetailPage
-              machine={selectedMachine}
-              source={machineSource}
-              onBack={handleBackFromDetail}
-              onNavigate={handleNavigate}
-              onSelectMachine={handleSelectMachine}
-            />
-          </div>
-        ) : (
-          <div className="page-enter" key={currentTab}>
-            {currentTab === 'landing' && (
-              <LandingPage
-                onNavigate={handleNavigate}
-                onSelectMachine={(m) => handleSelectMachine(m, 'library')}
-              />
-            )}
-
-            {currentTab === 'pricing' && (
-              <div className="app-container pt-16 sm:pt-20 md:pt-6">
-                <PricingPage onNavigate={handleNavigate} />
-              </div>
-            )}
-
-            {currentTab === 'home' && (
-              <HomePage
+        {/* Main App Content Area */}
+        <main
+          className={
+            isFullWidthPage 
+              ? '' 
+              : 'w-full px-4 pt-3 pb-24 overflow-x-hidden'
+          }
+          style={{ flex: 1 }}
+        >
+          {selectedMachine ? (
+            <div className="page-enter">
+              <MachineDetailPage
+                machine={selectedMachine}
+                source={machineSource}
+                onBack={handleBackFromDetail}
                 onNavigate={handleNavigate}
                 onSelectMachine={handleSelectMachine}
               />
-            )}
+            </div>
+          ) : (
+            <div className="page-enter" key={currentTab}>
+              {currentTab === 'landing' && (
+                <LandingPage
+                  onNavigate={handleNavigate}
+                  onSelectMachine={(m) => handleSelectMachine(m, 'library')}
+                />
+              )}
 
-            {currentTab === 'scan' && (
-              <ScanHubPage
-                initialMode={scanInitialMode}
-                onMachineSelected={handleSelectMachine}
-                onNavigate={handleNavigate}
-              />
-            )}
+              {currentTab === 'pricing' && (
+                <div className="pt-4">
+                  <PricingPage onNavigate={handleNavigate} />
+                </div>
+              )}
 
-            {currentTab === 'library' && (
-              <MachineLibraryPage
-                onSelectMachine={handleSelectMachine}
-                onNavigate={handleNavigate}
-              />
-            )}
+              {currentTab === 'home' && (
+                <HomePage
+                  onNavigate={handleNavigate}
+                  onSelectMachine={handleSelectMachine}
+                />
+              )}
 
-            {/* ── Guest-First Pages: Directly accessible without authentication gates ── */}
-            {currentTab === 'activity' && (
-              <ActivityPage
-                onSelectMachine={handleSelectMachine}
-                onNavigate={handleNavigate}
-              />
-            )}
+              {currentTab === 'scan' && (
+                <ScanHubPage
+                  initialMode={scanInitialMode}
+                  onMachineSelected={handleSelectMachine}
+                  onNavigate={handleNavigate}
+                />
+              )}
 
-            {currentTab === 'achievements' && (
-              <AchievementsPage onNavigate={handleNavigate} />
-            )}
+              {currentTab === 'library' && (
+                <MachineLibraryPage
+                  onSelectMachine={handleSelectMachine}
+                  onNavigate={handleNavigate}
+                />
+              )}
 
-            {currentTab === 'profile' && (
-              <ProfilePage
-                onSelectMachine={handleSelectMachine}
-                onNavigate={handleNavigate}
-              />
-            )}
+              {/* ── Guest-First Pages: Directly accessible without authentication gates ── */}
+              {currentTab === 'activity' && (
+                <ActivityPage
+                  onSelectMachine={handleSelectMachine}
+                  onNavigate={handleNavigate}
+                />
+              )}
 
-            {/* Temporarily paused: AI Workout Routine Generator */}
-            {/* {currentTab === 'routines' && (
-              <div className="app-container pt-16 sm:pt-20 md:pt-6">
-                <WorkoutRoutineGenerator onNavigate={handleNavigate} />
-              </div>
-            )} */}
+              {currentTab === 'achievements' && (
+                <AchievementsPage onNavigate={handleNavigate} />
+              )}
 
+              {currentTab === 'profile' && (
+                <ProfilePage
+                  onSelectMachine={handleSelectMachine}
+                  onNavigate={handleNavigate}
+                />
+              )}
 
+              {/* 404 Fallback for unknown tabs */}
+              {!KNOWN_TABS.includes(currentTab) && (
+                <div style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                  minHeight: '50vh', textAlign: 'center', gap: '1rem', padding: '2rem',
+                }}>
+                  <div style={{ fontSize: '3rem', fontWeight: 900, color: '#1d2332', fontFamily: 'var(--font-mono)' }}>404</div>
+                  <h2 style={{ fontSize: '1.4rem', color: '#F1F5F9' }}>Page Not Found</h2>
+                  <p style={{ color: '#94A3B8', fontSize: '0.9rem' }}>This section does not exist or has been moved.</p>
+                  <button onClick={() => handleNavigate('home')} className="btn-primary">
+                    Return to Dashboard
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </main>
 
-            {/* 404 Fallback for unknown tabs */}
-            {!KNOWN_TABS.includes(currentTab) && (
-              <div style={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                minHeight: '50vh', textAlign: 'center', gap: '1rem', padding: '2rem',
-              }}>
-                <div style={{ fontSize: '3rem', fontWeight: 900, color: '#1d2332', fontFamily: 'var(--font-mono)' }}>404</div>
-                <h2 style={{ fontSize: '1.4rem', color: '#F1F5F9' }}>Page Not Found</h2>
-                <p style={{ color: '#94A3B8', fontSize: '0.9rem' }}>This section does not exist or has been moved.</p>
-                <button onClick={() => handleNavigate('home')} className="btn-primary">
-                  Return to Dashboard
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-      </main>
-
-      {/* Main Navigation Footer */}
-      <Footer onNavigate={handleNavigate} />
-
-      {/* Mobile Bottom Navigation Bar */}
-      <BottomNav
-        currentTab={selectedMachine ? 'library' : currentTab}
-        onTabChange={handleNavigate}
-      />
+        {/* Mobile Bottom Navigation Bar */}
+        <BottomNav
+          currentTab={selectedMachine ? 'library' : currentTab}
+          onTabChange={handleNavigate}
+        />
+      </div>
 
       {/* Toast Notification Container */}
       <ToastContainer />

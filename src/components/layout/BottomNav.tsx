@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Camera, BookOpen, History, Trophy } from 'lucide-react';
+import { Home, BookOpen, Camera, History, Trophy } from 'lucide-react';
 
 interface BottomNavProps {
   currentTab: string;
@@ -7,12 +7,13 @@ interface BottomNavProps {
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange }) => {
+  // Mobile bottom tab bar with 5 concise items: Home, Library, Scan, Activity, Badges
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'library', label: 'Library', icon: BookOpen },
-    { id: 'scan', label: 'Scan', icon: Camera, isSpecial: true },
+    { id: 'scan', label: 'Scan', icon: Camera, isCenterScan: true },
     { id: 'activity', label: 'Activity', icon: History },
-    { id: 'achievements', label: 'XP & Badges', icon: Trophy },
+    { id: 'achievements', label: 'Badges', icon: Trophy },
   ];
 
   const handleTabPress = (tabId: string) => {
@@ -22,85 +23,37 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
   return (
     <nav
       aria-label="Mobile Bottom Navigation"
-      style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        backgroundColor: 'rgba(10, 12, 16, 0.96)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderTop: '1px solid rgba(255, 255, 255, 0.09)',
-        padding: '0.4rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom, 0px)) 0.75rem',
-        boxShadow: '0 -10px 32px rgba(0, 0, 0, 0.65)'
-      }}
-      className="mobile-bottom-nav"
+      className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"
     >
-      <div style={{
-        maxWidth: '540px',
-        margin: '0 auto',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        position: 'relative'
-      }}>
+      <div className="w-full max-w-[430px] mx-auto pointer-events-auto bg-[#0A0C0B]/95 backdrop-blur-md border-t border-[#222624] px-2 pt-1.5 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] flex items-center justify-between">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = currentTab === tab.id;
 
-          if (tab.isSpecial) {
+          if (tab.isCenterScan) {
             return (
-              <div
+              <button
                 key={tab.id}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  marginTop: '-24px',
-                  position: 'relative',
-                  zIndex: 2
-                }}
+                type="button"
+                id="mobile-nav-scan-btn"
+                aria-label="Open Scanner"
+                onClick={() => handleTabPress(tab.id)}
+                className="flex flex-col items-center justify-center -mt-5 relative z-10 cursor-pointer px-1 shrink-0"
               >
-                <button
-                  type="button"
-                  id="mobile-nav-scan-btn"
-                  aria-label="Open Scanner"
-                  onClick={() => handleTabPress(tab.id)}
-                  style={{
-                    background: isActive 
-                      ? 'linear-gradient(135deg, #00FFB2 0%, #00D2FF 100%)' 
-                      : 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
-                    color: '#05140F',
-                    border: '3px solid #0A0C10',
-                    borderRadius: '50%',
-                    width: '58px',
-                    height: '58px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    boxShadow: isActive
-                      ? '0 0 24px rgba(0, 245, 155, 0.7), 0 8px 20px rgba(0, 0, 0, 0.6)'
-                      : '0 0 16px rgba(0, 245, 155, 0.45), 0 6px 16px rgba(0, 0, 0, 0.5)',
-                    transform: isActive ? 'scale(1.05)' : 'scale(1)',
-                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                    outline: 'none'
-                  }}
+                <div
+                  className={`w-12 h-12 rounded-full flex items-center justify-center border-4 border-[#0A0C0B] transition-transform active:scale-95 ${
+                    isActive
+                      ? 'bg-[#1ED760] text-black shadow-[0_0_16px_rgba(30,215,96,0.35)]'
+                      : 'bg-[#22C55E] text-black'
+                  }`}
+                  style={{ width: '48px', height: '48px' }}
                 >
-                  <Icon size={28} strokeWidth={2.6} />
-                </button>
-                <span style={{
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  color: isActive ? '#00F59B' : '#CBD5E1',
-                  marginTop: '3px',
-                  letterSpacing: '0.02em',
-                  textTransform: 'uppercase'
-                }}>
+                  <Icon size={22} strokeWidth={2.4} />
+                </div>
+                <span className="text-[10px] font-semibold tracking-wider text-[#9CA3AF] mt-0.5">
                   Scan
                 </span>
-              </div>
+              </button>
             );
           }
 
@@ -111,71 +64,24 @@ export const BottomNav: React.FC<BottomNavProps> = ({ currentTab, onTabChange })
               id={`mobile-nav-${tab.id}-btn`}
               aria-label={`Navigate to ${tab.label}`}
               onClick={() => handleTabPress(tab.id)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: isActive ? '#00F59B' : '#94A3B8',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '4px',
-                padding: '0.45rem 0.6rem',
-                minWidth: '56px',
-                minHeight: '48px',
-                cursor: 'pointer',
-                borderRadius: '12px',
-                transition: 'all 0.18s ease',
-                position: 'relative',
-                outline: 'none',
-              }}
+              className="flex flex-col items-center justify-center gap-0.5 py-1 px-1 rounded-xl cursor-pointer transition-colors flex-1"
             >
-              <div style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Icon
-                  size={22}
-                  strokeWidth={isActive ? 2.5 : 1.8}
-                  style={{
-                    filter: isActive ? 'drop-shadow(0 0 8px rgba(0, 245, 155, 0.5))' : 'none',
-                    transition: 'filter 0.2s ease'
-                  }}
-                />
-                {isActive && (
-                  <span style={{
-                    position: 'absolute',
-                    top: -5,
-                    width: '5px',
-                    height: '5px',
-                    borderRadius: '50%',
-                    background: '#00F59B',
-                    boxShadow: '0 0 6px #00F59B'
-                  }} />
-                )}
-              </div>
-              <span style={{
-                fontSize: '0.7rem',
-                fontWeight: isActive ? 700 : 500,
-                letterSpacing: '-0.01em',
-                color: isActive ? '#00F59B' : '#94A3B8'
-              }}>
+              <Icon
+                size={19}
+                strokeWidth={isActive ? 2.4 : 1.8}
+                className={isActive ? 'text-[#22C55E]' : 'text-[#6B7280]'}
+              />
+              <span
+                className={`text-[10px] font-medium tracking-tight text-center leading-tight truncate ${
+                  isActive ? 'text-[#22C55E] font-semibold' : 'text-[#6B7280]'
+                }`}
+              >
                 {tab.label}
               </span>
             </button>
           );
         })}
       </div>
-
-      <style>{`
-        @media (min-width: 860px) {
-          .mobile-bottom-nav {
-            display: none !important;
-          }
-        }
-      `}</style>
     </nav>
   );
 };

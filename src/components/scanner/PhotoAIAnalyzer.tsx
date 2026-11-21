@@ -718,88 +718,37 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
   };
 
   return (
-    <div className="pb-28 md:pb-6" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', width: '100%', maxWidth: '680px', margin: '0 auto' }}>
+    <div className="pb-24 w-full flex flex-col gap-3.5">
 
-      {/* 0. Fullscreen AI Vision Scanning Loader */}
+      {/* 0. Minimal Fullscreen Scanning Loader */}
       <ScanningLoader isScanning={analyzing} />
 
-
-      {/* 2. Live WebRTC Camera Stream Viewport OR Upload Dropzone */}
+      {/* 1. Live WebRTC Camera Stream Viewport OR Upload Dropzone */}
       {isLiveCameraOpen && currentMode !== 'upload' ? (
-        <div
-          className="h-[55vh] max-h-[420px] md:h-[480px]"
-          style={{
-            position: 'relative',
-            backgroundColor: '#07090E',
-            borderRadius: '24px',
-            overflow: 'hidden',
-            border: liveCameraMode === 'ai' ? '1.5px solid #00D2FF' : '1.5px solid #00F59B',
-            boxShadow: liveCameraMode === 'ai' ? '0 16px 36px rgba(0, 210, 255, 0.25)' : '0 16px 36px rgba(0, 245, 155, 0.25)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: '1rem'
-          }}>
+        <div className="relative w-full h-[380px] bg-[#0A0C0B] rounded-3xl overflow-hidden border border-[#222624] flex flex-col items-center justify-center">
           <video
             ref={videoRef}
             autoPlay
             playsInline
             muted
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            className="w-full h-full object-cover"
           />
 
+          {/* Clean Viewfinder Target Frame with Corner Focus Brackets */}
+          <div className="absolute w-[72%] max-w-[270px] h-[210px] pointer-events-none flex items-center justify-center">
+            {/* Corner brackets [ ] */}
+            <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-[#22C55E] rounded-tl-lg" />
+            <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-[#22C55E] rounded-tr-lg" />
+            <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-[#22C55E] rounded-bl-lg" />
+            <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-[#22C55E] rounded-br-lg" />
+            
+            <span className="text-[11px] font-medium text-white/90 bg-[#0A0C0B]/75 px-2.5 py-1 rounded-full border border-white/10 backdrop-blur-sm">
+              Frame the machine clearly
+            </span>
+          </div>
 
-          {/* Viewfinder Overlay with Laser & Target Frame */}
-          {liveCameraMode === 'qr' ? (
-            <div style={{
-              position: 'absolute',
-              width: '210px',
-              height: '210px',
-              border: '2px dashed rgba(0, 245, 155, 0.7)',
-              borderRadius: '16px',
-              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.45)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              pointerEvents: 'none'
-            }}>
-              <div className="viewfinder-corner corner-tl" style={{ borderColor: '#00F59B' }} />
-              <div className="viewfinder-corner corner-tr" style={{ borderColor: '#00F59B' }} />
-              <div className="viewfinder-corner corner-bl" style={{ borderColor: '#00F59B' }} />
-              <div className="viewfinder-corner corner-br" style={{ borderColor: '#00F59B' }} />
-              <div className="scanner-laser" />
-            </div>
-          ) : (
-            <div style={{
-              position: 'absolute',
-              width: '82%',
-              maxWidth: '340px',
-              height: '220px',
-              border: '1.5px dashed rgba(0, 210, 255, 0.65)',
-              borderRadius: '18px',
-              boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.45)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              pointerEvents: 'none'
-            }}>
-              <div className="viewfinder-corner corner-tl" style={{ borderColor: '#00D2FF' }} />
-              <div className="viewfinder-corner corner-tr" style={{ borderColor: '#00D2FF' }} />
-              <div className="viewfinder-corner corner-bl" style={{ borderColor: '#00D2FF' }} />
-              <div className="viewfinder-corner corner-br" style={{ borderColor: '#00D2FF' }} />
-            </div>
-          )}
-
-          {/* Camera Header Actions (Switch Camera / Close) */}
-          <div style={{
-            position: 'absolute',
-            top: '12px',
-            right: '12px',
-            display: 'flex',
-            gap: '6px',
-            zIndex: 26
-          }}>
+          {/* Camera Actions Header (Switch / Close) */}
+          <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
             <button
               type="button"
               onClick={() => {
@@ -807,187 +756,87 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
                 setCameraFacing(next);
                 startLiveCamera(next);
               }}
-              className="btn-ghost"
-              style={{
-                background: 'rgba(10, 14, 22, 0.85)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: '50%',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 0
-              }}
-              title="Switch Camera (Front/Back)"
+              className="w-8 h-8 rounded-full bg-[#141716]/80 border border-[#222624] text-white flex items-center justify-center cursor-pointer hover:bg-[#1C201E]"
+              title="Switch Camera"
             >
-              <RotateCcw size={14} color="#F1F5F9" />
+              <RotateCcw size={14} />
             </button>
             <button
               type="button"
               onClick={stopLiveCamera}
-              className="btn-ghost"
-              style={{
-                background: 'rgba(10, 14, 22, 0.85)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                borderRadius: '50%',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 0
-              }}
+              className="w-8 h-8 rounded-full bg-[#141716]/80 border border-[#222624] text-[#9CA3AF] hover:text-white flex items-center justify-center cursor-pointer hover:bg-[#1C201E]"
               title="Close Camera"
             >
-              <XCircle size={16} color="#FF6B81" />
+              <XCircle size={16} />
             </button>
           </div>
 
-          {/* Bottom Controls Overlay */}
-          <div style={{
-            position: 'absolute',
-            bottom: '16px',
-            left: 0,
-            right: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '8px',
-            zIndex: 25
-          }}>
-            {/* When Mode === 'ai', display prominent glowing shutter button */}
-            {liveCameraMode === 'ai' && (
-              <button
-                type="button"
-                onClick={captureLivePhoto}
-                disabled={analyzing || cooldownSeconds > 0}
-                style={{
-                  background: (analyzing || cooldownSeconds > 0)
-                    ? 'rgba(30, 40, 60, 0.85)'
-                    : 'linear-gradient(135deg, #00D2FF 0%, #0077FE 100%)',
-                  color: (analyzing || cooldownSeconds > 0) ? '#64748B' : '#FFFFFF',
-                  border: (analyzing || cooldownSeconds > 0)
-                    ? '1.5px solid rgba(100,116,139,0.3)'
-                    : '1.5px solid rgba(255, 255, 255, 0.35)',
-                  borderRadius: '999px',
-                  padding: '0.75rem 1.85rem',
-                  fontSize: '0.88rem',
-                  fontWeight: 700,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  boxShadow: (analyzing || cooldownSeconds > 0)
-                    ? 'none'
-                    : '0 8px 25px rgba(0, 210, 255, 0.45)',
-                  cursor: (analyzing || cooldownSeconds > 0) ? 'not-allowed' : 'pointer',
-                  transition: 'all 0.2s ease',
-                  textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)'
-                }}
-              >
-                <Camera size={18} />
-                {cooldownSeconds > 0
-                  ? <span>⏳ Ready in {cooldownSeconds}s…</span>
-                  : <span>📸 Snap Photo to Scan</span>}
-                <Sparkles size={15} />
-              </button>
-            )}
+          {/* Bottom Shutter & Upload Pill Controls */}
+          <div className="absolute bottom-4 inset-x-0 flex flex-col items-center gap-3 z-20">
+            {/* Center Circular Green Shutter Button */}
+            <button
+              type="button"
+              onClick={captureLivePhoto}
+              disabled={analyzing || cooldownSeconds > 0}
+              aria-label="Capture machine photo"
+              className="w-16 h-16 rounded-full bg-[#22C55E] hover:bg-[#1ED760] active:scale-95 text-black border-4 border-[#0A0C0B] flex items-center justify-center shadow-lg transition-transform cursor-pointer"
+            >
+              <Camera size={26} strokeWidth={2.4} />
+            </button>
 
-            <div style={{
-              background: 'rgba(10, 14, 22, 0.88)',
-              backdropFilter: 'blur(8px)',
-              padding: '5px 14px',
-              borderRadius: '999px',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              fontSize: '0.75rem',
-              color: '#CBD5E1',
-              textAlign: 'center',
-              maxWidth: '90%'
-            }}>
-              {getModeContent().helperText}
-            </div>
+            {/* Upload Secondary Pill */}
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#141716]/90 border border-[#222624] text-xs font-semibold text-[#9CA3AF] hover:text-white backdrop-blur-md cursor-pointer transition-colors"
+            >
+              <Upload size={13} />
+              <span>Upload Photo</span>
+            </button>
           </div>
         </div>
       ) : !uploadedImage ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+        <div className="flex flex-col gap-3 w-full">
           {currentMode === 'upload' ? (
-            /* Upload Mode: Clean file upload / drag-and-drop dropzone without camera feed */
             <PhotoUploadTab
               onImageSelected={validateAndProcessFile}
               isScanning={analyzing}
               previewUrl={uploadedImage}
             />
           ) : (
-            /* Camera Mode ('ai_camera' | 'qr'): Camera Idle Card */
-            <div
-              className="p-3 sm:p-5 md:p-8"
-              style={{
-                backgroundColor: '#07090E',
-                borderRadius: '24px',
-                border: currentMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid rgba(0, 210, 255, 0.3)',
-                boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
-                textAlign: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '1.25rem',
-                animation: 'fadeIn 0.25s ease-out'
-              }}
-            >
-              <div style={{
-                width: '68px',
-                height: '68px',
-                borderRadius: '22px',
-                background: currentMode === 'qr' ? 'rgba(0, 245, 155, 0.12)' : 'rgba(0, 210, 255, 0.12)',
-                border: currentMode === 'qr' ? '1px solid rgba(0, 245, 155, 0.35)' : '1px solid rgba(0, 210, 255, 0.35)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: getModeContent().accentColor,
-                boxShadow: currentMode === 'qr' ? '0 0 25px rgba(0, 245, 155, 0.15)' : '0 0 25px rgba(0, 210, 255, 0.15)'
-              }}>
-                {getModeContent().icon}
+            /* Idle Viewfinder Card */
+            <div className="w-full bg-[#141716] border border-[#222624] rounded-3xl p-6 text-center flex flex-col items-center justify-center gap-4">
+              <div className="w-16 h-16 rounded-3xl bg-[#0A0C0B] border border-[#222624] flex items-center justify-center text-[#22C55E]">
+                <Camera size={28} strokeWidth={2.2} />
               </div>
 
               <div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', marginBottom: '0.45rem' }}>
-                  <span className={currentMode === 'qr' ? 'badge badge-emerald' : 'badge badge-blue'} style={{ fontSize: '0.72rem' }}>
-                    {getModeContent().badgeText}
-                  </span>
-                </div>
-                <h3 style={{ fontSize: '1.25rem', color: '#F1F5F9', marginBottom: '0.45rem', fontWeight: 700 }}>
-                  {getModeContent().title}
+                <h3 className="text-base font-bold text-white tracking-tight">
+                  Camera Ready
                 </h3>
-                <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.5, margin: 0, maxWidth: '380px' }}>
-                  {getModeContent().subtitle}
+                <p className="text-xs text-[#9CA3AF] mt-1 max-w-[260px] leading-relaxed">
+                  Point camera directly at any gym equipment for instant cues and setup guides.
                 </p>
               </div>
 
-              <div className="mb-20 md:mb-0" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%', maxWidth: '320px' }}>
+              <div className="flex flex-col gap-2 w-full max-w-[280px]">
                 <button
                   type="button"
                   onClick={() => startLiveCamera()}
                   disabled={analyzing}
-                  style={{
-                    background: getModeContent().buttonGradient,
-                    color: getModeContent().buttonTextColor,
-                    fontWeight: 700,
-                    fontSize: '0.9rem',
-                    padding: '0.8rem 1.5rem',
-                    borderRadius: '14px',
-                    border: 'none',
-                    boxShadow: getModeContent().boxShadow,
-                    cursor: analyzing ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    transition: 'all 0.2s ease',
-                    width: '100%'
-                  }}
+                  className="w-full py-3 rounded-2xl bg-[#22C55E] hover:bg-[#1ED760] active:scale-98 text-black font-extrabold text-sm flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all"
                 >
-                  {getModeContent().mainButton}
+                  <Camera size={18} strokeWidth={2.4} />
+                  <span>Open Live Camera</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full py-2.5 rounded-2xl bg-[#0A0C0B] border border-[#222624] text-[#9CA3AF] hover:text-white font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                >
+                  <Upload size={14} />
+                  <span>Choose from Gallery</span>
                 </button>
               </div>
             </div>
@@ -1525,153 +1374,140 @@ export const PhotoAIAnalyzer: React.FC<PhotoAIAnalyzerProps> = ({
         );
       })()}
 
-      {/* 8. STATE: MACHINE_IDENTIFIED */}
+      {/* 8. STATE: MACHINE_IDENTIFIED - Native Hevy/Strong Gym Result View */}
       {analysisCompleted && visionOutput && (visionOutput.result_status === 'MACHINE_IDENTIFIED' || visionOutput.result_status === 'confirmed_candidate') && possibleMatches.length > 0 && selectedMatch && (
-        <div className="glass-card" style={{ padding: '1.5rem', animation: 'fadeIn 0.25s ease-out' }}>
+        <div className="w-full flex flex-col gap-3.5 select-none">
 
-          <div style={{ marginBottom: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '6px' }}>
-              {visionOutput.isNewMachine ? (
-                <span className="badge badge-blue" style={{ fontSize: '0.72rem', background: 'rgba(0, 210, 255, 0.2)', border: '1px solid #00D2FF', color: '#00D2FF' }}>
-                  ✨ New Machine Discovered
-                </span>
-              ) : null}
-              <span className={`badge ${visionOutput.confidence >= 80 ? 'badge-emerald' : 'badge-amber'}`} style={{ fontSize: '0.72rem' }}>
-                {visionOutput.isNewMachine ? 'Identified' : (visionOutput.confidence >= 80 ? 'Confirmed Match' : 'Likely Match — You can confirm this machine')}
-              </span>
-              <span className="badge badge-blue" style={{ fontSize: '0.72rem' }}>
-                Confidence: {visionOutput.confidence}%
-              </span>
+          {/* Top Machine Hero Card */}
+          <div className="relative w-full rounded-3xl overflow-hidden border border-[#222624] bg-[#141716] flex flex-col justify-end p-4">
+            <div className="relative h-44 w-full rounded-2xl overflow-hidden bg-[#0A0C0B] border border-[#222624] mb-3">
+              {uploadedImage || selectedMatch.frontReferenceImage ? (
+                <img
+                  src={uploadedImage || selectedMatch.frontReferenceImage!}
+                  alt={selectedMatch.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[#6B7280]">
+                  <Camera size={36} />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0C0B]/90 via-transparent to-transparent" />
+              
+              <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-[#0A0C0B]/85 border border-[#222624] text-[10px] font-mono font-bold text-[#22C55E]">
+                {visionOutput.confidence}% Match
+              </div>
             </div>
 
-            <h3 style={{ fontSize: '1.25rem', color: '#F1F5F9', margin: '4px 0 4px 0' }}>
-              Machine: <strong style={{ color: '#00F59B' }}>{selectedMatch.name}</strong>
-            </h3>
-
-            <p style={{ fontSize: '0.85rem', color: '#CBD5E1', margin: '0 0 6px 0' }}>
-              Exercise: <strong style={{ color: '#00D2FF' }}>{selectedMatch.name}</strong> • Category: <strong style={{ color: '#F1F5F9' }}>{selectedMatch.category}</strong>
-            </p>
-
-            {selectedMatch.description && (
-              <p style={{ fontSize: '0.82rem', color: '#94A3B8', margin: '0 0 6px 0', lineHeight: 1.4 }}>
-                {selectedMatch.description}
-              </p>
-            )}
-
-            {selectedMatch.primaryMuscles && selectedMatch.primaryMuscles.length > 0 && (
-              <p style={{ fontSize: '0.8rem', color: '#94A3B8', margin: 0 }}>
-                Target Muscles: <span style={{ color: '#CBD5E1' }}>{selectedMatch.primaryMuscles.join(', ')}</span>
-              </p>
-            )}
+            <div className="flex flex-col gap-0.5">
+              <h2 className="text-xl font-extrabold text-white tracking-tight leading-tight">
+                {selectedMatch.name}
+              </h2>
+              <div className="flex items-center gap-2 mt-1 text-xs">
+                <span className="text-[#22C55E] font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
+                  {selectedMatch.primaryMuscles[0]?.split('(')[0].trim() || selectedMatch.category}
+                </span>
+                {selectedMatch.secondaryMuscles && selectedMatch.secondaryMuscles.length > 0 && (
+                  <span className="text-[#9CA3AF] text-[11px] truncate">
+                    • {selectedMatch.secondaryMuscles.slice(0, 2).map(m => m.split('(')[0].trim()).join(', ')}
+                  </span>
+                )}
+              </div>
+            </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
-            {possibleMatches.map((match, idx) => {
-              const isSelected = selectedMatch.id === match.machine.id;
-
-              return (
-                <div
-                  key={match.machine.id}
-                  onClick={() => setSelectedMatch(match.machine)}
-                  style={{
-                    background: isSelected ? 'rgba(0, 245, 155, 0.1)' : 'rgba(255, 255, 255, 0.03)',
-                    border: isSelected ? '1.5px solid #00F59B' : '1px solid rgba(255, 255, 255, 0.08)',
-                    borderRadius: '14px',
-                    padding: '1rem',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    justifyContent: 'space-between',
-                    gap: '0.85rem',
-                    transition: 'all 0.15s'
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem', flex: 1 }}>
-                    <div style={{
-                      width: '22px',
-                      height: '22px',
-                      borderRadius: '50%',
-                      background: isSelected ? '#00F59B' : 'rgba(255, 255, 255, 0.1)',
-                      color: '#05140F',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      marginTop: '2px'
-                    }}>
-                      {isSelected && <Check size={13} strokeWidth={3} />}
-                    </div>
-
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                        <span style={{ fontWeight: 700, color: '#F1F5F9', fontSize: '0.95rem' }}>
-                          {match.machine.name}
-                        </span>
-                        <span className="badge badge-muted" style={{ fontSize: '0.65rem' }}>
-                          {match.machine.category}
-                        </span>
-                        {idx === 0 && (
-                          <span className="badge badge-emerald" style={{ fontSize: '0.65rem' }}>
-                            Top Match
-                          </span>
-                        )}
-                      </div>
-
-                      <div style={{ marginTop: '6px', display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                        {sanitizeMatchReasons(match.matchingFeatures || []).map((feat, fIdx) => (
-                          <span
-                            key={fIdx}
-                            style={{
-                              fontSize: '0.7rem',
-                              background: 'rgba(255, 255, 255, 0.05)',
-                              padding: '2px 7px',
-                              borderRadius: '6px',
-                              color: '#CBD5E1'
-                            }}
-                          >
-                            ✓ {feat}
-                          </span>
-                        ))}
-                      </div>
-
-                      <p style={{ fontSize: '0.76rem', color: '#94A3B8', margin: '6px 0 0 0', lineHeight: 1.35 }}>
-                        {match.notes}
-                      </p>
-                    </div>
-                  </div>
-
-
+          {/* Scannable Workout Cards (Hevy/Strong inspired) */}
+          <div className="flex flex-col gap-2.5">
+            {/* Quick Setup Card */}
+            <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
+                  Quick Setup
+                </span>
+                <span className="text-[10px] text-[#6B7280] font-semibold">1-2-3 Guide</span>
+              </div>
+              <div className="flex flex-col gap-1.5 text-xs text-[#CBD5E1]">
+                <div className="flex items-start gap-2">
+                  <span className="w-4 h-4 rounded-full bg-[#0A0C0B] border border-[#222624] text-[10px] font-bold text-[#22C55E] flex items-center justify-center shrink-0 mt-0.5">1</span>
+                  <span><strong>Seat / Pad:</strong> Adjust seat height so joint aligns with the machine pivot.</span>
                 </div>
-              );
-            })}
+                <div className="flex items-start gap-2">
+                  <span className="w-4 h-4 rounded-full bg-[#0A0C0B] border border-[#222624] text-[10px] font-bold text-[#22C55E] flex items-center justify-center shrink-0 mt-0.5">2</span>
+                  <span><strong>Pin Weight:</strong> Choose a warm-up pin weight that allows 10–12 controlled reps.</span>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="w-4 h-4 rounded-full bg-[#0A0C0B] border border-[#222624] text-[10px] font-bold text-[#22C55E] flex items-center justify-center shrink-0 mt-0.5">3</span>
+                  <span><strong>Grip:</strong> Secure comfortable handle or pad position before initiating motion.</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Form Execution Card */}
+            <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
+                Form Execution
+              </span>
+              <ul className="flex flex-col gap-1.5 text-xs text-[#CBD5E1] pl-1">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#22C55E]">•</span>
+                  <span>Maintain flat back against pad, chest up, and brace core.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#22C55E]">•</span>
+                  <span>Push/pull through full active range without slamming weight plates.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#22C55E]">•</span>
+                  <span>Exhale on the exertion stroke; inhale slowly on the eccentric return.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Common Mistakes */}
+            <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#FF6B81] flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B81]" />
+                Common Mistakes
+              </span>
+              <ul className="flex flex-col gap-1.5 text-xs text-[#9CA3AF] pl-1">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#FF6B81]">✕</span>
+                  <span>Using excessive momentum or arching spine off backrest.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#FF6B81]">✕</span>
+                  <span>Locking out joints forcefully at the end of each rep.</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
-            <button
-              type="button"
-              onClick={() => triggerRealVisionAnalysis()}
-              className="btn-secondary"
-              style={{ fontSize: '0.85rem' }}
-            >
-              <RotateCcw size={14} /> Re-analyze
-            </button>
-
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="btn-secondary"
-              style={{ fontSize: '0.85rem' }}
-            >
-              <Upload size={14} /> Upload Another
-            </button>
-
+          {/* Action Footer */}
+          <div className="flex flex-col gap-2 pt-2">
             <button
               type="button"
               onClick={handleConfirmAndProceed}
-              className="btn-primary"
-              style={{ flex: 1, minWidth: '220px', fontSize: '0.9rem' }}
+              className="w-full py-3.5 rounded-2xl bg-[#22C55E] hover:bg-[#1ED760] active:scale-98 text-black font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg cursor-pointer transition-all"
             >
-              <CheckCircle size={18} /> Confirm "{selectedMatch.name}"
+              <CheckCircle size={18} strokeWidth={2.4} />
+              <span>Mark Explored (+25 XP)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setAnalysisCompleted(false);
+                setVisionOutput(null);
+                setUploadedImage(null);
+                startLiveCamera();
+              }}
+              className="w-full py-2.5 rounded-2xl bg-[#141716] border border-[#222624] text-[#9CA3AF] hover:text-white font-semibold text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+            >
+              <RotateCcw size={14} />
+              <span>Scan Another Machine</span>
             </button>
           </div>
         </div>

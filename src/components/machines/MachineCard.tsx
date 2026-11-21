@@ -27,7 +27,7 @@ const CATEGORY_COLORS: Record<string, { bg: string; border: string; text: string
 };
 
 export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, onSelect }) => {
-  const { isMachineDiscovered, isTutorialCompleted, isFavorite, toggleFavorite } = useGym();
+  const { isMachineDiscovered, isFavorite, toggleFavorite } = useGym();
   const { requireAuth } = useSoftGate();
   const [imgError, setImgError] = useState(false);
 
@@ -36,9 +36,7 @@ export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, o
     ...rawMachine,
     isDiscovered: rawMachine.isDiscovered !== undefined ? rawMachine.isDiscovered : discovered
   };
-  const tutorialDone = isTutorialCompleted(machine.id);
   const favorited   = isFavorite(machine.id);
-  const catStyle    = CATEGORY_COLORS[machine.category] ?? CATEGORY_COLORS.Other;
 
   // Resolve the best available hero photo
   const photos     = getMachinePhotos(machine.id);
@@ -57,71 +55,24 @@ export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, o
           onSelect(machine);
         }
       }}
-      className="glass-card w-full max-w-full"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        aspectRatio: '1 / 1',
-        width: '100%',
-        maxWidth: '100%',
-        overflow: 'hidden',
-        cursor: 'pointer',
-        position: 'relative',
-        borderRadius: '20px',
-        border: '1px solid rgba(255,255,255,0.1)',
-        boxSizing: 'border-box',
-        transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-      }}
+      className="group flex flex-col w-full bg-[#14161A] hover:bg-[#181A20] rounded-xl border border-[#23272F] hover:border-[#2E3440] overflow-hidden cursor-pointer transition-all duration-150 select-none text-left"
     >
-      {/* ── Image Display (Fills top portion of Square) ── */}
-      <div style={{
-        position: 'relative',
-        flex: 1,
-        width: '100%',
-        background: usePhoto
-          ? 'radial-gradient(circle at center, #1E293B 0%, #0F172A 100%)'
-          : 'linear-gradient(180deg, #0E131F 0%, #090C14 100%)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        overflow: 'hidden',
-      }}>
+      {/* ── Equipment Image ── */}
+      <div className="relative aspect-[4/3] w-full bg-[#0D0E11] overflow-hidden flex items-center justify-center">
         {usePhoto ? (
-          <>
-            <img
-              src={heroPhotoUrl!}
-              alt={machine.name}
-              onError={() => setImgError(true)}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center',
-                display: 'block',
-              }}
-            />
-            {/* Scrim overlay */}
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(to top, rgba(11,15,25,0.95) 0%, rgba(11,15,25,0.2) 60%, transparent 100%)',
-              pointerEvents: 'none',
-            }} />
-          </>
+          <img
+            src={heroPhotoUrl!}
+            alt={machine.name}
+            onError={() => setImgError(true)}
+            className="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-300"
+          />
         ) : (
-          <div style={{
-            width: '100%',
-            height: '100%',
-            padding: '0.75rem',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'linear-gradient(180deg, rgba(14, 19, 31, 0.9) 0%, rgba(9, 12, 20, 0.95) 100%)',
-          }}>
+          <div className="w-full h-full p-4 flex items-center justify-center text-[#6B7280]">
             <MachineSvgIllustration type={machine.imageSvg} />
           </div>
         )}
 
-        {/* ── Favorite Button (top-right) ── */}
+        {/* Favorite Icon */}
         <button
           aria-label={favorited ? `Remove ${machine.name} from favorites` : `Save ${machine.name} to favorites`}
           onClick={(e) => {
@@ -131,133 +82,41 @@ export const MachineCard: React.FC<MachineCardProps> = ({ machine: rawMachine, o
               'Create a free account to bookmark your favorite machines!'
             );
           }}
-          style={{
-            position: 'absolute',
-            top: '8px',
-            right: '8px',
-            background: favorited ? 'rgba(255, 184, 0, 0.25)' : 'rgba(10,14,22,0.75)',
-            border: favorited ? '1px solid rgba(255, 184, 0, 0.5)' : '1px solid rgba(255,255,255,0.14)',
-            borderRadius: '50%',
-            width: '30px',
-            height: '30px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: favorited ? '#FFB800' : '#94A3B8',
-            cursor: 'pointer',
-            backdropFilter: 'blur(8px)',
-            zIndex: 3,
-            flexShrink: 0,
-          }}
+          className="absolute top-2.5 right-2.5 w-7 h-7 rounded-lg bg-[#0D0E11]/80 hover:bg-[#14161A] border border-[#23272F] flex items-center justify-center transition-colors z-10"
         >
-          <Star size={14} fill={favorited ? '#FFB800' : 'none'} />
+          <Star
+            size={13}
+            className={favorited ? 'text-[#E2FF32] fill-[#E2FF32]' : 'text-[#6B7280]'}
+          />
         </button>
 
-        {/* ── Top-Left Badges (Category & Verification) ── */}
-        <div style={{
-          position: 'absolute',
-          top: '8px',
-          left: '8px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '4px',
-          alignItems: 'flex-start',
-          zIndex: 3,
-        }}>
-          <span style={{
-            fontSize: '0.62rem',
-            padding: '2px 7px',
-            borderRadius: '999px',
-            background: catStyle.bg,
-            color: catStyle.text,
-            border: `1px solid ${catStyle.border}`,
-            fontWeight: 800,
-            backdropFilter: 'blur(6px)',
-          }}>
+        {/* Category Pill */}
+        <div className="absolute top-2.5 left-2.5 z-10">
+          <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-[#0D0E11]/80 border border-[#23272F] text-[#9CA3AF]">
             {machine.category}
           </span>
-
-          {discovered && (
-            <span style={{
-              background: 'rgba(0,245,155,0.2)', backdropFilter: 'blur(6px)',
-              color: '#00F59B',
-              border: '1px solid rgba(0,245,155,0.4)',
-              fontSize: '0.6rem', borderRadius: '999px', padding: '1px 6px',
-              fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '3px',
-            }}>
-              <CheckCircle size={9} /> Discovered
-            </span>
-          )}
         </div>
       </div>
 
-      {/* ── Bottom Info Content ── */}
-      <div style={{
-        padding: '0.75rem 0.85rem 0.85rem 0.85rem',
-        background: 'rgba(14, 18, 27, 0.95)',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        minHeight: '104px',
-        gap: '4px',
-      }}>
-        {/* Title */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '6px' }}>
-          <h3
-            className="text-sm font-bold text-white line-clamp-2"
-            style={{
-              margin: 0,
-              lineHeight: 1.25,
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
-              flex: 1,
-            }}
-          >
+      {/* ── Machine Information ── */}
+      <div className="p-3.5 flex flex-col justify-between gap-2.5 flex-1 bg-[#14161A]">
+        <div>
+          <h3 className="text-sm font-bold text-white tracking-tight line-clamp-1 group-hover:text-[#E2FF32] transition-colors">
             {machine.name}
           </h3>
+          <p className="text-xs text-[#9CA3AF] mt-1 line-clamp-1 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E2FF32]" />
+            <span>{machine.primaryMuscles[0]?.split('(')[0].trim() || machine.category}</span>
+          </p>
         </div>
 
-        {/* Primary Muscle Tag */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', overflow: 'hidden' }}>
-          <Dumbbell size={10} color="#00F59B" style={{ flexShrink: 0 }} />
-          <span style={{
-            fontSize: '0.68rem',
-            color: '#94A3B8',
-            whiteSpace: 'nowrap',
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-          }}>
-            {machine.primaryMuscles[0]?.split('(')[0].trim()}
+        <div className="flex items-center justify-between pt-2.5 border-t border-[#23272F]/60 text-xs">
+          <span className="text-[11px] font-medium text-[#6B7280]">
+            {machine.difficulty || 'All levels'}
           </span>
-        </div>
-
-        {/* In your Discover Machine Card JSX */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-800">
-          {/* Left Badge: Completion Status */}
-          <div className="flex items-center gap-1.5">
-            {machine.isDiscovered ? (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                ✓ Discovered
-              </span>
-            ) : (
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-800/60 text-slate-400 border border-slate-700/50">
-                ○ Unexplored
-              </span>
-            )}
-          </div>
-
-          {/* Right Link / Level Tag */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400 font-medium">
-              {machine.difficulty || 'Beginner'}
-            </span>
-            <button className="text-xs text-emerald-400 hover:text-emerald-300 font-semibold flex items-center gap-0.5">
-              Details →
-            </button>
-          </div>
+          <span className="text-[11px] font-semibold text-[#E2FF32] flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
+            Details →
+          </span>
         </div>
       </div>
     </div>
