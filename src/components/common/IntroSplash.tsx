@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dumbbell, Sparkles } from 'lucide-react';
+import { Dumbbell } from 'lucide-react';
 
 interface IntroSplashProps {
   onComplete: () => void;
@@ -7,7 +7,7 @@ interface IntroSplashProps {
 
 export const IntroSplash: React.FC<IntroSplashProps> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
-  const [tickerMessage, setTickerMessage] = useState('⚡ Initializing ScanFit Vision AI...');
+  const [tickerMessage, setTickerMessage] = useState('Initializing gym scanner...');
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export const IntroSplash: React.FC<IntroSplashProps> = ({ onComplete }) => {
       setProgress(currentProgress);
 
       if (elapsed >= 650) {
-        setTickerMessage('🎯 Calibrating 50+ Gym Equipment Profiles...');
+        setTickerMessage('Calibrating gym equipment profiles...');
       }
 
       if (elapsed >= duration) {
@@ -39,89 +39,48 @@ export const IntroSplash: React.FC<IntroSplashProps> = ({ onComplete }) => {
   return (
     <div
       id="intro-splash-overlay"
-      className="fixed inset-0 z-[100] flex flex-col items-center justify-center select-none"
+      className="fixed inset-0 z-[100] flex flex-col items-center justify-center select-none bg-[#0A0C0B]"
       style={{
-        backgroundColor: '#0B0F17',
         opacity: isFadingOut ? 0 : 1,
-        transform: isFadingOut ? 'scale(1.03)' : 'scale(1)',
+        transform: isFadingOut ? 'scale(1.02)' : 'scale(1)',
         transition: 'opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         pointerEvents: isFadingOut ? 'none' : 'auto',
       }}
     >
-      {/* Background radial glow */}
-      <div
-        style={{
-          position: 'absolute',
-          width: '380px',
-          height: '380px',
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0, 245, 155, 0.15) 0%, rgba(0, 210, 255, 0.08) 45%, transparent 70%)',
-          pointerEvents: 'none',
-          filter: 'blur(35px)',
-        }}
-      />
-
       <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-sm w-full">
-        {/* Animated Glowing Logo Badge */}
-        <div className="relative mb-6">
-          {/* Outer Pulsing Glow Ring */}
-          <div
-            className="absolute -inset-3 rounded-3xl opacity-75 blur-md animate-pulse"
-            style={{
-              background: 'linear-gradient(135deg, rgba(0, 245, 155, 0.6) 0%, rgba(0, 210, 255, 0.5) 100%)',
-            }}
-          />
-
-          {/* Core Badge */}
-          <div
-            className="relative w-20 h-20 rounded-2xl flex items-center justify-center shadow-[0_0_40px_rgba(0,245,155,0.3)]"
-            style={{
-              background: 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
-              color: '#05140F',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-            }}
-          >
-            <Dumbbell size={42} strokeWidth={2.5} className="animate-bounce" />
-          </div>
+        {/* Centered dark charcoal icon badge with crisp #22C55E dumbbell icon */}
+        <div className="w-16 h-16 rounded-2xl bg-[#141716] border border-[#222624] flex items-center justify-center mb-4 shadow-lg">
+          <Dumbbell size={32} strokeWidth={2.4} className="text-[#22C55E]" />
         </div>
 
-        {/* Brand Title & Tagline */}
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <span className="font-extrabold tracking-wider text-xl sm:text-2xl text-white font-['Outfit']">
-            ScanFit
-          </span>
-          <Sparkles size={16} className="text-[#00F59B] animate-spin" />
-        </div>
+        {/* Brand Title & Subtitle */}
+        <h1 className="font-black tracking-wider text-xl sm:text-2xl text-white uppercase mb-1">
+          SCANFIT
+        </h1>
 
-        <div className="text-xs uppercase tracking-[0.2em] font-semibold text-slate-400 mb-8">
-          Smart Equipment Vision Platform
-        </div>
+        <p className="text-xs font-semibold text-[#9CA3AF] mb-6">
+          Gym Equipment Scanner
+        </p>
 
-        {/* Dynamic High-Tech Ticker Text */}
-        <div className="h-6 flex items-center justify-center mb-4">
-          <p
-            key={tickerMessage}
-            className="text-xs sm:text-sm font-medium text-emerald-300 font-mono tracking-tight transition-all duration-200"
-            style={{ textShadow: '0 0 12px rgba(0, 245, 155, 0.5)' }}
-          >
+        {/* Dynamic Loading Status Text */}
+        <div className="h-5 flex items-center justify-center mb-3">
+          <p className="text-xs font-medium text-[#CBD5E1] tracking-tight">
             {tickerMessage}
           </p>
         </div>
 
-        {/* Sleek Neon Progress Bar Container */}
-        <div className="w-full max-w-[240px] bg-slate-800/80 rounded-full h-1.5 p-0.5 border border-slate-700/60 shadow-inner overflow-hidden relative">
+        {/* Slim Progress Bar Container with Solid #22C55E Fill */}
+        <div className="w-full max-w-[200px] bg-[#141716] rounded-full h-1.5 p-0 border border-[#222624] overflow-hidden relative">
           <div
-            className="h-full rounded-full transition-all duration-75 ease-out"
+            className="h-full bg-[#22C55E] rounded-full transition-all duration-75 ease-out"
             style={{
               width: `${progress}%`,
-              background: 'linear-gradient(90deg, #00F59B 0%, #00D2FF 100%)',
-              boxShadow: '0 0 12px rgba(0, 245, 155, 0.8)',
             }}
           />
         </div>
 
-        {/* Percentage Indicator */}
-        <div className="mt-2 text-[10px] font-mono text-slate-500 font-medium">
+        {/* Percentage Readout Cleanly Centered */}
+        <div className="mt-2 text-[11px] font-mono text-[#9CA3AF] font-semibold">
           {progress}%
         </div>
       </div>

@@ -131,7 +131,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
               <div
                 key={machine.id}
                 onClick={() => onSelectMachine(machine)}
-                className="w-[44%] min-w-[165px] bg-[#141716] border border-[#222624] hover:border-[#22C55E]/30 rounded-2xl overflow-hidden shrink-0 cursor-pointer active:scale-[0.98] transition-all"
+                className="w-[43%] min-w-[155px] max-w-[175px] bg-[#141716] border border-[#222624] hover:border-[#22C55E]/30 rounded-2xl overflow-hidden shrink-0 cursor-pointer active:scale-[0.98] transition-all"
               >
                 <div className="relative h-32 w-full bg-[#0A0C0B]">
                   <img

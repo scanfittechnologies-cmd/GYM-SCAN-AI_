@@ -14,11 +14,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
   const displayXP = totalXP ?? userProfile?.totalXP ?? 0;
   const displayLevel = currentLevel?.level ?? userProfile?.currentLevel ?? 1;
 
+  // Active user name with sensible fallback
+  const userName = userProfile?.displayName?.trim() || 'Alex';
+
   return (
     <header 
-      className="sticky top-0 z-50 w-full h-[52px] max-h-[52px] flex items-center bg-[#0A0C0B] border-b border-[#222624]"
+      className="sticky top-0 z-50 w-full flex items-center bg-[#0A0C0B] border-b border-[#222624] py-2"
     >
-      <div className="w-full max-w-[430px] h-full mx-auto px-4 flex items-center justify-between gap-3">
+      <div className="w-full max-w-[430px] mx-auto px-4 flex items-center justify-between gap-3">
         {/* ScanFit Logo & Brand Wordmark */}
         <div 
           onClick={() => onTabChange('home')}
@@ -32,19 +35,33 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
           </span>
         </div>
 
-        {/* Right Controls: Compact Level / XP Status Pill (L1 • 0 XP) */}
-        <div 
-          onClick={() => onTabChange('achievements')}
-          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1A1E1C] border border-[#2E3531] hover:border-[#3D4741] transition-colors cursor-pointer select-none"
-          title="View Level & XP Details"
-        >
-          <span className="text-[11px] font-bold text-white tracking-wide">
-            L{displayLevel}
-          </span>
-          <span className="text-[10px] text-[#9CA3AF]">•</span>
-          <span className="text-[11px] font-mono font-bold text-[#22C55E]">
-            {displayXP} <span className="text-[9px] text-[#D1D5DB] font-sans font-medium">XP</span>
-          </span>
+        {/* Right Controls: Level / XP Pill + User Name Pill directly below it */}
+        <div className="flex flex-col items-end gap-1 shrink-0 select-none">
+          {/* Level / XP Status Pill */}
+          <div 
+            onClick={() => onTabChange('achievements')}
+            className="flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-[#1A1E1C] border border-[#2E3531] hover:border-[#3D4741] transition-colors cursor-pointer"
+            title="View Level & XP Details"
+          >
+            <span className="text-[11px] font-bold text-white tracking-wide">
+              L{displayLevel}
+            </span>
+            <span className="text-[10px] text-[#9CA3AF]">•</span>
+            <span className="text-[11px] font-mono font-bold text-[#22C55E]">
+              {displayXP} <span className="text-[9px] text-[#D1D5DB] font-sans font-medium">XP</span>
+            </span>
+          </div>
+
+          {/* Compact User Name Pill */}
+          <div 
+            onClick={() => onTabChange('profile')}
+            className="flex items-center px-2 py-0.2 rounded-full bg-[#141716] border border-[#222624] hover:border-[#2C312E] transition-colors cursor-pointer"
+            title="User Profile"
+          >
+            <span className="text-[10px] font-medium text-gray-300 tracking-tight">
+              {userName}
+            </span>
+          </div>
         </div>
       </div>
     </header>
