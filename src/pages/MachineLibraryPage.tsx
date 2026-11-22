@@ -207,22 +207,22 @@ export const MachineLibraryPage: React.FC<MachineLibraryPageProps> = ({ onSelect
                 </div>
 
                 {/* Machine Details */}
-                <div className="p-2.5 flex flex-col justify-between flex-1 gap-1.5">
+                <div className="p-3 flex flex-col justify-between flex-1 gap-2">
                   <div>
-                    <h3 className="text-xs font-bold text-white tracking-tight line-clamp-1 group-hover:text-[#22C55E] transition-colors leading-snug">
+                    <h3 className="text-base font-bold text-white tracking-tight line-clamp-1 group-hover:text-[#22C55E] transition-colors leading-snug">
                       {machine.name}
                     </h3>
-                    <p className="text-[10px] text-[#22C55E] font-medium truncate mt-0.5 flex items-center gap-1">
-                      <span className="w-1 h-1 rounded-full bg-[#22C55E]" />
+                    <p className="text-sm font-semibold text-[#22C55E] truncate mt-1 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
                       <span>{primaryMuscle}</span>
                     </p>
                   </div>
 
-                  <div className="flex items-center justify-between pt-1.5 border-t border-[#222624]/60 text-[10px]">
-                    <span className="text-[#6B7280] font-medium">
+                  <div className="flex items-center justify-between pt-2 border-t border-[#222624]/60 text-xs">
+                    <span className="text-[#9CA3AF] font-medium text-[11px]">
                       {machine.difficulty || 'All levels'}
                     </span>
-                    <span className="text-[#22C55E] font-semibold">
+                    <span className="text-[#22C55E] font-bold text-xs">
                       Details →
                     </span>
                   </div>

@@ -13,10 +13,8 @@ import {
   Camera, 
   RotateCcw, 
   Sliders, 
-  Sparkles,
-  CheckCircle2,
-  XCircle,
-  HelpCircle
+  CheckCircle2, 
+  XCircle 
 } from 'lucide-react';
 import { MachineImageGallery } from '../components/machines/MachineImageGallery';
 import { ExerciseDetailModal } from '../components/machines/ExerciseDetailModal';
@@ -32,6 +30,26 @@ interface MachineDetailPageProps {
   onNavigate?: (tab: string) => void;
   onSelectMachine?: (machine: Machine, source?: 'qr' | 'photo' | 'library' | 'activity') => void;
 }
+
+/**
+ * Utility to format instruction text with bold scannable keywords and physical cues.
+ */
+const formatInstructionText = (text: string) => {
+  if (!text) return null;
+  const parts = text.split(/(mid-chest(?:\s*level)?|chest height|knee joint|pivot axis|10–20\s*lbs|10-20\s*lbs|45–60°|45-60\s*degrees?|90°|90\s*degrees?|neutral spine|scapulae|shoulder blades|rotator cuffs|weight stack|pull-pin|pin clicks?|3-second|3s|1s|1-second|full range of motion|explosive drive|concentric|eccentric)/gi);
+
+  return parts.map((part, index) => {
+    const isKeyword = /(mid-chest(?:\s*level)?|chest height|knee joint|pivot axis|10–20\s*lbs|10-20\s*lbs|45–60°|45-60\s*degrees?|90°|90\s*degrees?|neutral spine|scapulae|shoulder blades|rotator cuffs|weight stack|pull-pin|pin clicks?|3-second|3s|1s|1-second|full range of motion|explosive drive|concentric|eccentric)/i.test(part);
+    if (isKeyword) {
+      return (
+        <strong key={index} className="text-white font-semibold underline decoration-[#22C55E]/40 underline-offset-2">
+          {part}
+        </strong>
+      );
+    }
+    return part;
+  });
+};
 
 export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({ 
   machine, 
@@ -200,25 +218,25 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
           </div>
 
           {/* Machine Name */}
-          <h1 className="text-lg sm:text-xl font-extrabold text-white tracking-tight leading-snug">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight leading-snug">
             {machine.name}
           </h1>
 
           {/* Primary Purpose */}
-          <p className="text-xs text-[#CBD5E1] leading-relaxed">
+          <p className="text-sm text-gray-300 leading-relaxed">
             {machine.description}
           </p>
 
           {/* Target Muscle Groups */}
           <div className="pt-1 flex flex-col gap-1.5">
-            <span className="text-[11px] font-semibold text-[#9CA3AF]">
+            <span className="text-xs font-semibold text-[#9CA3AF]">
               Target Muscles:
             </span>
             <div className="flex flex-wrap gap-1.5">
               {machine.primaryMuscles.map((muscle, idx) => (
                 <span 
                   key={idx} 
-                  className="text-[11px] font-bold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/30 px-2.5 py-0.5 rounded-lg flex items-center gap-1"
+                  className="text-xs font-bold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/30 px-2.5 py-0.5 rounded-lg flex items-center gap-1.5"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
                   {muscle}
@@ -227,7 +245,7 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
               {machine.secondaryMuscles && machine.secondaryMuscles.map((muscle, idx) => (
                 <span 
                   key={`sec-${idx}`} 
-                  className="text-[11px] font-medium text-[#9CA3AF] bg-[#101211] border border-[#222624] px-2 py-0.5 rounded-lg"
+                  className="text-xs font-medium text-[#9CA3AF] bg-[#101211] border border-[#222624] px-2.5 py-0.5 rounded-lg"
                 >
                   {muscle}
                 </span>
@@ -237,17 +255,16 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
         </div>
       </div>
 
-      {/* ── 3. Sub-Navigation Tabs ── */}
+      {/* ── 3. Sub-Navigation Tabs (Concise Labels: Steps, Adjustments, Exercises, Mistakes) ── */}
       <div className="flex flex-col gap-3">
         <div 
-          className="w-full flex items-center gap-2 overflow-x-auto no-scrollbar scrollbar-none py-1 -mx-1 px-1"
-          style={{ WebkitOverflowScrolling: 'touch' }}
+          className="w-full grid grid-cols-4 gap-1.5 bg-[#101211] p-1 rounded-2xl border border-[#222624]"
         >
           {[
-            { id: 'overview', label: 'Step-by-Step Usage' },
-            { id: 'adjustments', label: 'Machine Adjustments' },
-            { id: 'exercises', label: `Exercises (${exercises.length})` },
-            { id: 'mistakes', label: 'Common Mistakes' },
+            { id: 'overview', label: 'Steps' },
+            { id: 'adjustments', label: 'Adjustments' },
+            { id: 'exercises', label: 'Exercises' },
+            { id: 'mistakes', label: 'Mistakes' },
           ].map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -255,10 +272,10 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                className={`py-2 px-1 rounded-xl text-xs sm:text-[13px] font-bold text-center transition-all cursor-pointer truncate ${
                   isActive
-                    ? 'bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/40'
-                    : 'bg-[#141716] text-[#9CA3AF] border border-[#222624] hover:text-white'
+                    ? 'bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/40 shadow-sm'
+                    : 'text-[#9CA3AF] hover:text-white border border-transparent'
                 }`}
               >
                 {tab.label}
@@ -270,7 +287,7 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
         {/* ── 4. Sub-Tab Content Panels ── */}
         <div className="w-full">
           
-          {/* TAB 1: STEP-BY-STEP USAGE */}
+          {/* TAB 1: STEPS (ONLY Step-by-Step Usage cards 1, 2, 3, 4) */}
           {activeTab === 'overview' && (() => {
             const getCategoryTailoredExecution = (category: string, primaryMuscles: string[] = [], name: string = '') => {
               const cat = (category || '').toLowerCase();
@@ -361,28 +378,21 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                   }
                 ];
 
-            const cues = machine.movementCues || {
-              exhale: machine.movementGuidance?.[0] || 'On concentric exertion phase (pushing or pulling the weight)',
-              inhale: machine.movementGuidance?.[2] || 'On controlled 3-second eccentric return phase',
-              tempo: '1s Explosive Drive | 1s Peak Hold | 3s Controlled Negative'
-            };
-
             return (
               <div className="flex flex-col gap-3">
-                {/* Steps List (Clean vertical stack with generous line lengths) */}
                 <div className="flex flex-col gap-2.5">
                   {displaySteps.map((step, idx) => (
                     <div
                       key={idx}
-                      className="bg-[#141716] border border-[#222624] hover:border-[#22C55E]/30 rounded-2xl p-3.5 sm:p-4 flex flex-col gap-2 transition-all"
+                      className="bg-[#141716] border border-[#222624] hover:border-[#22C55E]/30 rounded-2xl p-4 flex flex-col gap-2.5 transition-all"
                     >
                       {/* Step Header */}
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="w-6 h-6 rounded-full bg-[#0A0C0B] border border-[#222624] text-[11px] font-black text-[#22C55E] flex items-center justify-center shrink-0">
+                        <div className="flex items-center gap-2.5">
+                          <span className="w-7 h-7 rounded-full bg-[#0A0C0B] border border-[#222624] text-xs font-black text-[#22C55E] flex items-center justify-center shrink-0">
                             {idx + 1}
                           </span>
-                          <span className="text-xs font-bold text-white tracking-tight">
+                          <span className="text-base font-semibold text-white tracking-tight">
                             {step.title}
                           </span>
                         </div>
@@ -391,93 +401,66 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                         </span>
                       </div>
 
-                      {/* Description with proper break-word and comfortable line length */}
-                      <p className="text-xs text-[#CBD5E1] leading-relaxed break-words pl-8">
-                        {step.description}
+                      {/* Description with readable text-[15px] and bold scannable physical cues */}
+                      <p className="text-[15px] text-gray-200 leading-relaxed break-words pl-9">
+                        {formatInstructionText(step.description)}
                       </p>
                     </div>
                   ))}
-                </div>
-
-                {/* Movement Rhythm & Breathing Card */}
-                <div className="bg-[#141716] border border-[#222624] rounded-2xl p-3.5 flex flex-col gap-2.5">
-                  <div className="flex items-center gap-2">
-                    <Sparkles className="w-3.5 h-3.5 text-[#22C55E]" />
-                    <span className="text-xs font-bold text-white uppercase tracking-wider">
-                      Movement Rhythm & Breathing
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col gap-2 text-xs text-[#CBD5E1]">
-                    <div className="flex items-start gap-2 bg-[#101211] border border-[#1E2220] p-2.5 rounded-xl">
-                      <span className="text-[#22C55E] font-bold shrink-0">Exhale:</span>
-                      <span className="leading-snug">{cues.exhale}</span>
-                    </div>
-
-                    <div className="flex items-start gap-2 bg-[#101211] border border-[#1E2220] p-2.5 rounded-xl">
-                      <span className="text-[#22C55E] font-bold shrink-0">Inhale:</span>
-                      <span className="leading-snug">{cues.inhale}</span>
-                    </div>
-
-                    <div className="flex items-start gap-2 bg-[#101211] border border-[#1E2220] p-2.5 rounded-xl">
-                      <span className="text-[#22C55E] font-bold shrink-0">Tempo:</span>
-                      <span className="leading-snug">{cues.tempo}</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             );
           })()}
 
-          {/* TAB 2: MACHINE ADJUSTMENTS */}
+          {/* TAB 2: ADJUSTMENTS (ONLY Machine Adjustment Instructions) */}
           {activeTab === 'adjustments' && (
-            <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-3">
+            <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 sm:p-5 flex flex-col gap-3.5">
               <div className="flex items-center gap-2">
-                <Sliders size={16} className="text-[#22C55E]" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+                <Sliders size={18} className="text-[#22C55E]" />
+                <h3 className="text-base font-semibold text-white tracking-tight">
                   Machine Adjustment Instructions
                 </h3>
               </div>
 
-              <div className="flex flex-col gap-2.5">
-                <div className="bg-[#101211] border border-[#1E2220] p-3 rounded-xl flex flex-col gap-1">
-                  <h4 className="text-xs font-bold text-[#22C55E]">
+              <div className="flex flex-col gap-3">
+                <div className="bg-[#101211] border border-[#1E2220] p-3.5 rounded-xl flex flex-col gap-1.5">
+                  <h4 className="text-sm font-bold text-[#22C55E]">
                     1. Seat Height & Backrest Position
                   </h4>
-                  <p className="text-xs text-[#CBD5E1] leading-relaxed">
-                    Locate the pull-pin lever under the seat cushion. Adjust height so the handles or pivot axis align naturally with your target joint (e.g. mid-chest or knee joint). Make sure the pin clicks securely into place before loading weight.
+                  <p className="text-[15px] text-gray-200 leading-relaxed">
+                    {formatInstructionText('Locate the pull-pin lever under the seat cushion. Adjust height so the handles or pivot axis align naturally with your target joint at mid-chest level. Make sure the pin clicks securely into place before loading weight.')}
                   </p>
                 </div>
 
-                <div className="bg-[#101211] border border-[#1E2220] p-3 rounded-xl flex flex-col gap-1">
-                  <h4 className="text-xs font-bold text-[#22C55E]">
+                <div className="bg-[#101211] border border-[#1E2220] p-3.5 rounded-xl flex flex-col gap-1.5">
+                  <h4 className="text-sm font-bold text-[#22C55E]">
                     2. Weight Stack Pin Selector
                   </h4>
-                  <p className="text-xs text-[#CBD5E1] leading-relaxed">
-                    Ensure the selector pin is fully inserted into the weight plate hole. For beginners, select a lightweight plate (10–20 lbs) to test joint comfort and ensure fluid movement throughout the range of motion.
+                  <p className="text-[15px] text-gray-200 leading-relaxed">
+                    {formatInstructionText('Ensure the selector pin is fully inserted into the weight stack hole. For beginners, select a lightweight plate of 10–20 lbs to test joint comfort and ensure fluid movement throughout the full range of motion.')}
                   </p>
                 </div>
 
-                <div className="bg-[#101211] border border-[#1E2220] p-3 rounded-xl flex flex-col gap-1">
-                  <h4 className="text-xs font-bold text-[#22C55E]">
+                <div className="bg-[#101211] border border-[#1E2220] p-3.5 rounded-xl flex flex-col gap-1.5">
+                  <h4 className="text-sm font-bold text-[#22C55E]">
                     3. Range of Motion / Arm Lever Stop
                   </h4>
-                  <p className="text-xs text-[#CBD5E1] leading-relaxed">
-                    If equipped with an overhead or base cam limiter, adjust the starting position to allow a comfortable stretch without hyper-extending shoulders, knees, or lower back.
+                  <p className="text-[15px] text-gray-200 leading-relaxed">
+                    {formatInstructionText('If equipped with an overhead or base cam limiter, adjust the starting position to allow a comfortable stretch at a 45–60° angle without hyper-extending shoulders, knees, or lower back.')}
                   </p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 3: EXERCISES */}
+          {/* TAB 3: EXERCISES (Exercises You Can Perform + Related Equipment in Facility) */}
           {activeTab === 'exercises' && (
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+                <h3 className="text-base font-semibold text-white tracking-tight">
                   Exercises You Can Perform
                 </h3>
-                <span className="text-[11px] text-[#9CA3AF] font-medium">
+                <span className="text-xs text-[#9CA3AF] font-medium">
                   {exercises.length} variations
                 </span>
               </div>
@@ -486,30 +469,30 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                 {exercises.map((ex) => (
                   <div
                     key={ex.id}
-                    className="bg-[#141716] border border-[#222624] hover:border-[#22C55E]/30 rounded-2xl p-3.5 flex flex-col gap-2 transition-all"
+                    className="bg-[#141716] border border-[#222624] hover:border-[#22C55E]/30 rounded-2xl p-4 flex flex-col gap-2 transition-all"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-[10px] font-bold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/20 px-2 py-0.5 rounded-md">
+                      <span className="text-[11px] font-bold text-[#22C55E] bg-[#22C55E]/10 border border-[#22C55E]/20 px-2.5 py-0.5 rounded-md">
                         {ex.difficulty}
                       </span>
-                      <span className="text-[11px] font-semibold text-[#9CA3AF]">
+                      <span className="text-xs font-semibold text-[#9CA3AF]">
                         {ex.mainMuscle}
                       </span>
                     </div>
 
-                    <h4 className="text-xs font-bold text-white leading-snug">
+                    <h4 className="text-base font-bold text-white leading-snug">
                       {ex.name}
                     </h4>
 
-                    <p className="text-xs text-[#9CA3AF] leading-relaxed">
+                    <p className="text-[15px] text-gray-300 leading-relaxed">
                       {ex.description}
                     </p>
 
-                    <div className="pt-1 border-t border-[#1E2220]">
+                    <div className="pt-2 border-t border-[#1E2220]">
                       <button
                         type="button"
                         onClick={() => setSelectedExercise(ex)}
-                        className="w-full py-2 px-3 rounded-xl bg-[#101211] border border-[#222624] hover:border-[#22C55E]/40 text-xs font-semibold text-white flex items-center justify-between cursor-pointer transition-colors"
+                        className="w-full py-2.5 px-3 rounded-xl bg-[#101211] border border-[#222624] hover:border-[#22C55E]/40 text-xs font-semibold text-white flex items-center justify-between cursor-pointer transition-colors"
                       >
                         <span>View Exercise Details</span>
                         <ChevronRight size={14} className="text-[#22C55E]" />
@@ -518,10 +501,42 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
                   </div>
                 ))}
               </div>
+
+              {/* Related Equipment in Gym Facility placed ONLY on Exercises tab */}
+              {relatedMachines.length > 0 && (
+                <div className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-3 mt-2">
+                  <h3 className="text-base font-semibold text-white tracking-tight">
+                    Related Equipment in Facility
+                  </h3>
+                  <div className="flex flex-col gap-2">
+                    {relatedMachines.map((rel) => (
+                      <button
+                        key={rel.id}
+                        type="button"
+                        onClick={() => onSelectMachine ? onSelectMachine(rel, source) : undefined}
+                        className="w-full bg-[#101211] border border-[#1E2220] hover:border-[#22C55E]/40 p-2.5 rounded-xl flex items-center gap-3 text-left transition-all cursor-pointer active:scale-[0.99]"
+                      >
+                        <div className="w-10 h-10 bg-[#0A0C0B] border border-[#222624] rounded-lg p-1 shrink-0 flex items-center justify-center">
+                          <MachineSvgIllustration type={rel.imageSvg} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-bold text-white truncate">
+                            {rel.name}
+                          </div>
+                          <div className="text-xs text-[#22C55E] font-medium truncate">
+                            {rel.category} • {rel.difficulty}
+                          </div>
+                        </div>
+                        <ChevronRight size={14} className="text-[#9CA3AF] shrink-0" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
-          {/* TAB 4: COMMON MISTAKES */}
+          {/* TAB 4: MISTAKES (ONLY Common Mistakes & Fixes) */}
           {activeTab === 'mistakes' && (() => {
             const mistakesList = machine.commonMistakes && machine.commonMistakes.length > 0
               ? machine.commonMistakes
@@ -541,39 +556,39 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
             return (
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+                  <h3 className="text-base font-semibold text-white tracking-tight">
                     Common Mistakes & Fixes
                   </h3>
-                  <span className="text-[10px] font-semibold text-[#FF6B81] bg-[#FF6B81]/10 border border-[#FF6B81]/25 px-2 py-0.5 rounded-full">
+                  <span className="text-[11px] font-semibold text-[#FF6B81] bg-[#FF6B81]/10 border border-[#FF6B81]/25 px-2.5 py-0.5 rounded-full">
                     Form Check
                   </span>
                 </div>
 
-                <div className="flex flex-col gap-2.5">
+                <div className="flex flex-col gap-3">
                   {mistakesList.map((item, idx) => (
                     <div
                       key={idx}
-                      className="bg-[#141716] border border-[#222624] rounded-2xl p-3.5 flex flex-col gap-2.5"
+                      className="bg-[#141716] border border-[#222624] rounded-2xl p-4 flex flex-col gap-3"
                     >
                       {/* Mistake callout */}
-                      <div className="bg-[#101211] border border-[#FF6B81]/30 p-2.5 rounded-xl flex flex-col gap-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF6B81] flex items-center gap-1">
-                          <XCircle size={12} />
+                      <div className="bg-[#101211] border border-[#FF6B81]/30 p-3 rounded-xl flex flex-col gap-1.5">
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#FF6B81] flex items-center gap-1.5">
+                          <XCircle size={14} />
                           Mistake #{idx + 1}
                         </span>
-                        <p className="text-xs font-medium text-[#FCA5A5] leading-relaxed">
+                        <p className="text-[15px] font-medium text-[#FCA5A5] leading-relaxed">
                           {item.mistake}
                         </p>
                       </div>
 
                       {/* Correct form callout */}
-                      <div className="bg-[#101211] border border-[#22C55E]/30 p-2.5 rounded-xl flex flex-col gap-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#22C55E] flex items-center gap-1">
-                          <CheckCircle2 size={12} />
+                      <div className="bg-[#101211] border border-[#22C55E]/30 p-3 rounded-xl flex flex-col gap-1.5">
+                        <span className="text-xs font-bold uppercase tracking-wider text-[#22C55E] flex items-center gap-1.5">
+                          <CheckCircle2 size={14} />
                           Correct Form
                         </span>
-                        <p className="text-xs font-medium text-[#CBD5E1] leading-relaxed">
-                          {item.fix || item.correction}
+                        <p className="text-[15px] font-medium text-gray-200 leading-relaxed">
+                          {formatInstructionText(item.fix || item.correction || '')}
                         </p>
                       </div>
                     </div>
@@ -584,50 +599,6 @@ export const MachineDetailPage: React.FC<MachineDetailPageProps> = ({
           })()}
 
         </div>
-      </div>
-
-      {/* ── 5. Related Equipment in Gym Facility ── */}
-      {relatedMachines.length > 0 && (
-        <div className="bg-[#141716] border border-[#222624] rounded-2xl p-3.5 flex flex-col gap-2.5">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-white">
-            Related Equipment in Facility
-          </h3>
-          <div className="flex flex-col gap-2">
-            {relatedMachines.map((rel) => (
-              <button
-                key={rel.id}
-                type="button"
-                onClick={() => onSelectMachine ? onSelectMachine(rel, source) : undefined}
-                className="w-full bg-[#101211] border border-[#1E2220] hover:border-[#22C55E]/40 p-2 rounded-xl flex items-center gap-2.5 text-left transition-all cursor-pointer active:scale-[0.99]"
-              >
-                <div className="w-10 h-10 bg-[#0A0C0B] border border-[#222624] rounded-lg p-1 shrink-0 flex items-center justify-center">
-                  <MachineSvgIllustration type={rel.imageSvg} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-bold text-white truncate">
-                    {rel.name}
-                  </div>
-                  <div className="text-[10px] text-[#22C55E] font-medium truncate">
-                    {rel.category} • {rel.difficulty}
-                  </div>
-                </div>
-                <ChevronRight size={14} className="text-[#9CA3AF] shrink-0" />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ── 6. Bottom Action Bar ── */}
-      <div className="pt-1">
-        <button
-          type="button"
-          onClick={() => onNavigate && onNavigate('library')}
-          className="w-full py-3 rounded-xl bg-[#141716] border border-[#222624] hover:border-[#22C55E]/40 active:scale-[0.98] text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-        >
-          <BookOpen size={14} className="text-[#22C55E]" />
-          <span>Browse All Equipment</span>
-        </button>
       </div>
 
       {/* Interactive Exercise & Report Modals */}
