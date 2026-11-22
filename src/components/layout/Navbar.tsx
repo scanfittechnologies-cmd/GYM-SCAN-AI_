@@ -1,6 +1,6 @@
 import React from 'react';
 import { useGym } from '../../context/GymContext';
-import { Dumbbell } from 'lucide-react';
+import { Dumbbell, Settings } from 'lucide-react';
 
 interface NavbarProps {
   currentTab: string;
@@ -13,9 +13,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
   // Synced user total XP and Level across all routes
   const displayXP = totalXP ?? userProfile?.totalXP ?? 0;
   const displayLevel = currentLevel?.level ?? userProfile?.currentLevel ?? 1;
-
-  // Active user name with sensible fallback
-  const userName = userProfile?.displayName?.trim() || 'Alex';
 
   return (
     <header 
@@ -35,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
           </span>
         </div>
 
-        {/* Right Controls: Level / XP Pill + User Name Pill directly below it */}
+        {/* Right Controls: Level / XP Pill + Gear Settings Icon Button directly below it */}
         <div className="flex flex-col items-end gap-1 shrink-0 select-none">
           {/* Level / XP Status Pill */}
           <div 
@@ -52,16 +49,18 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onTabChange }) => {
             </span>
           </div>
 
-          {/* Compact User Name Pill */}
-          <div 
+          {/* Sleek Compact Settings Gear Icon Button */}
+          <button
+            type="button"
             onClick={() => onTabChange('profile')}
-            className="flex items-center px-2 py-0.2 rounded-full bg-[#141716] border border-[#222624] hover:border-[#2C312E] transition-colors cursor-pointer"
-            title="User Profile"
+            className={`p-1 rounded-full bg-[#141716] border border-[#222624] hover:border-[#22C55E]/40 text-gray-300 hover:text-white transition-all cursor-pointer ${
+              currentTab === 'profile' ? 'border-[#22C55E]/60 text-[#22C55E]' : ''
+            }`}
+            title="Profile & App Preferences"
+            aria-label="Profile and Settings"
           >
-            <span className="text-[10px] font-medium text-gray-300 tracking-tight">
-              {userName}
-            </span>
-          </div>
+            <Settings size={12} strokeWidth={2.2} />
+          </button>
         </div>
       </div>
     </header>

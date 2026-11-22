@@ -3,7 +3,6 @@ import { useGym } from '../context/GymContext';
 import { useAuth } from '../context/AuthContext';
 import { Machine } from '../types';
 import { 
-  User, 
   Trash2, 
   AlertTriangle, 
   Check, 
@@ -21,7 +20,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
     userProfile, 
     updateUserProfile, 
     totalXP, 
-    currentLevel, 
     discoveredMachineIds, 
     favoriteMachineIds, 
     achievements, 
@@ -29,19 +27,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
     clearAllUserData 
   } = useGym();
 
-  const { user, isAuthenticated, role, isAdmin, signOut } = useAuth();
+  const { user } = useAuth();
 
   const [displayName, setDisplayName] = useState(user?.displayName || userProfile.displayName);
   const [isEditingName, setIsEditingName] = useState(false);
   const [showClearConfirmModal, setShowClearConfirmModal] = useState(false);
-  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
   const [activeTab, setActiveTab] = useState<'profile' | 'favorites'>('profile');
 
   const favoriteMachines = machines.filter(m => favoriteMachineIds.includes(m.id));
   const unlockedAchievementsCount = achievements.filter(a => a.unlocked).length;
 
-  // All XP stats derive from GymContext (single source of truth) — never from localStorage directly.
-  // This prevents stale/hardcoded fallbacks like the former "return 95" bug.
   const displayTotalXP = totalXP ?? 0;
   const displayDiscoveredCount = discoveredMachineIds?.length ?? 0;
   const displayBadgesCount = unlockedAchievementsCount ?? 0;
@@ -54,198 +49,162 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
     }
   };
 
+  const activeName = user?.displayName || userProfile.displayName || 'Alex';
+  const initial = activeName.charAt(0).toUpperCase();
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', maxWidth: '850px', margin: '0 auto' }}>
+    <div className="w-full flex flex-col gap-4 pb-12 select-none">
       
       {/* Header */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+      <div className="flex items-center justify-between pt-1">
         <div>
-          <h1 style={{ fontSize: '1.85rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>
+          <h1 className="text-xl font-bold tracking-tight text-white">
             Profile & App Preferences
           </h1>
+          <p className="text-xs text-[#9CA3AF] mt-0.5">
+            Manage athlete profile & local app data
+          </p>
         </div>
       </div>
 
-      {/* Sub Tabs */}
-      <div style={{
-        display: 'flex',
-        gap: '0.4rem',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        paddingBottom: '0.5rem'
-      }}>
+      {/* Sub Tabs: User & Settings / Saved Routine */}
+      <div className="grid grid-cols-2 gap-1.5 bg-[#101211] p-1 rounded-2xl border border-[#222624]">
         <button
           onClick={() => setActiveTab('profile')}
-          style={{
-            background: activeTab === 'profile' ? 'rgba(0, 245, 155, 0.12)' : 'transparent',
-            color: activeTab === 'profile' ? '#00F59B' : '#94A3B8',
-            border: activeTab === 'profile' ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid transparent',
-            borderRadius: '10px',
-            padding: '0.5rem 1rem',
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            cursor: 'pointer'
-          }}
+          className={`py-2 px-3 rounded-xl text-xs font-bold text-center transition-all cursor-pointer ${
+            activeTab === 'profile'
+              ? 'bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/40 shadow-sm'
+              : 'text-[#9CA3AF] hover:text-white border border-transparent'
+          }`}
         >
           User & Settings
         </button>
 
         <button
           onClick={() => setActiveTab('favorites')}
-          style={{
-            background: activeTab === 'favorites' ? 'rgba(0, 245, 155, 0.12)' : 'transparent',
-            color: activeTab === 'favorites' ? '#00F59B' : '#94A3B8',
-            border: activeTab === 'favorites' ? '1px solid rgba(0, 245, 155, 0.3)' : '1px solid transparent',
-            borderRadius: '10px',
-            padding: '0.5rem 1rem',
-            fontSize: '0.85rem',
-            fontWeight: 700,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
+          className={`py-2 px-3 rounded-xl text-xs font-bold text-center transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+            activeTab === 'favorites'
+              ? 'bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/40 shadow-sm'
+              : 'text-[#9CA3AF] hover:text-white border border-transparent'
+          }`}
         >
-          <Star size={14} />
-          Saved Routine ({favoriteMachines.length})
+          <Star size={13} className={activeTab === 'favorites' ? 'fill-[#22C55E]' : ''} />
+          <span>Saved Routine ({favoriteMachines.length})</span>
         </button>
       </div>
 
       {/* 1. Main Profile & Settings Tab */}
       {activeTab === 'profile' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', animation: 'fadeIn 0.2s ease-out' }}>
+        <div className="flex flex-col gap-3.5">
           
-          {/* User Profile Card */}
-          <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                <div style={{
-                  width: '64px',
-                  height: '64px',
-                  borderRadius: '20px',
-                  background: isAdmin ? 'linear-gradient(135deg, #FFB800 0%, #FF8800 100%)' : 'linear-gradient(135deg, #00F59B 0%, #00D2FF 100%)',
-                  color: '#05140F',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 900,
-                  fontSize: '1.6rem',
-                  boxShadow: isAdmin ? '0 0 20px rgba(255, 184, 0, 0.35)' : '0 0 20px rgba(0, 245, 155, 0.35)'
-                }}>
-                  {(user?.displayName || userProfile.displayName).charAt(0).toUpperCase()}
-                </div>
-
-                <div>
-                  {isEditingName ? (
-                    <form onSubmit={handleSaveName} style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-                      <input
-                        type="text"
-                        value={displayName}
-                        onChange={(e) => setDisplayName(e.target.value)}
-                        className="input-modern"
-                        style={{ padding: '4px 8px', fontSize: '0.9rem', width: '160px' }}
-                        autoFocus
-                      />
-                      <button type="submit" className="btn-primary" style={{ padding: '4px 10px', fontSize: '0.75rem' }}>
-                        <Check size={14} />
-                      </button>
-                    </form>
-                  ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <h2 style={{ fontSize: '1.35rem', color: '#F1F5F9', margin: 0, fontWeight: 800 }}>
-                        {user?.displayName || userProfile.displayName}
-                      </h2>
-                      <button
-                        onClick={() => setIsEditingName(true)}
-                        style={{ background: 'transparent', border: 'none', color: '#00F59B', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 600 }}
-                      >
-                        Edit
-                      </button>
-                    </div>
-                  )}
-                  
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px', flexWrap: 'wrap' }}>
-                    <span style={{
-                      fontSize: '0.68rem',
-                      fontWeight: 800,
-                      padding: '2px 8px',
-                      borderRadius: '999px',
-                      background: isAdmin ? 'rgba(255, 184, 0, 0.2)' : 'rgba(0, 245, 155, 0.15)',
-                      color: isAdmin ? '#FFB800' : '#00F59B',
-                      border: isAdmin ? '1px solid rgba(255, 184, 0, 0.4)' : '1px solid rgba(0, 245, 155, 0.3)'
-                    }}>
-                      {isAdmin ? '🛡️ Administrator' : 'Athlete'}
-                    </span>
-                    <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
-                      {user?.email || 'Local User Session'}
-                    </span>
-                  </div>
-                </div>
+          {/* Clean Native Profile Card (#141716 bg, 1px #222624 border) */}
+          <div className="bg-[#141716] border border-[#222624] rounded-3xl p-4 sm:p-5 flex flex-col gap-4">
+            
+            {/* User Identity Row */}
+            <div className="flex items-center gap-3.5">
+              {/* Circular dark avatar badge with crisp #22C55E border & text */}
+              <div className="w-14 h-14 rounded-2xl bg-[#0A0C0B] border border-[#22C55E]/40 text-[#22C55E] font-black text-xl flex items-center justify-center shrink-0">
+                {initial}
               </div>
 
-              {/* Stats Highlights */}
-              <div style={{ display: 'flex', gap: '1.25rem', textAlign: 'center' }}>
-                <div>
-                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#00F59B' }}>{displayTotalXP}</div>
-                  <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>Total XP</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#38BDF8' }}>{displayDiscoveredCount}</div>
-                  <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>Discovered</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '1.35rem', fontWeight: 900, color: '#FFB800' }}>{displayBadgesCount}</div>
-                  <div style={{ fontSize: '0.7rem', color: '#94A3B8' }}>Badges</div>
+              <div className="flex-1 min-w-0">
+                {isEditingName ? (
+                  <form onSubmit={handleSaveName} className="flex items-center gap-1.5">
+                    <input
+                      type="text"
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
+                      className="bg-[#0A0C0B] border border-[#22C55E] text-white text-xs font-bold rounded-lg px-2.5 py-1 outline-none w-36"
+                      autoFocus
+                    />
+                    <button 
+                      type="submit" 
+                      className="px-2.5 py-1 rounded-lg bg-[#22C55E] text-black font-bold text-xs flex items-center justify-center cursor-pointer"
+                    >
+                      <Check size={14} />
+                    </button>
+                  </form>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base sm:text-lg font-bold text-white truncate">
+                      {activeName}
+                    </h2>
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingName(true)}
+                      className="text-xs font-semibold text-[#22C55E] hover:underline cursor-pointer"
+                    >
+                      Edit
+                    </button>
+                  </div>
+                )}
+                
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30">
+                    Athlete
+                  </span>
                 </div>
               </div>
             </div>
+
+            {/* 3 Summary Metrics: Crisp pure white numbers with muted gray labels */}
+            <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#222624]">
+              <div className="bg-[#101211] border border-[#1E2220] rounded-xl p-2.5 text-center flex flex-col items-center justify-center">
+                <span className="text-xl font-bold text-white tracking-tight">{displayTotalXP}</span>
+                <span className="text-xs text-[#9CA3AF] mt-0.5 font-medium">Total XP</span>
+              </div>
+
+              <div className="bg-[#101211] border border-[#1E2220] rounded-xl p-2.5 text-center flex flex-col items-center justify-center">
+                <span className="text-xl font-bold text-white tracking-tight">{displayDiscoveredCount}</span>
+                <span className="text-xs text-[#9CA3AF] mt-0.5 font-medium">Discovered</span>
+              </div>
+
+              <div className="bg-[#101211] border border-[#1E2220] rounded-xl p-2.5 text-center flex flex-col items-center justify-center">
+                <span className="text-xl font-bold text-white tracking-tight">{displayBadgesCount}</span>
+                <span className="text-xs text-[#9CA3AF] mt-0.5 font-medium">Badges</span>
+              </div>
+            </div>
+
           </div>
 
-
-          {/* Reset Activity Danger Zone */}
-          <div className="glass-card" style={{ padding: '1.25rem', border: '1px solid rgba(255, 71, 87, 0.25)' }}>
-            <h3 style={{ fontSize: '1.05rem', color: '#FF6B81', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Trash2 size={18} />
-              Reset Local Activity Data
+          {/* Reset Activity Data Card */}
+          <div className="bg-[#141716] border border-red-500/25 rounded-3xl p-4 flex flex-col gap-2.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-red-400 flex items-center gap-1.5">
+              <Trash2 size={14} />
+              <span>Reset Local Activity Data</span>
             </h3>
-            <p style={{ fontSize: '0.8rem', color: '#94A3B8', marginBottom: '1rem', lineHeight: 1.4 }}>
+            <p className="text-xs text-[#9CA3AF] leading-relaxed">
               Clear all locally stored scan history, completed tutorial checklists, saved favorites, and earned XP.
             </p>
-            <button
-              onClick={() => setShowClearConfirmModal(true)}
-              style={{
-                background: 'rgba(255, 71, 87, 0.12)',
-                border: '1px solid rgba(255, 71, 87, 0.4)',
-                color: '#FF6B81',
-                padding: '0.65rem 1.25rem',
-                borderRadius: '10px',
-                fontWeight: 700,
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <Trash2 size={16} /> Clear All Saved Activity & Progress
-            </button>
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={() => setShowClearConfirmModal(true)}
+                className="w-full py-2.5 px-3 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 text-red-400 hover:text-red-300 font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-colors active:scale-[0.99]"
+              >
+                <Trash2 size={14} />
+                <span>Clear All Saved Activity & Progress</span>
+              </button>
+            </div>
           </div>
+
         </div>
       )}
 
       {/* 2. Saved Favorites Tab */}
       {activeTab === 'favorites' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', animation: 'fadeIn 0.2s ease-out' }}>
+        <div className="flex flex-col gap-3">
           <div>
-            <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', margin: 0 }}>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-white">
               Your Saved Routine ({favoriteMachines.length})
             </h3>
-            <p style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '2px' }}>
+            <p className="text-xs text-[#9CA3AF] mt-0.5">
               Quick access to your curated workout machines and form reminders.
             </p>
           </div>
 
           {favoriteMachines.length > 0 ? (
-            <div className="grid-cards">
+            <div className="grid grid-cols-2 gap-2.5">
               {favoriteMachines.map((m) => (
                 <MachineCard
                   key={m.id}
@@ -255,17 +214,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
               ))}
             </div>
           ) : (
-            <div className="glass-card" style={{ padding: '3rem 1.5rem', textAlign: 'center' }}>
-              <Star size={32} color="#64748B" style={{ margin: '0 auto 0.75rem auto' }} />
-              <h4 style={{ fontSize: '1.05rem', color: '#F1F5F9', marginBottom: '0.35rem' }}>
+            <div className="bg-[#141716] border border-[#222624] rounded-3xl p-8 text-center flex flex-col items-center gap-2">
+              <Star size={28} className="text-[#64748B]" />
+              <h4 className="text-sm font-bold text-white mt-1">
                 No Machines Saved Yet
               </h4>
-              <p style={{ fontSize: '0.82rem', color: '#94A3B8', maxWidth: '320px', margin: '0 auto 1.25rem auto' }}>
+              <p className="text-xs text-[#9CA3AF] max-w-[240px] leading-relaxed">
                 Tap the star icon on any machine detail page to bookmark it in your routine (+2 XP).
               </p>
               <button
+                type="button"
                 onClick={() => onNavigate('library')}
-                className="btn-primary"
+                className="mt-2 px-4 py-2 rounded-xl bg-[#22C55E] hover:bg-[#1ED760] text-black font-bold text-xs cursor-pointer transition-all"
               >
                 Browse Library
               </button>
@@ -274,70 +234,37 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({ onSelectMachine, onNav
         </div>
       )}
 
-
-
       {/* Clear Data Confirmation Modal */}
       {showClearConfirmModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(5, 7, 10, 0.85)',
-          backdropFilter: 'blur(8px)',
-          zIndex: 1000,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '1rem'
-        }}>
-          <div style={{
-            background: '#131824',
-            border: '1px solid rgba(255, 71, 87, 0.4)',
-            borderRadius: '20px',
-            maxWidth: '420px',
-            width: '100%',
-            padding: '1.5rem',
-            textAlign: 'center'
-          }}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: '50%',
-              background: 'rgba(255, 71, 87, 0.15)',
-              color: '#FF4757',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 1rem auto'
-            }}>
+        <div className="fixed inset-0 z-50 bg-[#05070A]/85 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#141716] border border-red-500/40 rounded-3xl max-w-sm w-full p-5 text-center flex flex-col items-center gap-3 shadow-2xl">
+            <div className="w-12 h-12 rounded-full bg-red-500/15 border border-red-500/30 text-red-400 flex items-center justify-center">
               <AlertTriangle size={24} />
             </div>
 
-            <h3 style={{ fontSize: '1.15rem', color: '#F1F5F9', marginBottom: '0.5rem' }}>
+            <h3 className="text-base font-bold text-white">
               Are you sure you want to reset?
             </h3>
 
-            <p style={{ fontSize: '0.82rem', color: '#94A3B8', lineHeight: 1.4, marginBottom: '1.5rem' }}>
+            <p className="text-xs text-[#9CA3AF] leading-relaxed">
               This will permanently delete all scan records, XP milestones, and saved routines from your browser cache.
             </p>
 
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div className="grid grid-cols-2 gap-2 w-full pt-1">
               <button
+                type="button"
                 onClick={() => setShowClearConfirmModal(false)}
-                className="btn-secondary"
-                style={{ flex: 1 }}
+                className="py-2.5 px-3 rounded-xl bg-[#101211] border border-[#222624] text-xs font-semibold text-[#CBD5E1] hover:text-white cursor-pointer"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={() => {
                   clearAllUserData();
                   setShowClearConfirmModal(false);
                 }}
-                className="btn-primary"
-                style={{ flex: 1, background: 'linear-gradient(135deg, #FF4757, #FF6B81)', color: '#FFFFFF' }}
+                className="py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs cursor-pointer transition-colors"
               >
                 Yes, Reset All
               </button>
