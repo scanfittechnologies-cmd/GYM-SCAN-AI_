@@ -1228,6 +1228,8 @@ export const MACHINES_DATABASE: Machine[] = [
       "Foot assist pedal to bring bar forward",
       "Bucket seat with seatbelt strap"
     ],
+    "frontReferenceImage": "/machines/pullover-machine.jpg",
+    "sideReferenceImage": "/machines/pullover-machine.jpg",
     "verificationStatus": "Verified",
     "setupInstructions": [
       "Adjust seat so your shoulder joints align precisely with the rotational axis cam.",
@@ -1543,6 +1545,8 @@ export const MACHINES_DATABASE: Machine[] = [
       "Horizontal dual swivel handles set to back position",
       "Pin-loaded central tower"
     ],
+    "frontReferenceImage": "/machines/rear-delt-machine.jpg",
+    "sideReferenceImage": "/machines/rear-delt-machine.jpg",
     "verificationStatus": "Verified",
     "setupInstructions": [
       "Set the overhead range pins to the rear-most slots.",
@@ -2423,204 +2427,6 @@ export const MACHINES_DATABASE: Machine[] = [
       "exhale": "On pulling resistance toward your body",
       "inhale": "On 3-second controlled extension back to starting stretch",
       "tempo": "1s Powerful Pull | 1s Peak Contraction | 3s Controlled Negative"
-    }
-  },
-  {
-    "id": "seated-leg-curl",
-    "name": "Seated Leg Curl Machine",
-    "alternativeNames": [
-      "Seated Hamstring Curl",
-      "Knee Flexion Machine",
-      "Pin-Loaded Leg Curl"
-    ],
-    "category": "Legs",
-    "tagline": "Target the hamstrings in a lengthened hip position for peak muscle hypertrophy",
-    "difficulty": "Beginner",
-    "primaryMuscles": [
-      "Hamstrings (Biceps Femoris, Semitendinosus, Semimembranosus)"
-    ],
-    "secondaryMuscles": [
-      "Gastrocnemius (Calves)",
-      "Gracilis"
-    ],
-    "equipmentType": "Pin-Loaded (Selectorized)",
-    "qrCodeId": "GYM-LEG-06",
-    "matchKeywords": [
-      "leg curl",
-      "seated curl",
-      "hamstring curl",
-      "hamstrings",
-      "seated leg curl",
-      "back of legs"
-    ],
-    "imageSvg": "leg-curl",
-    "description": "Flexes the knees against a padded lever arm while seated with hips bent at 90 degrees, maximizing hamstring tension.",
-    "brand": "Life Fitness Signature Series",
-    "visualCharacteristics": [
-      "Seated station with upper thigh lockdown pad",
-      "Lower padded ankle roller bar behind Achilles tendon",
-      "Dual side stabilization grips",
-      "Weight stack tower"
-    ],
-    "verificationStatus": "Verified",
-    "setupInstructions": [
-      "Adjust backrest so the machine pivot aligns with your knee joint.",
-      "Place lower legs on top of the lower padded lever so it rests right below your calves.",
-      "Lower the upper thigh hold-down pad tightly over your quads to prevent hips from rising."
-    ],
-    "movementGuidance": [
-      "Exhale and curl your heels downward and back underneath your seat as far as possible.",
-      "Squeeze the hamstrings hard for 1 second at full knee flexion.",
-      "Inhale and slowly resist the weight back up over 3 seconds to the top position."
-    ],
-    "commonMistakes": [
-      {
-        "mistake": "Leaving thigh clamp loose",
-        "fix": "Tighten thigh clamp securely so your knees cannot lift off the seat cushion.",
-        "correction": "Tighten thigh clamp securely so your knees cannot lift off the seat cushion."
-      },
-      {
-        "mistake": "Hyperextending lower back",
-        "fix": "Keep lumbar spine neutral and engage abdominals.",
-        "correction": "Keep lumbar spine neutral and engage abdominals."
-      }
-    ],
-    "safetyReminders": [
-      "Never let the weight stack smash at full stretch."
-    ],
-    "tutorialSteps": [
-      {
-        "stepNumber": 1,
-        "title": "Thigh Clamp Tightening",
-        "description": "Pull the thigh clamp lever down until it is snug against your lower thighs."
-      }
-    ],
-    "videoDurationSec": 40,
-    "steps": [
-      {
-        "stage": "Setup",
-        "icon": "🪑",
-        "title": "Machine Setup & Alignment",
-        "description": "Adjust backrest so the machine pivot aligns with your knee joint."
-      },
-      {
-        "stage": "Adjust",
-        "icon": "🎯",
-        "title": "Select Resistance & Pins",
-        "description": "Place lower legs on top of the lower padded lever so it rests right below your calves."
-      },
-      {
-        "stage": "Position",
-        "icon": "🧘",
-        "title": "Body Position & Core Brace",
-        "description": "Lower the upper thigh hold-down pad tightly over your quads to prevent hips from rising."
-      },
-      {
-        "stage": "Execute",
-        "icon": "💥",
-        "title": "Downward Heel Curl Under Seat",
-        "description": "Lock thigh clamp pad, curl heels downward and under seat toward calves, squeeze hamstrings hard at bottom for 1-2s, and return slowly over 3s."
-      }
-    ],
-    "movementCues": {
-      "exhale": "On pulling resistance toward your body",
-      "inhale": "On 3-second controlled extension back to starting stretch",
-      "tempo": "1s Powerful Pull | 1s Peak Contraction | 3s Controlled Negative"
-    }
-  },
-  {
-    "id": "hip-abduction-machine",
-    "name": "Hip Abduction Machine",
-    "alternativeNames": [
-      "Outer Thigh Machine",
-      "Seated Abductor Machine",
-      "Glute Abductor"
-    ],
-    "category": "Legs",
-    "tagline": "Isolate gluteus medius and outer hip stabilizers for pelvic stability",
-    "difficulty": "Beginner",
-    "primaryMuscles": [
-      "Gluteus Medius",
-      "Gluteus Minimus",
-      "Tensor Fasciae Latae (TFL)"
-    ],
-    "secondaryMuscles": [
-      "Gluteus Maximus (Upper Fibers)"
-    ],
-    "equipmentType": "Pin-Loaded (Selectorized)",
-    "qrCodeId": "GYM-LEG-08",
-    "matchKeywords": [
-      "hip abduction",
-      "outer thigh",
-      "abductor machine",
-      "glute machine",
-      "thigh machine"
-    ],
-    "imageSvg": "leg-press",
-    "description": "A seated machine where the user pushes the padded knee levers outward against stack resistance, targeting the outer hips and glutes.",
-    "brand": "Life Fitness Signature Series Abductor",
-    "visualCharacteristics": [
-      "Seated bucket chair with foot pegs",
-      "Dual outer knee pads",
-      "Central pin adjustment to start pads close together"
-    ],
-    "verificationStatus": "Verified",
-    "setupInstructions": [
-      "Sit back firmly and adjust the start lever so pads touch outside of knees.",
-      "Place feet on footrests and grip side handles."
-    ],
-    "movementGuidance": [
-      "Push knees outward as wide as possible against the pads.",
-      "Hold peak outer glute squeeze for 2 seconds before returning."
-    ],
-    "commonMistakes": [
-      {
-        "mistake": "Using momentum and leaning torso back and forth",
-        "fix": "Sit upright and isolate hip joint movement.",
-        "correction": "Sit upright and isolate hip joint movement."
-      }
-    ],
-    "safetyReminders": [
-      "Do not set the starting pin too narrow if hip mobility is restricted."
-    ],
-    "tutorialSteps": [
-      {
-        "stepNumber": 1,
-        "title": "2-Second Peak Hold",
-        "description": "Pause at the widest point to trigger gluteus medius fibers."
-      }
-    ],
-    "videoDurationSec": 35,
-    "steps": [
-      {
-        "stage": "Setup",
-        "icon": "🪑",
-        "title": "Machine Setup & Alignment",
-        "description": "Sit back firmly and adjust the start lever so pads touch outside of knees."
-      },
-      {
-        "stage": "Adjust",
-        "icon": "🎯",
-        "title": "Select Resistance & Pins",
-        "description": "Place feet on footrests and grip side handles."
-      },
-      {
-        "stage": "Position",
-        "icon": "🧘",
-        "title": "Body Position & Core Brace",
-        "description": "Sit or stand with torso braced, feet planted flat on floor, and grip handles securely."
-      },
-      {
-        "stage": "Execute",
-        "icon": "💥",
-        "title": "Push Knees Outward & Glute Squeeze",
-        "description": "Press knees outward against resistance pads as wide as comfortable, hold peak glute squeeze for 2s at maximum abduction, and resist inward slowly."
-      }
-    ],
-    "movementCues": {
-      "exhale": "On driving weight upward or curling into contraction",
-      "inhale": "On 3-second controlled eccentric descent",
-      "tempo": "2s Controlled Drive | 1s Pause | 3s Smooth Reset"
     }
   },
   {
@@ -4039,6 +3845,8 @@ export const MACHINES_DATABASE: Machine[] = [
       "Dual foam leg lock rollers",
       "Incline adjustment ladder"
     ],
+    "frontReferenceImage": "/machines/decline-ab-bench.jpg",
+    "sideReferenceImage": "/machines/decline-ab-bench.jpg",
     "verificationStatus": "Verified",
     "setupInstructions": [
       "Adjust slant angle notch (steeper = harder).",

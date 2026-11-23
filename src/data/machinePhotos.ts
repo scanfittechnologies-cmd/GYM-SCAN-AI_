@@ -51,6 +51,16 @@ export const MACHINE_PHOTO_MAP: Record<string, MachinePhotoEntry> = {
     side:  '/machines/pec-deck-machine.jpg',
     verified: true,
   },
+  'pullover-machine': {
+    front: '/machines/pullover-machine.jpg',
+    side: '/machines/pullover-machine.jpg',
+    verified: true,
+  },
+  'rear-delt-machine': {
+    front: '/machines/rear-delt-machine.jpg',
+    side: '/machines/rear-delt-machine.jpg',
+    verified: true,
+  },
   'cable-crossover': {
     front: '/machines/cable-crossover.jpg',
     verified: true,
@@ -94,14 +104,6 @@ export const MACHINE_PHOTO_MAP: Record<string, MachinePhotoEntry> = {
     front: '/machines/lying-leg-curl.jpg',
     side: '/machines/lying-leg-curl.jpg',
     verified: true,
-  },
-  'seated-leg-curl': {
-    front: u('photo-1533681904393-9ab6eee7e408'),
-    verified: true,
-  },
-  'hip-abduction-machine': {
-    front: u('photo-1517838277536-f5f99be501cd'),
-    verified: false,
   },
 
   /* ─────────────────────── ARMS ─────────────────────── */
@@ -214,6 +216,11 @@ export const MACHINE_PHOTO_MAP: Record<string, MachinePhotoEntry> = {
   'ab-crunch-machine': {
     front: '/machines/ab-crunch-machine.jpg',
     side: '/machines/ab-crunch-machine.jpg',
+    verified: true,
+  },
+  'decline-ab-bench': {
+    front: '/machines/decline-ab-bench.jpg',
+    side: '/machines/decline-ab-bench.jpg',
     verified: true,
   },
   'captains-chair-leg-raise': {
