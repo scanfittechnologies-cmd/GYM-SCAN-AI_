@@ -1,7 +1,5 @@
 import React from 'react';
 import { 
-  Flame, 
-  Calendar, 
   ChevronRight, 
   Sparkles,
   Zap,
@@ -21,34 +19,15 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
     totalXP, 
     activityLog = [], 
     discoveredMachineIds = [], 
-    machines = [],
-    streakInfo
+    machines = []
   } = useGym();
 
   const machinesScanned = discoveredMachineIds.length;
-  const currentStreak = streakInfo?.activeDays ?? (activityLog.length > 0 ? 1 : 0);
 
   // Filter to scan-type activities only
   const scanHistory = activityLog.filter(
     item => item.activityType === 'qr_scan' || item.activityType === 'photo_scan'
   );
-
-  // Build a set of days (date strings) with activity for the weekly strip
-  const activityDates = new Set(
-    activityLog.map(item => new Date(item.timestamp).toDateString())
-  );
-  const today = new Date();
-  const todayIndex = today.getDay(); // 0=Sun
-
-  // Days for the 7-day strip
-  const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-
-  // Calculate the date for each day of the current week (starting Sunday)
-  const getWeekDayDate = (dayIdx: number): Date => {
-    const d = new Date(today);
-    d.setDate(d.getDate() - todayIndex + dayIdx);
-    return d;
-  };
 
   return (
     <div className="w-full flex flex-col space-y-4 pb-12 select-none">
@@ -58,82 +37,30 @@ export const ActivityPage: React.FC<ActivityPageProps> = ({ onSelectMachine, onN
           <h1 className="text-xl font-bold tracking-tight text-white">Activity</h1>
           <p className="text-xs text-[#9CA3AF] mt-0.5">Your workout & scan history</p>
         </div>
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#141716] border border-[#222624] text-xs font-semibold text-[#22C55E]">
-          <Flame className="w-3.5 h-3.5 fill-[#22C55E]" />
-          <span>{currentStreak > 0 ? `${currentStreak} Day Streak` : 'Streak Active'}</span>
-        </div>
       </div>
 
-      {/* ── 2. 3-Metric Summary Strip ── */}
-      <div className="grid grid-cols-3 gap-2.5">
+      {/* ── 2. 2-Column Summary Grid ── */}
+      <div className="grid grid-cols-2 gap-2.5">
         {/* Machines Scanned */}
-        <div className="bg-[#141716] border border-[#222624] rounded-2xl p-3 flex flex-col">
-          <span className="text-[11px] font-medium text-[#9CA3AF]">Scanned</span>
-          <span className="text-xl font-black text-white mt-1">{machinesScanned}</span>
-          <span className="text-[10px] text-[#22C55E] mt-0.5 flex items-center gap-0.5">
-            <CheckCircle2 className="w-2.5 h-2.5" /> Machines
-          </span>
-        </div>
-
-        {/* Day Streak */}
-        <div className="bg-[#141716] border border-[#222624] rounded-2xl p-3 flex flex-col">
-          <span className="text-[11px] font-medium text-[#9CA3AF]">Streak</span>
-          <span className="text-xl font-black text-white mt-1">{currentStreak}</span>
-          <span className="text-[10px] text-[#22C55E] mt-0.5 flex items-center gap-0.5">
-            <Flame className="w-2.5 h-2.5" /> {currentStreak === 1 ? 'Day Active' : 'Days'}
+        <div className="bg-[#141716] border border-[#222624] rounded-2xl p-3.5 flex flex-col">
+          <span className="text-xs font-medium text-[#9CA3AF]">Machines Scanned</span>
+          <span className="text-2xl font-black text-white mt-1">{machinesScanned}</span>
+          <span className="text-[11px] text-[#22C55E] mt-1 flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3" /> Discovered
           </span>
         </div>
 
         {/* Total XP */}
-        <div className="bg-[#141716] border border-[#222624] rounded-2xl p-3 flex flex-col">
-          <span className="text-[11px] font-medium text-[#9CA3AF]">Total XP</span>
-          <span className="text-xl font-black text-white mt-1">{totalXP}</span>
-          <span className="text-[10px] text-[#22C55E] mt-0.5 flex items-center gap-0.5">
-            <Zap className="w-2.5 h-2.5" /> Points
+        <div className="bg-[#141716] border border-[#222624] rounded-2xl p-3.5 flex flex-col">
+          <span className="text-xs font-medium text-[#9CA3AF]">Total XP</span>
+          <span className="text-2xl font-black text-white mt-1">{totalXP}</span>
+          <span className="text-[11px] text-[#22C55E] mt-1 flex items-center gap-1">
+            <Zap className="w-3 h-3" /> Points
           </span>
         </div>
       </div>
 
-      {/* ── 3. Weekly Consistency Card ── */}
-      <div className="bg-[#141716] border border-[#222624] rounded-2xl p-3.5">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-[#22C55E]" />
-            <span className="text-xs font-semibold text-white">Weekly Consistency</span>
-          </div>
-          <span className="text-[11px] font-medium text-[#9CA3AF]">This week</span>
-        </div>
-
-        <div className="grid grid-cols-7 gap-1.5">
-          {daysOfWeek.map((day, idx) => {
-            const isToday = idx === todayIndex;
-            const dayDate = getWeekDayDate(idx);
-            const hadActivity = activityDates.has(dayDate.toDateString());
-
-            return (
-              <div 
-                key={idx} 
-                className={`flex flex-col items-center justify-center py-2 rounded-xl transition-all ${
-                  isToday 
-                    ? 'bg-[#22C55E]/15 border border-[#22C55E]/50' 
-                    : 'bg-[#101211] border border-[#1A1D1C]'
-                }`}
-              >
-                <span className={`text-[10px] font-medium ${isToday ? 'text-white' : 'text-[#9CA3AF]'}`}>{day}</span>
-                <div className={`w-2 h-2 rounded-full mt-1.5 ${
-                  hadActivity 
-                    ? 'bg-[#22C55E]' 
-                    : isToday 
-                      ? 'bg-[#22C55E]/40' 
-                      : 'bg-[#222624]'
-                }`} />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── 4. Recent Scans History ── */}
+      {/* ── 3. Recent Scans History ── */}
       <div className="space-y-2.5 pt-1">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-bold text-white flex items-center gap-2">

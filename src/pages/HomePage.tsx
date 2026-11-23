@@ -4,8 +4,7 @@ import { Machine } from '../types';
 import { 
   Camera, 
   Upload, 
-  ChevronRight,
-  Flame
+  ChevronRight
 } from 'lucide-react';
 import { getMachinePhotos } from '../data/machinePhotos';
 
@@ -18,10 +17,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
   const { 
     machines
   } = useGym();
-
-  // 7-day consistency strip: Sun to Sat
-  const daysOfWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  const todayIndex = new Date().getDay(); // 0 is Sunday, 6 is Saturday
 
   // Specific starter machines for quick horizontal swipe
   const starterMachineIds = ['seated-chest-press', 'lat-pulldown', 'leg-press-45', 'seated-cable-row'];
@@ -73,39 +68,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
         </div>
       </div>
 
-      {/* 2. Weekly Consistency Strip */}
-      <div className="w-full bg-[#141716] border border-[#222624] rounded-2xl p-3.5 flex flex-col gap-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-[#9CA3AF] font-medium flex items-center gap-1.5">
-            <Flame size={14} className="text-[#22C55E]" />
-            Weekly Consistency
-          </span>
-          <span className="text-[11px] font-semibold text-white">
-            Streak Active
-          </span>
-        </div>
-
-        <div className="grid grid-cols-7 gap-1.5 pt-1">
-          {daysOfWeek.map((day, idx) => {
-            const isToday = idx === todayIndex;
-            return (
-              <div
-                key={idx}
-                className={`flex flex-col items-center justify-center py-1.5 rounded-xl border text-[11px] transition-colors ${
-                  isToday
-                    ? 'bg-[#22C55E]/15 border-[#22C55E] text-[#22C55E] font-bold'
-                    : 'bg-[#0A0C0B] border-[#222624] text-[#6B7280]'
-                }`}
-              >
-                <span className="text-[9px] uppercase font-bold tracking-wider">{day}</span>
-                <span className={`w-1.5 h-1.5 rounded-full mt-1 ${isToday ? 'bg-[#22C55E]' : 'bg-[#222624]'}`} />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 3. Quick-Scan Machines Row (Horizontal swipeable) */}
+      {/* 2. Quick-Scan Machines Row (Directly below hero card) */}
       <div className="flex flex-col gap-2.5 pt-1">
         <div className="flex items-center justify-between px-1">
           <span className="text-sm font-bold text-white tracking-tight">
@@ -158,4 +121,3 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate, onSelectMachine 
     </div>
   );
 };
-
